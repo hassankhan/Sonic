@@ -1,4 +1,4 @@
-Zepto [![Build Status](https://travis-ci.org/hassankhan/Pico.png?branch=develop)](https://travis-ci.org/hassankhan/Pico) [![Coverage Status](https://coveralls.io/repos/hassankhan/Pico/badge.png?branch=develop)](https://coveralls.io/r/hassankhan/Pico?branch=develop)
+Zepto [![Build Status](https://travis-ci.org/hassankhan/Zepto.png?branch=master)](https://travis-ci.org/hassankhan/Zepto) [![Coverage Status](https://coveralls.io/repos/hassankhan/Zepto/badge.png)](https://coveralls.io/r/hassankhan/Zepto)
 ====
 
 Zepto is a stupidly simple, blazing fast, flat-file CMS based on [Pico](http://pico.dev7studios.com).
