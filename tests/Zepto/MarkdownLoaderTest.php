@@ -47,11 +47,7 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
         $files['404.md'] = array(
             'meta'    => array(
                 'title'         => 'Error 404',
-                'robots'        => 'noindex,nofollow',
-                'description'   => '',
-                'author'        => '',
-                'date'          => '',
-                'template'      => ''
+                'robots'        => 'noindex,nofollow'
             ),
             'content' => '<h1>Error 404</h1>' . PHP_EOL
                 . '<p>Woops. Looks like this page doesn\'t exist.</p>'
@@ -68,12 +64,7 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $files['sub/index.md'] = array(
             'meta'    => array(
-                'title'         => 'Sub Page Index',
-                'robots'        => '',
-                'description'   => '',
-                'author'        => '',
-                'date'          => '',
-                'template'      => ''
+                'title'         => 'Sub Page Index'
             ),
             'content' => '<h2>This is a Sub Page Index</h2>' . PHP_EOL
                 . '<p>This is index.md in the "sub" folder.</p>' . PHP_EOL
@@ -84,12 +75,7 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
 
         $files['sub/page.md'] = array(
             'meta'    => array(
-                'title'         => 'Sub Page',
-                'robots'        => '',
-                'description'   => '',
-                'author'        => '',
-                'date'          => '',
-                'template'      => ''
+                'title'         => 'Sub Page'
             ),
             'content' => '<h2>This is a Sub Page</h2>' . PHP_EOL
                 . '<p>This is page.md in the "sub" folder.</p>' . PHP_EOL
