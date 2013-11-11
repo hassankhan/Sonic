@@ -94,7 +94,7 @@ class Router
 
     /**
      * An array containing the list of routing rules and their callback
-     * functions, as well as their priority and any additional paramters.
+     * functions, as well as their request method and any additional paramters.
      *
      * @var array
      */
@@ -215,34 +215,36 @@ class Router
         // Whether or not we have matched the URL to a route
         $matched_route = false;
 
-        // Sort the array by priority
+        // Sort the array by request_method
         ksort($this->routes);
 
-        // Loop through each priority level
-        foreach ($this->routes as $priority => $routes) {
-            // Loop through each route for this priority level
-            foreach ($routes as $route => $callback) {
-                // Does the routing rule match the current URL?
-                if (preg_match($route, $this->url_clean, $matches)) {
-                    // A routing rule was matched
-                    $matched_route = true;
+        // Loop through each request_method level
+        foreach ($this->routes as $request_method => $routes) {
+            if ($_SERVER['REQUEST_METHOD'] === $request_method) {
+                // Loop through each route for this request_method level
+                foreach ($routes as $route => $callback) {
+                    // Does the routing rule match the current URL?
+                    if (preg_match($route, $this->url_clean, $matches)) {
+                        // A routing rule was matched
+                        $matched_route = true;
 
-                    // Parameters to pass to the callback function
-                    $params = array($this->url_clean);
+                        // Parameters to pass to the callback function
+                        $params = array($this->url_clean);
 
-                    // Get any named parameters from the route
-                    foreach ($matches as $key => $match) {
-                        if (is_string($key)) {
-                            $params[] = $match;
+                        // Get any named parameters from the route
+                        foreach ($matches as $key => $match) {
+                            if (is_string($key)) {
+                                $params[] = $match;
+                            }
                         }
+
+                        // Store the parameters and callback function to execute later
+                        $this->params   = $params;
+                        $this->callback = $callback;
+
+                        // Return the callback and params, useful for unit testing
+                        return array('callback' => $callback, 'params' => $params, 'route' => $route, 'original_route' => $this->routes_original[$request_method][$route]);
                     }
-
-                    // Store the parameters and callback function to execute later
-                    $this->params   = $params;
-                    $this->callback = $callback;
-
-                    // Return the callback and params, useful for unit testing
-                    return array('callback' => $callback, 'params' => $params, 'route' => $route, 'original_route' => $this->routes_original[$priority][$route]);
                 }
             }
         }
@@ -283,15 +285,39 @@ class Router
     }
 
     /**
+     * Convenience method for HTTP GET routes
+     *
+     * @param  string $route
+     * @param  Callable $callback
+     * @return boolean
+     */
+    public function get($route, $callback)
+    {
+        return $this->route($route, $callback, 'GET');
+    }
+
+    /**
+     * Convenience method for HTTP POST routes
+     *
+     * @param  string $route
+     * @param  Callable $callback
+     * @return boolean
+     */
+    public function post($route, $callback)
+    {
+        return $this->route($route, $callback, 'POST');
+    }
+
+    /**
      * Adds a new URL routing rule to the routing table, after converting any of
      * our special tokens into proper regular expressions.
      *
      * @param  string   $route
      * @param  Callable $callback
-     * @param  integer  $priority
+     * @param  integer  $request_method
      * @return boolean
      */
-    public function route($route, $callback, $priority = 10)
+    public function route($route, $callback, $request_method = 'GET')
     {
         // Keep the original routing rule for debugging/unit tests
         $original_route = $route;
@@ -318,7 +344,7 @@ class Router
         $route = '#^' . $route . '$#';
 
         // Does this URL routing rule already exist in the routing table?
-        if (isset($this->routes[$priority][$route])) {
+        if (isset($this->routes[$request_method][$route])) {
             // Trigger a new error and exception if errors are on
             if ($this->show_errors) {
                 throw new \Exception('The URI "' . htmlspecialchars($route) . '" already exists in the routing table');
@@ -327,8 +353,8 @@ class Router
         }
 
         // Add the route to our routing array
-        $this->routes[$priority][$route]          = $callback;
-        $this->routes_original[$priority][$route] = $original_route;
+        $this->routes[$request_method][$route]          = $callback;
+        $this->routes_original[$request_method][$route] = $original_route;
 
         return true;
     }
