@@ -1,0 +1,30 @@
+{
+    "name": "hassankhan/Zepto",
+    "description": "Zepto is a stupidly simple, blazing fast, flat-file CMS based on Pico",
+    "homepage": "https://github.com/hassankhan/Zepto",
+    "require": {
+        "php": ">=5.3",
+        "twig/twig": "dev-master",
+        "erusev/parsedown": "dev-master",
+        "pimple/pimple": "dev-master"
+    },
+    "require-dev": {
+        "filp/whoops": "1.*",
+        "phpunit/phpunit": "3.7.*",
+        "satooshi/php-coveralls": "dev-master"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-0": {
+            "Zepto": "library/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Hassan Khan",
+            "email": "contact@hassankhan.me",
+            "homepage": "http://hassankhan.me",
+            "role": "Developer"
+        }
+    ]
+}

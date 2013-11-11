@@ -1,0 +1,14 @@
+# Composer
+composer.lock
+vendor
+
+# OS Generated
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+*.swp
+
+# User config
+my.config.php
+build
