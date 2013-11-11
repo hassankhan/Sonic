@@ -17,17 +17,17 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $_SERVER['DOCUMENT_ROOT'] = '/var/www';
-        $_SERVER['SCRIPT_FILENAME'] = '/var/www/pico/index.php';
-        $_SERVER['SERVER_NAME'] = 'pico';
-        $_SERVER['SERVER_PORT'] = '80';
-        $_SERVER['SCRIPT_NAME'] = '/pico/index.php';
-        $_SERVER['REQUEST_URI'] = '/pico/index.php/bar/xyz';
-        $_SERVER['PATH_INFO'] = '/bar/xyz';
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['QUERY_STRING'] = 'one=1&two=2&three=3';
-        $_SERVER['HTTPS'] = '';
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $_SERVER['DOCUMENT_ROOT']   = '/var/www';
+        $_SERVER['SCRIPT_FILENAME'] = '/var/www/zepto/index.php';
+        $_SERVER['SERVER_NAME']     = 'zepto';
+        $_SERVER['SERVER_PORT']     = '80';
+        $_SERVER['SCRIPT_NAME']     = '/zepto/index.php';
+        $_SERVER['REQUEST_URI']     = '/zepto/index.php/bar/xyz';
+        $_SERVER['PATH_INFO']       = '/bar/xyz';
+        $_SERVER['REQUEST_METHOD']  = 'GET';
+        $_SERVER['QUERY_STRING']    = 'one=1&two=2&three=3';
+        $_SERVER['HTTPS']           = '';
+        $_SERVER['REMOTE_ADDR']     = '127.0.0.1';
         unset($_SERVER['CONTENT_TYPE'], $_SERVER['CONTENT_LENGTH']);
 
         $this->object = new Router;
