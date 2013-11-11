@@ -55,7 +55,7 @@ class FileLoader extends \Pimple {
 
                     // To stop PHP error
                     $exploded_file = explode('.', $file);
-                    if (in_array(strtolower(array_pop($exploded_file)), $file_extension)) {
+                    if (in_array(strtolower(array_pop($exploded_file)), str_replace('.', '', $file_extension))) {
                         // Get rid of extraneous path details
                         $clean_file_name                = str_replace(ROOT_DIR, '', $file);
                         $clean_file_name                = str_replace('content/', '', $clean_file_name);

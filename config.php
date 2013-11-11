@@ -2,19 +2,17 @@
 
 $config = array(
     'zepto' => array(
-        'content_dir'   => 'content',
-        'plugin_dir'    => 'plugins',
-        'templates_dir' => 'templates',
-        'content_ext'   => array('md', 'markdown')
+        'content_dir'       => 'content',
+        'plugin_dir'        => 'plugins',
+        'templates_dir'     => 'templates',
+        'default_template'  => 'base.twig',
+        'content_ext'       => array('.md', '.markdown')
     ),
     'site' => array(
-        'site_root'      => 'Site root URL goes here',
-        'site_title'     => 'Zepto',
-        'theme'          => 'default',
-        'date_format'    => 'jS M Y',
-        'page_order'     => 'asc',
-        'page_order_by'  => 'date|a-z',
-        'excerpt_length' => '50'
+        'site_root'         => 'Site root URL goes here',
+        'site_title'        => 'Zepto',
+        'date_format'       => 'jS M Y',
+        'excerpt_length'    => '50'
     ),
     'twig' => array(
         'charset'           => 'utf-8',
