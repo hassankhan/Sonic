@@ -85,7 +85,7 @@ class MarkdownLoader extends \Zepto\FileLoader {
                 $meta[$field] = trim(preg_replace("/\s*(?:\*\/|\?>).*/", '', $match[1]));
             }
             else {
-                $meta[$field] = '';
+                unset($meta[$field]);
             }
         }
 

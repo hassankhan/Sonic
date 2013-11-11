@@ -166,9 +166,9 @@ class Zepto {
                 );
 
                 // Retrieve template name, if none given, use base template
-                $template_name = $content['meta']['template'] === ''
-                    ? 'base.twig'
-                    : $content['meta']['template'];
+                $template_name = array_key_exists('template', $content['meta']) === true
+                    ? $content['meta']['template']
+                    : 'base.twig';
 
                 // Merge Twig options and content into one array
                 $options = array_merge($twig_options, $content);
