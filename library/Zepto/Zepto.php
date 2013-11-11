@@ -96,9 +96,11 @@ class Zepto {
         // Load content from files
         $this->load_files();
 
+        // Create navigation object
+        $this->create_nav_links();
+
         // Add basic routes to router
         $this->setup_router();
-
     }
 
     public function run()
@@ -124,8 +126,7 @@ class Zepto {
      * Does the initial setup for the router. This entails getting the list of
      * loaded files as returned by Zepto\FileLoader and turning that into
      * routes.
-     * @todo Add Twig render function
-     * @todo Map 'index' pages to '/'
+     *
      * @return void
      */
     protected function setup_router()
@@ -133,13 +134,14 @@ class Zepto {
         // Get local references
         $container = $this->container;
         $router    = $container['router'];
+        $nav       = $container['nav'];
 
         // Get loaded files array keys
         $files  = array_keys($container['content']);
 
         // Remove 'content' and file extensions from path
         $clean_files = str_replace(
-            array('.md', '.markdown'),
+            $container['settings']['zepto']['content_ext'],
             '',
             $files
         );
@@ -151,7 +153,7 @@ class Zepto {
                 ? '/' . str_replace('index', '', $file)
                 : '/' . $file;
 
-            $router->route($route, function() use ($container, $file) {
+            $router->route($route, function() use ($container, $file, $nav) {
 
                 // Get local references to Twig and content
                 $twig    = $container['twig'];
@@ -165,17 +167,45 @@ class Zepto {
                     'site_title' => $container['settings']['site']['site_title']
                 );
 
-                // Retrieve template name, if none given, use base template
+                // Merge Twig options and content into one array
+                $options = array_merge($twig_options, $content, $nav);
+
+                // Get template name from file, if not set, then use default
                 $template_name = array_key_exists('template', $content['meta']) === true
                     ? $content['meta']['template']
-                    : 'base.twig';
+                    : $container['settings']['zepto']['default_template'];
 
-                // Merge Twig options and content into one array
-                $options = array_merge($twig_options, $content);
                 // Render template with Twig
                 echo $twig->render($template_name, $options);
             });
         }
+    }
+
+    protected function create_nav_links()
+    {
+        $container    = $this->container;
+        $content      = $container['content'];
+        $content_ext  = $container['settings']['zepto']['content_ext'];
+
+        $nav_items = array();
+
+        foreach ($content as $file_name => $item) {
+
+            // Don't add 40x, 50x pages to navigation items
+            if (preg_match('/^[4|5]0\d\.md$/', $file_name) === 0) {
+                array_push(
+                    $nav_items,
+                    array(
+                        'title' => $item['meta']['title'],
+                        'url'   => str_replace($content_ext, '', $file_name)
+                    )
+                );
+            }
+        }
+
+        $nav = array('nav' => $nav_items);
+
+        $this->container['nav'] = $nav;
     }
 
     // This should be moved into a plugin
