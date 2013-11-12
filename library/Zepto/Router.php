@@ -155,21 +155,6 @@ class Router
     }
 
     /**
-     * If the router cannot match the current URL to any of the given routes,
-     * the function passed to this method will be executed instead. This would
-     * be useful for displaying a 404 page for example.
-     *
-     * @param  Callable $callback
-     * @return self
-     */
-    public function default_route($callback)
-    {
-        $this->default_route = $callback;
-
-        return $this;
-    }
-
-    /**
      * Tries to match one of the URL routes to the current URL, otherwise
      * execute the default function and return false.
      *
