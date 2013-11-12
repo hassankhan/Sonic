@@ -155,32 +155,6 @@ class Router
     }
 
     /**
-     * Enables the display of errors such as malformed URL routing rules or
-     * conflicting routing rules. Not recommended for production sites.
-     *
-     * @return self
-     */
-    public function show_errors()
-    {
-        $this->show_errors = true;
-
-        return $this;
-    }
-
-    /**
-     * Disables the display of errors such as malformed URL routing rules or
-     * conflicting routing rules. Not recommended for production sites.
-     *
-     * @return self
-     */
-    public function hide_errors()
-    {
-        $this->show_errors = false;
-
-        return $this;
-    }
-
-    /**
      * If the router cannot match the current URL to any of the given routes,
      * the function passed to this method will be executed instead. This would
      * be useful for displaying a 404 page for example.
@@ -193,16 +167,6 @@ class Router
         $this->default_route = $callback;
 
         return $this;
-    }
-
-    /**
-     * Returns all routes mapped on the routing table.
-     *
-     * @return array
-     */
-    public function get_routes()
-    {
-        return $this->routes;
     }
 
     /**
@@ -354,6 +318,18 @@ class Router
         $this->routes_original[$request_method][$route] = $original_route;
 
         return true;
+    }
+
+    /**
+     * Returns all routes mapped on the routing table.
+     *
+     * @return array
+     * @todo   Fix this shitty implementation and make it return one
+     *         single array with all routes
+     */
+    public function get_routes()
+    {
+        return $this->routes;
     }
 
     /**
