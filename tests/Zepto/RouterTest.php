@@ -22,6 +22,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $_SERVER['SERVER_NAME']     = 'zepto';
         $_SERVER['SERVER_PORT']     = '80';
         $_SERVER['SCRIPT_NAME']     = '/zepto/index.php';
+        $_SERVER['REQUEST_URL']     = '/zepto/index.php/bar/xyz';
         $_SERVER['REQUEST_URI']     = '/zepto/index.php/bar/xyz';
         $_SERVER['PATH_INFO']       = '/bar/xyz';
         $_SERVER['REQUEST_METHOD']  = 'GET';
@@ -95,7 +96,26 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testDispatchOnNonExistentRoute()
     {
-        $this->assertFalse($this->object->dispatch());
+        $this->object->dispatch();
+    }
+
+    /**
+     * @covers Zepto\Router::dispatch
+     */
+    public function testDispatch()
+    {
+        $_SERVER['REQUEST_URL']     = '/zepto/index.php/get';
+        $_SERVER['REQUEST_URI']     = '/zepto/index.php/get';
+
+        $router = new Router;
+
+        $callback = function() {
+            echo '1';
+        };
+        $router->get('/get', $callback);
+        $router->run();
+
+        $this->assertTrue($router->dispatch());
     }
 
     /**
@@ -134,8 +154,50 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->object->route('/hello', $callback);
 
         $expected = array(
-            10 => array(
+            'GET' => array(
                 '#^/hello/$#' => $callback
+            )
+        );
+
+        $actual = $this->object->get_routes();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Zepto\Router::get
+     */
+    public function testGetRouteAdd()
+    {
+        $callback = function() {
+            echo '1';
+        };
+        $this->object->get('/get', $callback);
+
+        $expected = array(
+            'GET' => array(
+                '#^/get/$#' => $callback
+            )
+        );
+
+        $actual = $this->object->get_routes();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Zepto\Router::post
+     */
+    public function testPostRouteAdd()
+    {
+        $callback = function() {
+            echo '1';
+        };
+        $this->object->post('/post', $callback);
+
+        $expected = array(
+            'POST' => array(
+                '#^/post/$#' => $callback
             )
         );
 

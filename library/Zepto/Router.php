@@ -10,6 +10,7 @@
  * @package    Zepto
  * @subpackage Router
  * @author     Brandon Wamboldt <brandon.wamboldt@gmail.com>
+ * @author     Hassan Khan <contact@hassankhan.me>
  * @license    MIT
  */
 
@@ -265,7 +266,6 @@ class Router
     {
         if ($this->callback == null || $this->params == null) {
             throw new \Exception('No callback or parameters found, please run $router->run() before $router->dispatch(). Please make sure you\'ve set a default route.');
-            return false;
         }
 
         call_user_func_array($this->callback, $this->params);
@@ -346,10 +346,7 @@ class Router
         // Does this URL routing rule already exist in the routing table?
         if (isset($this->routes[$request_method][$route])) {
             // Trigger a new error and exception if errors are on
-            if ($this->show_errors) {
-                throw new \Exception('The URI "' . htmlspecialchars($route) . '" already exists in the routing table');
-            }
-            return false;
+            throw new \Exception('The URI "' . htmlspecialchars($route) . '" already exists in the routing table');
         }
 
         // Add the route to our routing array
