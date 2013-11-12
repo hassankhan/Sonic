@@ -191,13 +191,16 @@ class Zepto {
 
         foreach ($content as $file_name => $item) {
 
-            // Don't add 40x, 50x pages to navigation items
+            // Remove 'index' along with any file extensions from URL
+            $filth = array_merge(array('index'), $content_ext);
+
+            // Don't add 40x, 50x error pages to navigation items
             if (preg_match('/^[4|5]0\d\.md$/', $file_name) === 0) {
                 array_push(
                     $nav_items,
                     array(
                         'title' => $item['meta']['title'],
-                        'url'   => str_replace($content_ext, '', $file_name)
+                        'url'   => '/zepto/' . str_replace($filth, '', $file_name)
                     )
                 );
             }
