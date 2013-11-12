@@ -49,7 +49,7 @@
  * $router->route( '/users/<:status>', 'view_users_by_status', 100 ); // Executes after
  *
  * // Specifying a default callback function if no other route is matched
- * $router->default_route( 'page_404' );
+ * $router->error_404( 'page_404' );
  *
  * // Run the router
  * $router->execute();
@@ -73,9 +73,9 @@ class Router
      * Contains the callback function to execute if none of the given routes can
      * be matched to the current URL.
      *
-     * @var atring|array
+     * @var Callable
      */
-    protected $default_route = null;
+    protected $error_404 = null;
 
     /**
      * Contains the last route executed, used when chaining methods calls in
@@ -135,6 +135,7 @@ class Router
      * Initializes the router by getting the URL and cleaning it.
      *
      * @param string $url
+     * @codeCoverageIgnore
      */
     public function __construct($url = null)
     {
@@ -200,8 +201,9 @@ class Router
         }
 
         // Was a match found or should we execute the default callback?
-        if (!$matched_route && $this->default_route !== null) {
-            return array('params' => $this->url_clean, 'callback' => $this->default_route, 'route' => false, 'original_route' => false);
+        if (!$matched_route && $this->error_404 !== null) {
+            // call_user_func($this->error_404);
+            return array('params' => $this->url_clean, 'callback' => $this->error_404, 'route' => false, 'original_route' => false);
         }
     }
 
@@ -209,12 +211,13 @@ class Router
      * Calls the appropriate callback function and passes the given parameters
      * given by Router::run()
      *
-     * @return boolean
+     * @return boolean     Returns true on a successful match, otherwise false
      */
     public function dispatch()
     {
         if ($this->callback == null || $this->params == null) {
-            throw new \Exception('No callback or parameters found, please run $router->run() before $router->dispatch(). Please make sure you\'ve set a default route.');
+            call_user_func($this->error_404);
+            return false;
         }
 
         call_user_func_array($this->callback, $this->params);
@@ -229,6 +232,7 @@ class Router
      */
     public function execute()
     {
+        $this->error_404 = $this->routes['GET']['#^/404/$#'];
         $this->run();
         $this->dispatch();
     }

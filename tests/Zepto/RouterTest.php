@@ -30,8 +30,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTPS']           = '';
         $_SERVER['REMOTE_ADDR']     = '127.0.0.1';
         unset($_SERVER['CONTENT_TYPE'], $_SERVER['CONTENT_LENGTH']);
-
-        $this->object = new Router;
     }
 
     /**
@@ -43,60 +41,59 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Router::show_errors
-     * @todo   Implement testShow_errors().
+     * @covers Zepto\Router::run
      */
-    public function testShow_errors()
+    public function testRun()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
 
-    /**
-     * @covers Zepto\Router::hide_errors
-     * @todo   Implement testHide_errors().
-     */
-    public function testHide_errors()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+        $_SERVER['REQUEST_URL']     = '/zepto/index.php/get';
+        $_SERVER['REQUEST_URI']     = '/zepto/index.php/get';
 
-    /**
-     * @covers Zepto\Router::default_route
-     * @todo   Implement testDefault_route().
-     */
-    public function testDefault_route()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
+        $router = new Router;
+
+        $callback = function() {
+            echo 'Successful run';
+        };
+        $router->get('/get', $callback);
+
+        $expected = array(
+            'callback'       => $callback,
+            'params'         => array('/get/'),
+            'route'          => '#^/get/$#',
+            'original_route' => '/get'
         );
+
+        $actual = $router->run();
+
+        $this->assertEquals($expected, $actual);
     }
 
     /**
      * @covers Zepto\Router::run
-     * @todo   Implement testRun().
      */
-    public function testRun()
+    public function testRunWithParameters()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
 
-    /**
-     * @covers Zepto\Router::dispatch
-     * @expectedException Exception
-     */
-    public function testDispatchOnNonExistentRoute()
-    {
-        $this->object->dispatch();
+        $_SERVER['REQUEST_URL']     = '/zepto/index.php/get/random_value';
+        $_SERVER['REQUEST_URI']     = '/zepto/index.php/get/random_value';
+
+        $router = new Router;
+
+        $callback = function($var) {
+            echo $var;
+        };
+        $router->get('/get/<:random_var>', $callback);
+
+        $expected = array(
+            'callback'       => $callback,
+            'params'         => array('/get/random_value/', 'random_value'),
+            'route'          => '#^/get/(?P<random_var>[A-Za-z0-9\-\_]+)/$#',
+            'original_route' => '/get/<:random_var>'
+        );
+
+        $actual = $router->run();
+
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -110,12 +107,27 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $router = new Router;
 
         $callback = function() {
-            echo '1';
+            echo 'Successful dispatch';
         };
         $router->get('/get', $callback);
         $router->run();
 
         $this->assertTrue($router->dispatch());
+    }
+
+    /**
+     * @covers Zepto\Router::dispatch
+     * @expectedException Exception
+     */
+    public function testDispatchOnNonExistentRoute()
+    {
+        $_SERVER['REQUEST_URL']     = '/zepto/index.php/get';
+        $_SERVER['REQUEST_URI']     = '/zepto/index.php/get';
+
+        $router = new Router;
+        $router->run();
+
+        $this->assertFalse($router->dispatch());
     }
 
     /**
@@ -136,11 +148,13 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteAddExistingRoute()
     {
+        $router = new Router;
+
         $callback = function() {
             echo '1';
         };
-        $this->object->route('/hello', $callback);
-        $this->object->route('/hello', $callback);
+        $router->route('/hello', $callback);
+        $router->route('/hello', $callback);
     }
 
     /**
@@ -148,10 +162,12 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteAdd()
     {
+        $router = new Router;
+
         $callback = function() {
             echo '1';
         };
-        $this->object->route('/hello', $callback);
+        $router->route('/hello', $callback);
 
         $expected = array(
             'GET' => array(
@@ -159,7 +175,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $actual = $this->object->get_routes();
+        $actual = $router->get_routes();
 
         $this->assertEquals($expected, $actual);
     }
@@ -169,10 +185,12 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRouteAdd()
     {
+        $router = new Router;
+
         $callback = function() {
             echo '1';
         };
-        $this->object->get('/get', $callback);
+        $router->get('/get', $callback);
 
         $expected = array(
             'GET' => array(
@@ -180,7 +198,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $actual = $this->object->get_routes();
+        $actual = $router->get_routes();
 
         $this->assertEquals($expected, $actual);
     }
@@ -190,10 +208,12 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testPostRouteAdd()
     {
+        $router = new Router;
+
         $callback = function() {
             echo '1';
         };
-        $this->object->post('/post', $callback);
+        $router->post('/post', $callback);
 
         $expected = array(
             'POST' => array(
@@ -201,7 +221,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $actual = $this->object->get_routes();
+        $actual = $router->get_routes();
 
         $this->assertEquals($expected, $actual);
     }
