@@ -17,20 +17,19 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $_SERVER['DOCUMENT_ROOT'] = '/var/www';
-        $_SERVER['SCRIPT_FILENAME'] = '/var/www/pico/index.php';
-        $_SERVER['SERVER_NAME'] = 'pico';
-        $_SERVER['SERVER_PORT'] = '80';
-        $_SERVER['SCRIPT_NAME'] = '/pico/index.php';
-        $_SERVER['REQUEST_URI'] = '/pico/index.php/bar/xyz';
-        $_SERVER['PATH_INFO'] = '/bar/xyz';
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['QUERY_STRING'] = 'one=1&two=2&three=3';
-        $_SERVER['HTTPS'] = '';
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $_SERVER['DOCUMENT_ROOT']   = '/var/www';
+        $_SERVER['SCRIPT_FILENAME'] = '/var/www/zepto/index.php';
+        $_SERVER['SERVER_NAME']     = 'zepto';
+        $_SERVER['SERVER_PORT']     = '80';
+        $_SERVER['SCRIPT_NAME']     = '/zepto/index.php';
+        $_SERVER['REQUEST_URL']     = '/zepto/index.php/bar/xyz';
+        $_SERVER['REQUEST_URI']     = '/zepto/index.php/bar/xyz';
+        $_SERVER['PATH_INFO']       = '/bar/xyz';
+        $_SERVER['REQUEST_METHOD']  = 'GET';
+        $_SERVER['QUERY_STRING']    = 'one=1&two=2&three=3';
+        $_SERVER['HTTPS']           = '';
+        $_SERVER['REMOTE_ADDR']     = '127.0.0.1';
         unset($_SERVER['CONTENT_TYPE'], $_SERVER['CONTENT_LENGTH']);
-
-        $this->object = new Router;
     }
 
     /**
@@ -42,51 +41,78 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Router::show_errors
-     * @todo   Implement testShow_errors().
+     * @covers Zepto\Router::run
      */
-    public function testShow_errors()
+    public function testRun()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
 
-    /**
-     * @covers Zepto\Router::hide_errors
-     * @todo   Implement testHide_errors().
-     */
-    public function testHide_errors()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+        $_SERVER['REQUEST_URL']     = '/zepto/index.php/get';
+        $_SERVER['REQUEST_URI']     = '/zepto/index.php/get';
 
-    /**
-     * @covers Zepto\Router::default_route
-     * @todo   Implement testDefault_route().
-     */
-    public function testDefault_route()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
+        $router = new Router;
+
+        $callback = function() {
+            echo 'Successful run';
+        };
+        $router->get('/get', $callback);
+
+        $expected = array(
+            'callback'       => $callback,
+            'params'         => array('/get/'),
+            'route'          => '#^/get/$#',
+            'original_route' => '/get'
         );
+
+        $actual = $router->run();
+
+        $this->assertEquals($expected, $actual);
     }
 
     /**
      * @covers Zepto\Router::run
-     * @todo   Implement testRun().
      */
-    public function testRun()
+    public function testRunWithParameters()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
+
+        $_SERVER['REQUEST_URL']     = '/zepto/index.php/get/random_value';
+        $_SERVER['REQUEST_URI']     = '/zepto/index.php/get/random_value';
+
+        $router = new Router;
+
+        $callback = function($var) {
+            echo $var;
+        };
+        $router->get('/get/<:random_var>', $callback);
+
+        $expected = array(
+            'callback'       => $callback,
+            'params'         => array('/get/random_value/', 'random_value'),
+            'route'          => '#^/get/(?P<random_var>[A-Za-z0-9\-\_]+)/$#',
+            'original_route' => '/get/<:random_var>'
         );
+
+        $actual = $router->run();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Zepto\Router::dispatch
+     */
+    public function testDispatch()
+    {
+        $_SERVER['REQUEST_URL']     = '/zepto/index.php/get';
+        $_SERVER['REQUEST_URI']     = '/zepto/index.php/get';
+
+        $router = new Router;
+
+        $callback = function() {
+            echo 'Successful dispatch';
+        };
+        $router->get('/get', $callback);
+        $router->run();
+
+        $this->assertTrue($router->dispatch());
     }
 
     /**
@@ -95,7 +121,13 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testDispatchOnNonExistentRoute()
     {
-        $this->assertFalse($this->object->dispatch());
+        $_SERVER['REQUEST_URL']     = '/zepto/index.php/get';
+        $_SERVER['REQUEST_URI']     = '/zepto/index.php/get';
+
+        $router = new Router;
+        $router->run();
+
+        $this->assertFalse($router->dispatch());
     }
 
     /**
@@ -116,11 +148,13 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteAddExistingRoute()
     {
+        $router = new Router;
+
         $callback = function() {
             echo '1';
         };
-        $this->object->route('/hello', $callback);
-        $this->object->route('/hello', $callback);
+        $router->route('/hello', $callback);
+        $router->route('/hello', $callback);
     }
 
     /**
@@ -128,18 +162,66 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteAdd()
     {
+        $router = new Router;
+
         $callback = function() {
             echo '1';
         };
-        $this->object->route('/hello', $callback);
+        $router->route('/hello', $callback);
 
         $expected = array(
-            10 => array(
+            'GET' => array(
                 '#^/hello/$#' => $callback
             )
         );
 
-        $actual = $this->object->get_routes();
+        $actual = $router->get_routes();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Zepto\Router::get
+     */
+    public function testGetRouteAdd()
+    {
+        $router = new Router;
+
+        $callback = function() {
+            echo '1';
+        };
+        $router->get('/get', $callback);
+
+        $expected = array(
+            'GET' => array(
+                '#^/get/$#' => $callback
+            )
+        );
+
+        $actual = $router->get_routes();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Zepto\Router::post
+     */
+    public function testPostRouteAdd()
+    {
+        $router = new Router;
+
+        $callback = function() {
+            echo '1';
+        };
+        $router->post('/post', $callback);
+
+        $expected = array(
+            'POST' => array(
+                '#^/post/$#' => $callback
+            )
+        );
+
+        $actual = $router->get_routes();
 
         $this->assertEquals($expected, $actual);
     }
