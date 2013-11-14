@@ -75,15 +75,7 @@ class Router
      *
      * @var Callable
      */
-    protected $error_404 = null;
-
-    /**
-     * Contains the last route executed, used when chaining methods calls in
-     * the route() function (Such as for put(), post(), and delete()).
-     *
-     * @var pointer
-     */
-    protected $last_route = null;
+    public $error_404 = null;
 
     /**
      * An array containing the parameters to pass to the callback function,
@@ -108,14 +100,6 @@ class Router
      * @var array
      */
     protected $routes_original = array();
-
-    /**
-     * Whether or not to display errors for things like malformed routes or
-     * conflicting routes.
-     *
-     * @var boolean
-     */
-    protected $show_errors = true;
 
     /**
      * A sanitized version of the URL, excluding the domain and base component
@@ -148,6 +132,8 @@ class Router
             }
         }
 
+        $this->error_404 = $this->set_404_callback();
+
         // Store the dirty version of the URL
         $this->url_dirty = $url;
 
@@ -160,6 +146,7 @@ class Router
      * execute the default function and return false.
      *
      * @return array
+     * @todo   See if there's any way of avoiding the triple for-if
      */
     public function run()
     {
@@ -168,7 +155,7 @@ class Router
 
         // If no routes have been added, then throw an exception
         if (!array_key_exists('GET', $this->routes) === true) {
-            throw new \Exception('No routes exist in the routing table');
+            throw new \Exception('No routes exist in the routing table. Add some');
         }
 
         // Sort the array by request method
@@ -204,41 +191,33 @@ class Router
                 }
             }
         }
-
-        // Was a match found or should we execute the default callback?
-        if (!$matched_route && $this->error_404 !== null) {
-            return array('params' => $this->url_clean, 'callback' => $this->error_404, 'route' => false, 'original_route' => false);
-        }
     }
 
     /**
-     * Calls the appropriate callback function and passes the given parameters
-     * given by Router::run()
+     * Runs the router matching engine and then calls the matching route's callback.
+     * If no matching route is found, then returns false
      *
-     * @return boolean     Returns true on a successful dispatch, otherwise false on 404 errors
+     * @uses Router::run()
+     * @return mixed
      */
-    public function dispatch()
+    public function execute()
     {
+        try{
+            $this->run();
+        }
+        catch (Exception $e) {
+            // Add logging stuff here - maybe?
+        }
+
+        // Removing this makes testing easier, how can I fix this?
+        $this->error_404 = $this->routes['GET']['#^/404/$#'];
+
         if ($this->callback == null || $this->params == null) {
             call_user_func($this->error_404);
             return false;
         }
 
-        call_user_func_array($this->callback, $this->params);
-        return true;
-    }
-
-    /**
-     * Runs the router matching engine and then calls the dispatcher
-     *
-     * @uses Router::run()
-     * @uses Router::dispatch()
-     */
-    public function execute()
-    {
-        $this->error_404 = $this->routes['GET']['#^/404/$#'];
-        $this->run();
-        $this->dispatch();
+        return call_user_func_array($this->callback, $this->params);
     }
 
     /**
@@ -323,6 +302,19 @@ class Router
     public function get_routes()
     {
         return $this->routes;
+    }
+
+    /**
+     * Sets the 404 callback
+     */
+    public function set_404_callback()
+    {
+        if (func_num_args() === 1 && gettype(func_get_arg(0)) === 'Callable') {
+            return $callback;
+        }
+        return function() {
+            echo 'Page doesn\'t exist';
+        };
     }
 
     /**

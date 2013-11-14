@@ -45,7 +45,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testRun()
     {
-
         $_SERVER['REQUEST_URL']     = '/zepto/index.php/get';
         $_SERVER['REQUEST_URI']     = '/zepto/index.php/get';
 
@@ -73,7 +72,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testRunWithParameters()
     {
-
         $_SERVER['REQUEST_URL']     = '/zepto/index.php/get/random_value';
         $_SERVER['REQUEST_URI']     = '/zepto/index.php/get/random_value';
 
@@ -102,7 +100,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testRunOnNonexistentRoute()
     {
-
         $_SERVER['REQUEST_URL']     = '/zepto/index.php/get';
         $_SERVER['REQUEST_URI']     = '/zepto/index.php/get';
 
@@ -119,9 +116,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Router::dispatch
+     * @covers Zepto\Router::execute
      */
-    public function testDispatch()
+    public function testExecute()
     {
         $_SERVER['REQUEST_URL']     = '/zepto/index.php/get';
         $_SERVER['REQUEST_URI']     = '/zepto/index.php/get';
@@ -129,41 +126,43 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $router = new Router;
 
         $callback = function() {
-            echo 'Successful dispatch';
+            return 'Successful GET';
         };
         $router->get('/get', $callback);
-        $router->run();
 
-        $this->assertTrue($router->dispatch());
+        $callback = function() {
+            return 'Shit! A 404';
+        };
+        $router->get('/404', $callback);
+
+        $expected = 'Successful GET';
+        $actual   = $router->execute();
+
+        $this->assertEquals($expected, $actual);
     }
 
     /**
-     * @covers Zepto\Router::dispatch
-     * @expectedException Exception
+     * @covers Zepto\Router::execute
      */
-    public function testDispatchToNonexistentRoute()
+    public function testExecute404()
     {
-        $_SERVER['REQUEST_URL']     = '/zepto/index.php/get';
-        $_SERVER['REQUEST_URI']     = '/zepto/index.php/get';
+        $_SERVER['REQUEST_URL']     = '/zepto/index.php/unknown_url';
+        $_SERVER['REQUEST_URI']     = '/zepto/index.php/unknown_url';
 
         $router = new Router;
-        $router->run();
 
-        $this->assertFalse($router->dispatch());
-    }
+        $callback = function() {
+            return 'Successful GET';
+        };
+        $router->get('/get', $callback);
 
-    /**
-     * @covers Zepto\Router::run()
-     * @covers Zepto\Router::dispatch()
-     * @covers Zepto\Router::execute
-     * @todo   Implement testExecute().
-     */
-    public function testExecute()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $callback = function() {
+            return 'Shit! A 404';
+        };
+        $router->get('/404', $callback);
+
+        $actual   = $router->execute();
+        $this->assertFalse($actual);
     }
 
     /**
@@ -250,4 +249,30 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testGetRoutes()
+    {
+        $router = new Router;
+
+        $post_callback = function() {
+            echo '1';
+        };
+        $router->post('/post', $post_callback);
+
+        $get_callback = function() {
+            echo '1';
+        };
+        $router->get('/get', $get_callback);
+
+        $expected = array(
+            'GET' => array(
+                '#^/get/$#' => $get_callback
+            ),
+            'POST' => array(
+                '#^/post/$#' => $post_callback
+            )
+        );
+
+        $actual = $router->get_routes();
+        $this->assertEquals($expected, $actual);
+    }
 }
