@@ -10,6 +10,7 @@
  * @package    Zepto
  * @subpackage Router
  * @author     Brandon Wamboldt <brandon.wamboldt@gmail.com>
+ * @author     Hassan Khan <contact@hassankhan.me>
  * @license    MIT
  */
 
@@ -48,7 +49,7 @@
  * $router->route( '/users/<:status>', 'view_users_by_status', 100 ); // Executes after
  *
  * // Specifying a default callback function if no other route is matched
- * $router->default_route( 'page_404' );
+ * $router->error_404( 'page_404' );
  *
  * // Run the router
  * $router->execute();
@@ -72,17 +73,9 @@ class Router
      * Contains the callback function to execute if none of the given routes can
      * be matched to the current URL.
      *
-     * @var atring|array
+     * @var Callable
      */
-    protected $default_route = null;
-
-    /**
-     * Contains the last route executed, used when chaining methods calls in
-     * the route() function (Such as for put(), post(), and delete()).
-     *
-     * @var pointer
-     */
-    protected $last_route = null;
+    public $error_404 = null;
 
     /**
      * An array containing the parameters to pass to the callback function,
@@ -94,7 +87,7 @@ class Router
 
     /**
      * An array containing the list of routing rules and their callback
-     * functions, as well as their priority and any additional paramters.
+     * functions, as well as their request method and any additional paramters.
      *
      * @var array
      */
@@ -107,14 +100,6 @@ class Router
      * @var array
      */
     protected $routes_original = array();
-
-    /**
-     * Whether or not to display errors for things like malformed routes or
-     * conflicting routes.
-     *
-     * @var boolean
-     */
-    protected $show_errors = true;
 
     /**
      * A sanitized version of the URL, excluding the domain and base component
@@ -134,6 +119,7 @@ class Router
      * Initializes the router by getting the URL and cleaning it.
      *
      * @param string $url
+     * @codeCoverageIgnore
      */
     public function __construct($url = null)
     {
@@ -146,6 +132,8 @@ class Router
             }
         }
 
+        $this->error_404 = $this->set_404_callback();
+
         // Store the dirty version of the URL
         $this->url_dirty = $url;
 
@@ -154,132 +142,106 @@ class Router
     }
 
     /**
-     * Enables the display of errors such as malformed URL routing rules or
-     * conflicting routing rules. Not recommended for production sites.
-     *
-     * @return self
-     */
-    public function show_errors()
-    {
-        $this->show_errors = true;
-
-        return $this;
-    }
-
-    /**
-     * Disables the display of errors such as malformed URL routing rules or
-     * conflicting routing rules. Not recommended for production sites.
-     *
-     * @return self
-     */
-    public function hide_errors()
-    {
-        $this->show_errors = false;
-
-        return $this;
-    }
-
-    /**
-     * If the router cannot match the current URL to any of the given routes,
-     * the function passed to this method will be executed instead. This would
-     * be useful for displaying a 404 page for example.
-     *
-     * @param  Callable $callback
-     * @return self
-     */
-    public function default_route($callback)
-    {
-        $this->default_route = $callback;
-
-        return $this;
-    }
-
-    /**
-     * Returns all routes mapped on the routing table.
-     *
-     * @return array
-     */
-    public function get_routes()
-    {
-        return $this->routes;
-    }
-
-    /**
      * Tries to match one of the URL routes to the current URL, otherwise
      * execute the default function and return false.
      *
-     * @return boolean
+     * @return array
+     * @todo   See if there's any way of avoiding the triple for-if
      */
     public function run()
     {
         // Whether or not we have matched the URL to a route
         $matched_route = false;
 
-        // Sort the array by priority
+        // If no routes have been added, then throw an exception
+        if (!array_key_exists('GET', $this->routes) === true) {
+            throw new \Exception('No routes exist in the routing table. Add some');
+        }
+
+        // Sort the array by request method
         ksort($this->routes);
 
-        // Loop through each priority level
-        foreach ($this->routes as $priority => $routes) {
-            // Loop through each route for this priority level
-            foreach ($routes as $route => $callback) {
-                // Does the routing rule match the current URL?
-                if (preg_match($route, $this->url_clean, $matches)) {
-                    // A routing rule was matched
-                    $matched_route = true;
+        // Loop through each request_method level
+        foreach ($this->routes as $request_method => $routes) {
+            if ($_SERVER['REQUEST_METHOD'] === $request_method) {
+                // Loop through each route for this request_method level
+                foreach ($routes as $route => $callback) {
+                    // Does the routing rule match the current URL?
+                    if (preg_match($route, $this->url_clean, $matches)) {
+                        // A routing rule was matched
+                        $matched_route = true;
 
-                    // Parameters to pass to the callback function
-                    $params = array($this->url_clean);
+                        // Parameters to pass to the callback function
+                        $params = array($this->url_clean);
 
-                    // Get any named parameters from the route
-                    foreach ($matches as $key => $match) {
-                        if (is_string($key)) {
-                            $params[] = $match;
+                        // Get any named parameters from the route
+                        foreach ($matches as $key => $match) {
+                            if (is_string($key)) {
+                                $params[] = $match;
+                            }
                         }
+
+                        // Store the parameters and callback function to execute later
+                        $this->params   = $params;
+                        $this->callback = $callback;
+
+                        // Return the callback and params, useful for unit testing
+                        return array('callback' => $callback, 'params' => $params, 'route' => $route, 'original_route' => $this->routes_original[$request_method][$route]);
                     }
-
-                    // Store the parameters and callback function to execute later
-                    $this->params   = $params;
-                    $this->callback = $callback;
-
-                    // Return the callback and params, useful for unit testing
-                    return array('callback' => $callback, 'params' => $params, 'route' => $route, 'original_route' => $this->routes_original[$priority][$route]);
                 }
             }
         }
-
-        // Was a match found or should we execute the default callback?
-        if (!$matched_route && $this->default_route !== null) {
-            return array('params' => $this->url_clean, 'callback' => $this->default_route, 'route' => false, 'original_route' => false);
-        }
     }
 
     /**
-     * Calls the appropriate callback function and passes the given parameters
-     * given by Router::run()
-     *
-     * @return boolean
-     */
-    public function dispatch()
-    {
-        if ($this->callback == null || $this->params == null) {
-            throw new \Exception('No callback or parameters found, please run $router->run() before $router->dispatch(). Please make sure you\'ve set a default route.');
-            return false;
-        }
-
-        call_user_func_array($this->callback, $this->params);
-        return true;
-    }
-
-    /**
-     * Runs the router matching engine and then calls the dispatcher
+     * Runs the router matching engine and then calls the matching route's callback.
+     * If no matching route is found, then returns false
      *
      * @uses Router::run()
-     * @uses Router::dispatch()
+     * @return mixed
      */
     public function execute()
     {
-        $this->run();
-        $this->dispatch();
+        try{
+            $this->run();
+        }
+        catch (Exception $e) {
+            // Add logging stuff here - maybe?
+        }
+
+        // Removing this makes testing easier, how can I fix this?
+        $this->error_404 = $this->routes['GET']['#^/404/$#'];
+
+        if ($this->callback == null || $this->params == null) {
+            call_user_func($this->error_404);
+            return false;
+        }
+
+        return call_user_func_array($this->callback, $this->params);
+    }
+
+    /**
+     * Convenience method for HTTP GET routes
+     *
+     * @param  string $route
+     * @param  Callable $callback
+     * @return boolean
+     */
+    public function get($route, $callback)
+    {
+        return $this->route($route, $callback, 'GET');
+    }
+
+    /**
+     * Convenience method for HTTP POST routes
+     *
+     * @param  string $route
+     * @param  Callable $callback
+     * @return boolean
+     */
+    public function post($route, $callback)
+    {
+        return $this->route($route, $callback, 'POST');
     }
 
     /**
@@ -288,10 +250,10 @@ class Router
      *
      * @param  string   $route
      * @param  Callable $callback
-     * @param  integer  $priority
+     * @param  integer  $request_method
      * @return boolean
      */
-    public function route($route, $callback, $priority = 10)
+    public function route($route, $callback, $request_method = 'GET')
     {
         // Keep the original routing rule for debugging/unit tests
         $original_route = $route;
@@ -318,19 +280,41 @@ class Router
         $route = '#^' . $route . '$#';
 
         // Does this URL routing rule already exist in the routing table?
-        if (isset($this->routes[$priority][$route])) {
+        if (isset($this->routes[$request_method][$route])) {
             // Trigger a new error and exception if errors are on
-            if ($this->show_errors) {
-                throw new \Exception('The URI "' . htmlspecialchars($route) . '" already exists in the routing table');
-            }
-            return false;
+            throw new \Exception('The URI "' . htmlspecialchars($route) . '" already exists in the routing table');
         }
 
         // Add the route to our routing array
-        $this->routes[$priority][$route]          = $callback;
-        $this->routes_original[$priority][$route] = $original_route;
+        $this->routes[$request_method][$route]          = $callback;
+        $this->routes_original[$request_method][$route] = $original_route;
 
         return true;
+    }
+
+    /**
+     * Returns all routes mapped on the routing table.
+     *
+     * @return array
+     * @todo   Fix this shitty implementation and make it return one
+     *         single array with all routes
+     */
+    public function get_routes()
+    {
+        return $this->routes;
+    }
+
+    /**
+     * Sets the 404 callback
+     */
+    public function set_404_callback()
+    {
+        if (func_num_args() === 1 && gettype(func_get_arg(0)) === 'Callable') {
+            return $callback;
+        }
+        return function() {
+            echo 'Page doesn\'t exist';
+        };
     }
 
     /**

@@ -106,7 +106,7 @@ class Zepto {
     public function run()
     {
         $router = $this->container['router'];
-        $router->execute();
+        return $router->execute();
     }
 
     protected function load_files()
