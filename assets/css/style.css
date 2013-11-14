@@ -61,7 +61,7 @@ label, input[type=button], input[type=submit], button {
 	cursor: pointer;
 }
 
-/* make buttons play nice in IE:	 
+/* make buttons play nice in IE:
 		www.viget.com/inspire/styling-the-button-element-in-internet-explorer/ */
 button {
 	width: auto;
@@ -104,7 +104,9 @@ body {
 }
 
 a, a:visited {
-	color: #2EAE9B;
+	color: #6A46CE;
+	border-bottom: 1px solid #6A46CE;
+    padding-bottom: 3px;
 	text-decoration: none;
 	-webkit-transition: all 0.2s linear;
 	-moz-transition: all 0.2s linear;
@@ -206,7 +208,7 @@ blockquote {
 }
 
 #header {
-	background: #2EAE9B;
+	background: #6A46CE;
 	padding: 60px 0;
 	margin-bottom: 80px;
 	color: #afe1da;
@@ -214,9 +216,9 @@ blockquote {
 #header a { color: #afe1da; }
 #header h1 a,
 #header a:hover { color: #fff; }
-#header h1 { 
+#header h1 {
 	font-weight: bold;
-	margin: 0; 
+	margin: 0;
 	float: left;
 }
 #header .nav {
