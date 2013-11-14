@@ -97,6 +97,28 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Zepto\Router::run
+     * @expectedException Exception
+     */
+    public function testRunOnNonexistentRoute()
+    {
+
+        $_SERVER['REQUEST_URL']     = '/zepto/index.php/get';
+        $_SERVER['REQUEST_URI']     = '/zepto/index.php/get';
+
+        $router = new Router;
+
+        $expected = array(
+            'callback'       => '',
+            'params'         => array('/get/'),
+            'route'          => '#^/get/$#',
+            'original_route' => '/get'
+        );
+
+        $actual = $router->run();
+    }
+
+    /**
      * @covers Zepto\Router::dispatch
      */
     public function testDispatch()
@@ -119,7 +141,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      * @covers Zepto\Router::dispatch
      * @expectedException Exception
      */
-    public function testDispatchOnNonExistentRoute()
+    public function testDispatchToNonexistentRoute()
     {
         $_SERVER['REQUEST_URL']     = '/zepto/index.php/get';
         $_SERVER['REQUEST_URI']     = '/zepto/index.php/get';
@@ -131,6 +153,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Zepto\Router::run()
+     * @covers Zepto\Router::dispatch()
      * @covers Zepto\Router::execute
      * @todo   Implement testExecute().
      */

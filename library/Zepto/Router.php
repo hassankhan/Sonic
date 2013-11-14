@@ -159,14 +159,19 @@ class Router
      * Tries to match one of the URL routes to the current URL, otherwise
      * execute the default function and return false.
      *
-     * @return boolean
+     * @return array
      */
     public function run()
     {
         // Whether or not we have matched the URL to a route
         $matched_route = false;
 
-        // Sort the array by request_method
+        // If no routes have been added, then throw an exception
+        if (!array_key_exists('GET', $this->routes) === true) {
+            throw new \Exception('No routes exist in the routing table');
+        }
+
+        // Sort the array by request method
         ksort($this->routes);
 
         // Loop through each request_method level
@@ -202,7 +207,6 @@ class Router
 
         // Was a match found or should we execute the default callback?
         if (!$matched_route && $this->error_404 !== null) {
-            // call_user_func($this->error_404);
             return array('params' => $this->url_clean, 'callback' => $this->error_404, 'route' => false, 'original_route' => false);
         }
     }
@@ -211,7 +215,7 @@ class Router
      * Calls the appropriate callback function and passes the given parameters
      * given by Router::run()
      *
-     * @return boolean     Returns true on a successful match, otherwise false
+     * @return boolean     Returns true on a successful dispatch, otherwise false on 404 errors
      */
     public function dispatch()
     {
