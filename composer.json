@@ -5,7 +5,7 @@
     "require": {
         "php": ">=5.3",
         "twig/twig": "1.15.*@dev",
-        "erusev/parsedown": "dev-master",
+        "erusev/parsedown": "dev-master@dev",
         "pimple/pimple": "2.0.*@dev"
     },
     "require-dev": {
