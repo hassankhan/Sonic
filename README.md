@@ -6,9 +6,9 @@ Master: [![Build Status](https://travis-ci.org/hassankhan/Zepto.png?branch=maste
 
 [![Coverage Status](https://coveralls.io/repos/hassankhan/Zepto/badge.png)](https://coveralls.io/r/hassankhan/Zepto)
 
-Zepto is a stupidly simple, blazing fast, flat-file CMS based on [Pico](http://pico.dev7studios.com) and [Slim](http://slimframework.com/).
+Zepto is a stupidly simple, blazing fast, flat-file CMS based on [Pico](http://pico.dev7studios.com) and loosely based on [Slim](http://slimframework.com/).
 
-Zepto is a flat file CMS - this means there is no administration backend and database to deal with. You simply create ``.md`` files in the "content" folder and that becomes a page. For example, this file is called ``index.md`` and is shown as the main landing page.
+Zepto is a flat file CMS - this means there is no administration backend and database to deal with. You simply create ``.md`` files in the "content" folder and that becomes a page.
 
 Its interface is _supposed_ to be simple and is in process of documentation. Thank you for choosing Zepto for your next project.
 
