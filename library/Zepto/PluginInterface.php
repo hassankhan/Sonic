@@ -11,14 +11,19 @@
 
 namespace Zepto;
 
-class Plugin {
+interface PluginInterface {
 
-    public function plugins_loaded()
+    public function before_plugins_load()
     {
 
     }
 
-    public function config_loaded(&$settings)
+    public function after_plugins_load()
+    {
+
+    }
+
+    public function after_config_load(&$settings)
     {
 
     }
@@ -28,26 +33,17 @@ class Plugin {
 
     }
 
-    public function before_content_loaded(&$file)
+    public function before_file_load(&$file)
     {
 
     }
 
-    public function after_content_loaded(&$file, &$content)
+    public function after_file_load(&$file, &$content)
     {
 
     }
 
-    public function before_404_load_content(&$file)
-    {
-
-    }
-
-    public function after_404_load_content(&$file, &$content)
-    {
-
-    }
-
+    // Move all these methods into their own classes
     public function before_file_meta_parsed(&$headers)
     {
 
