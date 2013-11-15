@@ -2,9 +2,9 @@ To-Do
 ====
 
 ## Project organisation
-- [DONE] Rename 'themes' to 'templates', and all extensions inside to '.twig'
-- [DONE] Rename 'lib' to 'library'
-- [DONE] Remove 'themes' folder
+- [DONE] Rename ``themes`` to ``templates``, and all extensions inside to ``.twig``
+- [DONE] Rename ``lib`` to ``library``
+- [DONE] Remove ``themes`` folder
 
 ## Composer
 - [DONE] Add [erusev/parsedown](https://github.com/erusev/parsedown) as Markdown parser
@@ -12,17 +12,16 @@ To-Do
 
 ## Application
 - Abstract-ify Whoops and Twig
-- Make navigation easier
+- [DONE] Make navigation easier
 
 ## Router
 - How to test router
     - [DONE] Add a ``get_routes()`` function to retrieve all registered routes
-    - Improve ``get_routes()`` to return single array containing all routes
-    - Instead of throwing an exception, check if route exists in table, if not, set 404 status code and display 404 page
+    - [DONE] Improve ``get_routes()`` to return single array containing all routes
+    - [DONE] Instead of throwing an exception, check if route exists in table, if not, set 404 status code and display 404 page
 - Add functionality to allow for
-    - GET
-    - POST
-    - PUT
+    - [DONE] GET
+    - [DONE] POST
     - DELETE
 
 ## File Loader
@@ -44,4 +43,4 @@ To-Do
 - Write unit tests
 
 ## Miscellanea
-- Move 'index.php' to 'public' folder
+- Move ``index.php`` to ``public`` folder

@@ -296,8 +296,6 @@ class Router
      * Returns all routes mapped on the routing table.
      *
      * @return array
-     * @todo   Fix this shitty implementation and make it return one
-     *         single array with all routes
      */
     public function get_routes()
     {

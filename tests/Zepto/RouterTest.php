@@ -249,6 +249,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @covers Zepto\Router::get
+     */
     public function testGetRoutes()
     {
         $router = new Router;

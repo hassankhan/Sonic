@@ -4,9 +4,9 @@
     "homepage": "https://github.com/hassankhan/Zepto",
     "require": {
         "php": ">=5.3",
-        "twig/twig": "dev-master",
+        "twig/twig": "1.15.*@dev",
         "erusev/parsedown": "dev-master",
-        "pimple/pimple": "dev-master"
+        "pimple/pimple": "2.0.*@dev"
     },
     "require-dev": {
         "filp/whoops": "1.*",
