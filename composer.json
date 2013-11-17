@@ -6,7 +6,7 @@
         "php": ">=5.3",
         "twig/twig": "1.*",
         "erusev/parsedown": "~0.4",
-        "pimple/pimple": "2.*"
+        "pimple/pimple": "2.0.*@dev"
     },
     "require-dev": {
         "filp/whoops": "1.*",
