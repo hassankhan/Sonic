@@ -31,7 +31,7 @@ Its interface is _supposed_ to be simple and is in process of documentation. Tha
 ### Install
 
 #### Composer install
-    composer require hassankhan/zepto
+    composer create-project hassankhan/zepto
 
 Then add the following to the top of your ``index.php`` file:
 

@@ -1,12 +1,13 @@
 {
     "name": "hassankhan/zepto",
     "description": "Zepto is a stupidly simple, blazing fast, flat-file CMS based on Pico",
+    "keywords": ["cms", "framework", "markdown"],
     "homepage": "https://github.com/hassankhan/Zepto",
     "require": {
         "php": ">=5.3",
         "twig/twig": "1.*",
         "erusev/parsedown": "~0.4",
-        "pimple/pimple": "dev-master"
+        "pimple/pimple": "~2.0"
     },
     "require-dev": {
         "filp/whoops": "1.*",
