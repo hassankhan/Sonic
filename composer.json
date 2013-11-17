@@ -4,9 +4,9 @@
     "homepage": "https://github.com/hassankhan/Zepto",
     "require": {
         "php": ">=5.3",
-        "twig/twig": "1.15.*@dev",
-        "erusev/parsedown": "dev-master@dev",
-        "pimple/pimple": "2.0.*@dev"
+        "twig/twig": "1.*",
+        "erusev/parsedown": "~0.4",
+        "pimple/pimple": "2.*"
     },
     "require-dev": {
         "filp/whoops": "1.*",
@@ -17,6 +17,11 @@
     "autoload": {
         "psr-0": {
             "Zepto": "library/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.4.x-dev"
         }
     },
     "authors": [
