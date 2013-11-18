@@ -60,13 +60,11 @@ class Zepto {
 
         // Get local reference to container
         $container                  = $this->container;
-        // Set application settings
-        $container['settings']      = $settings;
 
         // Create application hooks
         $container['hooks']         = array(
-            'after_plugins_load'  => array(),
             'after_config_load'   => array(),
+            'after_plugins_load'  => array(),
             'request_url'         => array(),
             'before_file_load'    => array(),
             'after_file_load'     => array()
@@ -105,6 +103,10 @@ class Zepto {
                 );
             }
         );
+
+
+        // Set application settings
+        $container['settings'] = $settings;
 
         // Load plugins
         $this->load_plugins();
@@ -165,6 +167,7 @@ class Zepto {
                 array('.php')
             );
         }
+        $this->run_hooks('after_plugins_load');
     }
 
     protected function load_files()
@@ -174,14 +177,14 @@ class Zepto {
         $file_loader = $container['file_loader'];
         $settings    = $container['settings']['zepto'];
 
-        $container['content'] = $file_loader->load(
-            $settings['content_dir'],
+        $content_dir = $settings['content_dir'];
+        $this->run_hooks('before_file_load', array(&$content_dir));
+
+        $content = $file_loader->load(
+            $content_dir,
             $settings['content_ext']
         );
 
-        // Ahhhh, this is a bit annoying, surely there's a better way of working
-        // with Pimple to do this
-        $content = $container['content'];
         $this->run_hooks('after_file_load', array(&$content));
         $container['content'] = $content;
     }

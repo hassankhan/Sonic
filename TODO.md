@@ -29,6 +29,7 @@ To-Do
 - Make plugins Pimple Objects
 - Remove all hardcoded paths from PluginLoader
 - Add ``run_hooks()`` calls
+    - ``after_config_load`` isn't working at the minute, need to decouple it some
 
 ## Tests
 - Write unit tests
