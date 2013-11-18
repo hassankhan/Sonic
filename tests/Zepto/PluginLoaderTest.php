@@ -44,9 +44,17 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadSingleFile()
     {
-        $path = ROOT_DIR . 'plugins/ExamplePlugin.php';
-        $result = $this->object->load($path, array('php'));
-        $this->assertTrue(class_exists('ExamplePlugin'));
+        $path   = ROOT_DIR . 'plugins/ExamplePlugin.php';
+        $plugin_name = 'ExamplePlugin';
+
+        $actual = $this->object->load($path, array('php'));
+        $plugin = new $plugin_name;
+        $expected = array(
+            $plugin_name => $plugin
+        );
+
+        $this->assertTrue(class_exists($plugin_name));
+        $this->assertEquals($expected, $actual);
     }
 
     /**
