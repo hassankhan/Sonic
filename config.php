@@ -3,10 +3,11 @@
 $config = array(
     'zepto' => array(
         'content_dir'       => 'content',
-        'plugin_dir'        => 'plugins',
+        'plugins_dir'       => 'plugins',
         'templates_dir'     => 'templates',
         'default_template'  => 'base.twig',
-        'content_ext'       => array('.md', '.markdown')
+        'content_ext'       => array('.md', '.markdown'),
+        'plugins_enabled'   => true
     ),
     'site' => array(
         'site_root'         => 'Site root URL goes here',

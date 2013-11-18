@@ -24,8 +24,6 @@ class Zepto {
 
     public $container;
 
-    protected $hooks = array();
-
     /**
      * Zepto constructor
      *
@@ -62,8 +60,15 @@ class Zepto {
 
         // Get local reference to container
         $container                  = $this->container;
-        // Set application settings
-        $container['settings']      = $settings;
+
+        // Create application hooks
+        $container['hooks']         = array(
+            'after_config_load'   => array(),
+            'after_plugins_load'  => array(),
+            'request_url'         => array(),
+            'before_file_load'    => array(),
+            'after_file_load'     => array()
+        );
 
         // Configure error handler
         $container['error_handler'] = $container->share(
@@ -76,6 +81,12 @@ class Zepto {
         $container['router'] = $container->share(
             function ($container) {
                 return new Router;
+            }
+        );
+
+        $container['plugin_loader'] = $container->share(
+            function ($container) {
+                return new FileLoader\PluginLoader();
             }
         );
 
@@ -93,6 +104,13 @@ class Zepto {
             }
         );
 
+
+        // Set application settings
+        $container['settings'] = $settings;
+
+        // Load plugins
+        $this->load_plugins();
+
         // Load content from files
         $this->load_files();
 
@@ -109,6 +127,49 @@ class Zepto {
         return $router->execute();
     }
 
+    /**
+     * Runs all hooks registered to the specified hook name
+     *
+     * @param  string  $hook
+     * @return boolean Returns true on successful execution of all hooks
+     */
+    public function run_hooks($hook_id, $args = array())
+    {
+        $container = $this->container;
+        $hooks     = $container['hooks'];
+        $plugins   = $container['plugins'];
+
+        // Check if event name exists
+        if (array_key_exists($hook_id, $hooks) === false) {
+            throw new \Exception('No such hook exists');
+        }
+
+        // Run hooks associated with that event
+        foreach ($plugins as $plugin_id => $plugin) {
+            if (is_callable(array($plugin, $hook_id))) {
+                call_user_func_array(array($plugin, $hook_id), $args);
+            }
+        }
+        return true;
+    }
+
+    protected function load_plugins()
+    {
+        $container     = $this->container;
+        $settings      = $container['settings']['zepto'];
+
+        if ($settings['plugins_enabled'] === true) {
+            $plugin_loader = $container['plugin_loader'];
+
+            // Load plugins from 'plugins' folder
+            $container['plugins'] = $plugin_loader->load(
+                $settings['plugins_dir'],
+                array('.php')
+            );
+        }
+        $this->run_hooks('after_plugins_load');
+    }
+
     protected function load_files()
     {
         // Get local reference to file loader
@@ -116,10 +177,16 @@ class Zepto {
         $file_loader = $container['file_loader'];
         $settings    = $container['settings']['zepto'];
 
-        $container['content'] = $file_loader->load(
-            $settings['content_dir'],
+        $content_dir = $settings['content_dir'];
+        $this->run_hooks('before_file_load', array(&$content_dir));
+
+        $content = $file_loader->load(
+            $content_dir,
             $settings['content_ext']
         );
+
+        $this->run_hooks('after_file_load', array(&$content));
+        $container['content'] = $content;
     }
 
     /**
