@@ -11,29 +11,29 @@
 
 class OtherExamplePlugin implements \Zepto\PluginInterface {
 
-    public function after_plugins_load()
-    {
-        echo '2';
-    }
-
     public function after_config_load(&$settings)
     {
-        echo '2';
+        echo __CLASS__ . '::after_config_load';
+    }
+
+    public function after_plugins_load()
+    {
+        echo __CLASS__ . '::after_plugins_load';
     }
 
     public function request_url(&$url)
     {
-        echo '2';
+        echo __CLASS__ . '::request_url';
     }
 
-    public function before_file_load(&$file)
+    public function before_file_load(&$content_dir)
     {
-        echo '2';
+        echo __CLASS__ . '::before_file_load';
     }
 
     public function after_file_load(&$content)
     {
-        echo '2';
+        echo __CLASS__ . '::after_file_load';
     }
 
 }

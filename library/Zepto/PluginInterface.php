@@ -13,13 +13,13 @@ namespace Zepto;
 
 interface PluginInterface {
 
-    public function after_plugins_load();
-
     public function after_config_load(&$settings);
+
+    public function after_plugins_load();
 
     public function request_url(&$url);
 
-    public function before_file_load(&$file);
+    public function before_file_load(&$content_dir);
 
     public function after_file_load(&$content);
 
