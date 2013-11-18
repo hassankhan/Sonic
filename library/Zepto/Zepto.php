@@ -24,8 +24,6 @@ class Zepto {
 
     public $container;
 
-    protected $hooks = array();
-
     /**
      * Zepto constructor
      *
@@ -65,6 +63,15 @@ class Zepto {
         // Set application settings
         $container['settings']      = $settings;
 
+        // Create application hooks
+        $container['hooks']         = array(
+            'after_plugins_load'  => array(),
+            'after_config_load'   => array(),
+            'request_url'         => array(),
+            'before_file_load'    => array(),
+            'after_file_load'     => array()
+        );
+
         // Configure error handler
         $container['error_handler'] = $container->share(
             function ($container) {
@@ -76,6 +83,12 @@ class Zepto {
         $container['router'] = $container->share(
             function ($container) {
                 return new Router;
+            }
+        );
+
+        $container['plugin_loader'] = $container->share(
+            function ($container) {
+                return new FileLoader\PluginLoader();
             }
         );
 
@@ -93,6 +106,9 @@ class Zepto {
             }
         );
 
+        // Load plugins
+        $this->load_plugins();
+
         // Load content from files
         $this->load_files();
 
@@ -109,6 +125,48 @@ class Zepto {
         return $router->execute();
     }
 
+    /**
+     * Runs all hooks registered to the specified hook name
+     *
+     * @param  string  $hook
+     * @return boolean Returns true on successful execution of all hooks
+     */
+    public function run_hooks($hook_id, $args = array())
+    {
+        $container = $this->container;
+        $hooks     = $container['hooks'];
+        $plugins   = $container['plugins'];
+
+        // Check if event name exists
+        if (array_key_exists($hook_id, $hooks) === false) {
+            throw new \Exception('No such hook exists');
+        }
+
+        // Run hooks associated with that event
+        foreach ($plugins as $plugin_id => $plugin) {
+            if (is_callable(array($plugin, $hook_id))) {
+                call_user_func_array(array($plugin, $hook_id), $args);
+            }
+        }
+        return true;
+    }
+
+    protected function load_plugins()
+    {
+        $container     = $this->container;
+        $settings      = $container['settings']['zepto'];
+
+        if ($settings['plugins_enabled'] === true) {
+            $plugin_loader = $container['plugin_loader'];
+
+            // Load plugins from 'plugins' folder
+            $container['plugins'] = $plugin_loader->load(
+                $settings['plugins_dir'],
+                array('.php')
+            );
+        }
+    }
+
     protected function load_files()
     {
         // Get local reference to file loader
@@ -120,6 +178,12 @@ class Zepto {
             $settings['content_dir'],
             $settings['content_ext']
         );
+
+        // Ahhhh, this is a bit annoying, surely there's a better way of working
+        // with Pimple to do this
+        $content = $container['content'];
+        $this->run_hooks('after_file_load', array(&$content));
+        $container['content'] = $content;
     }
 
     /**
