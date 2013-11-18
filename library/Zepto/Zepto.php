@@ -20,7 +20,7 @@ use Whoops;
 
 class Zepto {
 
-    const VERSION = '0.2';
+    const VERSION = '0.4';
 
     public $container;
 
