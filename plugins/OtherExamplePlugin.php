@@ -31,7 +31,7 @@ class OtherExamplePlugin implements \Zepto\PluginInterface {
         echo '2';
     }
 
-    public function after_file_load(&$file, &$content)
+    public function after_file_load(&$content)
     {
         echo '2';
     }

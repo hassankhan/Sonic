@@ -21,7 +21,7 @@ interface PluginInterface {
 
     public function before_file_load(&$file);
 
-    public function after_file_load(&$file, &$content);
+    public function after_file_load(&$content);
 
     // Move all these methods into their own classes
     // public function before_file_meta_parsed(&$headers);
