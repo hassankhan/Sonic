@@ -17,7 +17,23 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new FileLoader\PluginLoader();
+        $this->object   = new FileLoader\PluginLoader();
+
+        include_once(ROOT_DIR . 'plugins/ExamplePlugin.php');
+        include_once(ROOT_DIR . 'plugins/OtherExamplePlugin.php');
+
+        $plugin_1_name = 'ExamplePlugin';
+        $plugin_2_name = 'OtherExamplePlugin';
+
+        $plugin_1      = new $plugin_1_name;
+        $plugin_2      = new $plugin_2_name;
+
+        $this->plugins = array(
+            $plugin_1_name => $plugin_1,
+            $plugin_2_name => $plugin_2
+        );
+
+
     }
 
     /**
@@ -45,15 +61,13 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
     public function testLoadSingleFile()
     {
         $path   = ROOT_DIR . 'plugins/ExamplePlugin.php';
-        $plugin_name = 'ExamplePlugin';
 
         $actual = $this->object->load($path, array('php'));
-        $plugin = new $plugin_name;
+
         $expected = array(
-            $plugin_name => $plugin
+            'ExamplePlugin' => $this->plugins['ExamplePlugin']
         );
 
-        $this->assertTrue(class_exists($plugin_name));
         $this->assertEquals($expected, $actual);
     }
 
@@ -62,31 +76,16 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadMultipleFiles()
     {
-        // $files['sub/index.md'] = array(
-        //     'meta'    => array(
-        //         'title'         => 'Sub Page Index'
-        //     ),
-        //     'content' => '<h2>This is a Sub Page Index</h2>' . PHP_EOL
-        //         . '<p>This is index.md in the "sub" folder.</p>' . PHP_EOL
-        //         . '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>' . PHP_EOL
-        //         . '<p>Donec ultricies tristique nulla et mattis.</p>' . PHP_EOL
-        //         . '<p>Phasellus id massa eget nisl congue blandit sit amet id ligula.</p>'
-        // );
+        $path   = ROOT_DIR . 'plugins';
 
-        // $files['sub/page.md'] = array(
-        //     'meta'    => array(
-        //         'title'         => 'Sub Page'
-        //     ),
-        //     'content' => '<h2>This is a Sub Page</h2>' . PHP_EOL
-        //         . '<p>This is page.md in the "sub" folder.</p>' . PHP_EOL
-        //         . '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>' . PHP_EOL
-        //         . '<p>Donec ultricies tristique nulla et mattis.</p>' . PHP_EOL
-        //         . '<p>Phasellus id massa eget nisl congue blandit sit amet id ligula.</p>'
-        // );
+        $actual = $this->object->load($path, array('php'));
 
-        // $result = $this->object->load(ROOT_DIR . 'content/sub', array('md'));
-        // $this->assertEquals($files, $result);
-        $this->markTestIncomplete('Not yet implemented');
+        $expected = array(
+            'ExamplePlugin'      => $this->plugins['ExamplePlugin'],
+            'OtherExamplePlugin' => $this->plugins['OtherExamplePlugin']
+        );
+
+        $this->assertEquals($expected, $actual);
     }
 
 }
