@@ -121,6 +121,11 @@ class Zepto {
         $this->setup_router();
     }
 
+    /**
+     * Executes router and returns result of callback function for specified route
+     *
+     * @return mixed
+     */
     public function run()
     {
         $router = $this->container['router'];
@@ -153,6 +158,11 @@ class Zepto {
         return true;
     }
 
+    /**
+     * Loads all plugins from the 'plugins' directory
+     *
+     * @return
+     */
     protected function load_plugins()
     {
         $container     = $this->container;
