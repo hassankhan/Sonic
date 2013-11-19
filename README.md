@@ -72,7 +72,7 @@ Zepto hasn't been tested on other configurations yet, but because of how similar
 
 ## Documentation
 
-***Coming soon***
+You can check out more in-depth documentation [here](https://github.com/hassankhan/Zepto/wiki/Documentation).
 
 ## How to Contribute
 

@@ -1,6 +1,36 @@
 Changelog
 =========
 
+- [Added more comments to ``Zepto\Zepto``](http://github.com/hassankhan/Pico/commit/7b345e155805a68c0d140a0e725cd4f6168b0e7c)
+
+#### 2013.11.18 - v0.4.1-3 feature/add-hooks
+- [Merge branch 'feature/add-hooks' into develop](http://github.com/hassankhan/Pico/commit/ae887fd1d64cd0849befdce682e7e81c83a48c71)
+- [Added hooks to ``Zepto\Zepto``](http://github.com/hassankhan/Pico/commit/f1024d0ef0cef8f4e7ad9ce819538372138e1a66)
+- [Changed method signature of ``Zepto\PluginInterface::before_file_load()``](http://github.com/hassankhan/Pico/commit/4f0dd44f6400cf87949c341739e483974133b146)
+- [Merge branch 'develop' into feature/add-hooks](http://github.com/hassankhan/Pico/commit/3515bc307b5b7e7e638cfd3b337db70081003889)
+- [Cleaned up TODO.md](http://github.com/hassankhan/Pico/commit/6bc826f312be81ef47fa5a6b30eec954ee57cfed)
+- [Updated project version. Seriously, why didn’t I update this earlier?](http://github.com/hassankhan/Pico/commit/91057a516453c9b288a1f723917238a3aac55385)
+- [Added ``Zepto\FileLoader\PluginLoader`` to main app. Added ``after_file_load`` hook](http://github.com/hassankhan/Pico/commit/f0332ead1c820588ba89f3d066e025c0a810d789)
+- [Renamed option ``plugin_dir`` to ``plugins_dir``](http://github.com/hassankhan/Pico/commit/656d105b17872897a4c49c8cf5dc75a24626ad53)
+- [Changed method signature of ``Zepto\PluginInterface::after_file_load()``](http://github.com/hassankhan/Pico/commit/42dc9aafb04212e3d75299610000bd8ddb7df8fb)
+- [Fixed broken directory scanning for plugin files. Cleaned up ``Zepto\FileLoader\PluginLoader`` and test class](http://github.com/hassankhan/Pico/commit/b8c247abb883653b857f3ba5a6b62d0847d83e6a)
+- [Removed pico_plugin.php. Added OtherExamplePlugin.php](http://github.com/hassankhan/Pico/commit/6e40692722f8b6a76dd5b03e8df6c7f7ac3109a3)
+- [``Zepto\FileLoader\PluginLoader`` now returns an array of plugin names and instances.](http://github.com/hassankhan/Pico/commit/d7e3d698e2a12f35c5570f018c6861e1c4b9ee5a)
+
+#### 2013.11.17 - v0.4.1-2 feature/add-hooks
+- [Added an option to config.php to enable/disable plugins](http://github.com/hassankhan/Pico/commit/e669adf794111aabfe03ee6e8f1d95d35a69f0bf)
+- [Added ``Zepto\FileLoader\PluginLoader`` and related test class. Updated ``Zepto\PluginInterface``, removed unnecessary hook. Added ``ExamplePlugin`` to show how to use ``Zepto\PluginInterface``](http://github.com/hassankhan/Pico/commit/8af88be78387d4843567d88a91df6cf2de8619bc)
+- [Updated Travis configuration to only include master and develop branches Fixes #1, updated README.md and documentation to reflect that. Updated composer.json](http://github.com/hassankhan/Pico/commit/87ca48879161b69c255c1180c94e409f787cb4ec)
+- [fix #1](http://github.com/hassankhan/Pico/commit/0cd8717fd0ec8042decdd07a9ef4e3a6be1fc85d)
+- [Updated composer.json (again)](http://github.com/hassankhan/Pico/commit/971b1eb25c0b409d0dabbb3c9bf31a8e17c20f47)
+- [Updated composer.json](http://github.com/hassankhan/Pico/commit/60e6d090ec54527a2f345021e9eb9795df5f43c4)
+- [More changes to composer.json in the vain hope that it will somehow work.](http://github.com/hassankhan/Pico/commit/4bc50b2312059d3cc28bac520c62ec09ea81e6fb)
+
+#### 2013.11.15 - v0.4.1-1 feature/add-hooks
+- [Updated composer.json](http://github.com/hassankhan/Pico/commit/61b7b5b48f5659a0afa00ec6ae4a225da0cdd0d4)
+- [Merge branch 'develop'](http://github.com/hassankhan/Pico/commit/695bfc337a3593042a266bb965fe1fa2e649a119)
+- [Updated README.md. Updated composer.json to fix issues when installing from Composer](http://github.com/hassankhan/Pico/commit/8f124cf1e096d75996265af8018b36da4c6babc5)
+- [Updated CHANGELOG.md. Minor cleanup](http://github.com/hassankhan/Pico/commit/6ca23940689350cda556228c4e1fe447e6a19ea9)
 - [Changed ``Zepto\Plugin`` to be an interface](http://github.com/hassankhan/Pico/commit/3f66b55556b00e413374a1693cfae41910ef0238)
 - [[ci skip] Updated README.md and TODO.md](http://github.com/hassankhan/Pico/commit/57c6d1535736d153e331857dd166936c3ba00bf0)
 - [Updated README.md and style.css](http://github.com/hassankhan/Pico/commit/a79f2ce0095bd5f38e06d654ad934937d85222a5)
