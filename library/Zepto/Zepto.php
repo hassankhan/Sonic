@@ -30,25 +30,25 @@ class Zepto {
      * <code>
      * $config = array(
      *     'zepto' => array(
-     *         'cache_dir'     => ROOT_DIR . 'cache',
-     *         'content_dir'   => ROOT_DIR . 'content',
-     *         'plugin_dir'    => ROOT_DIR . 'plugins',
-     *         'templates_dir' => ROOT_DIR . 'templates',
-     *         'content_ext'   => array('md', 'markdown')
+     *         'content_dir'       => 'content',
+     *         'plugins_dir'       => 'plugins',
+     *         'templates_dir'     => 'templates',
+     *         'default_template'  => 'base.twig',
+     *         'content_ext'       => array('.md', '.markdown'),
+     *         'plugins_enabled'   => true
      *     ),
      *     'site' => array(
-     *         'site_root'      => 'Site root URL goes here',
-     *         'site_title'     => 'Zepto',
-     *         'theme'          => 'default',
-     *         'date_format'    => 'jS M Y',
-     *         'page_order'     => 'asc',
-     *         'page_order_by'  => 'date|a-z',
-     *         'excerpt_length' => '50'
+     *         'site_root'         => 'Site root URL goes here',
+     *         'site_title'        => 'Zepto',
+     *         'date_format'       => 'jS M Y',
+     *         'excerpt_length'    => '50'
      *     ),
      *     'twig' => array(
-     *         'cache'      => false,
-     *         'autoescape' => false,
-     *         'debug'      => false
+     *         'charset'           => 'utf-8',
+     *         'cache'             => 'cache',
+     *         'strict_variables'  => false,
+     *         'autoescape'        => false,
+     *         'auto_reload'       => true
      *     )
      * );
      * </code>
@@ -149,6 +149,9 @@ class Zepto {
             throw new \Exception('No such hook exists');
         }
 
+        // Send app reference to hooks
+        $args = array_merge($args, array($this));
+
         // Run hooks associated with that event
         foreach ($plugins as $plugin_id => $plugin) {
             if (is_callable(array($plugin, $hook_id))) {
@@ -180,6 +183,11 @@ class Zepto {
         $this->run_hooks('after_plugins_load');
     }
 
+    /**
+     * Loads files from the ``content`` folder
+     *
+     * @return
+     */
     protected function load_files()
     {
         // Get local reference to file loader
@@ -238,7 +246,7 @@ class Zepto {
 
                 // Set Twig options
                 $twig_options = array(
-                    'config'     => $container['settings']['twig'],
+                    'config'     => $container['settings'],
                     'base_dir'   => '/zepto',
                     'base_url'   => $container['settings']['site']['site_root'],
                     'site_title' => $container['settings']['site']['site_title']
@@ -258,6 +266,11 @@ class Zepto {
         }
     }
 
+    /**
+     * Helper function to create navigation links
+     *
+     * @return
+     */
     protected function create_nav_links()
     {
         $container    = $this->container;
@@ -297,8 +310,8 @@ class Zepto {
         // Configure the PrettyPageHandler:
         $errorPage = new Whoops\Handler\PrettyPageHandler();
 
-        $errorPage->setPageTitle("Shit hit the fan!");
-        $errorPage->setEditor("sublime");
+        $errorPage->setPageTitle('Shit hit the fan!');
+        $errorPage->setEditor('sublime');
         $error_handler->pushHandler($errorPage);
         $error_handler->register();
     }
