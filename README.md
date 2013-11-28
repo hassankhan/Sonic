@@ -1,6 +1,8 @@
 # Zepto
 
-Master: [![Build Status](https://travis-ci.org/hassankhan/Zepto.png?branch=master)](https://travis-ci.org/hassankhan/Zepto) Develop: [![Build Status](https://travis-ci.org/hassankhan/Zepto.png?branch=develop)](https://travis-ci.org/hassankhan/Zepto)
+Master: [![Build Status](https://travis-ci.org/hassankhan/Zepto.png?branch=master)](https://travis-ci.org/hassankhan/Zepto) [![Coverage Status](https://coveralls.io/repos/hassankhan/Zepto/badge.png?branch=master)](https://coveralls.io/r/hassankhan/Zepto?branch=master)
+
+Develop: [![Build Status](https://travis-ci.org/hassankhan/Zepto.png?branch=develop)](https://travis-ci.org/hassankhan/Zepto) [![Coverage Status](https://coveralls.io/repos/hassankhan/Zepto/badge.png?branch=develop)](https://coveralls.io/r/hassankhan/Zepto?branch=develop)
 
 [![Latest Stable Version](https://poser.pugx.org/hassankhan/Zepto/v/stable.png)](https://packagist.org/packages/hassankhan/Zepto) [![Montly Downloads](https://poser.pugx.org/hassankhan/Zepto/d/monthly.png)](https://packagist.org/packages/hassankhan/Zepto)
 
