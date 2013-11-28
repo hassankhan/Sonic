@@ -44,6 +44,62 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * CONSTRUCTOR TESTS
+     */
+
+    /**
+     * @covers Zepto\Zepto::__construct()
+     */
+    public function testRouterAdded()
+    {
+        $zepto = $this->object;
+        $this->assertArrayHasKey('router', $zepto->container);
+        $this->assertInstanceOf(
+            'Zepto\Router',
+            $zepto->container['router']
+        );
+    }
+
+    /**
+     * @covers Zepto\Zepto::__construct()
+     */
+    public function testPluginLoaderAdded()
+    {
+        $zepto = $this->object;
+        $this->assertArrayHasKey('plugin_loader', $zepto->container);
+        $this->assertInstanceOf(
+            'Zepto\FileLoader\PluginLoader',
+            $zepto->container['plugin_loader']
+        );
+    }
+
+    /**
+     * @covers Zepto\Zepto::__construct()
+     */
+    public function testFileLoaderAdded()
+    {
+        $zepto = $this->object;
+        $this->assertArrayHasKey('file_loader', $zepto->container);
+        $this->assertInstanceOf(
+            'Zepto\FileLoader\MarkdownLoader',
+            $zepto->container['file_loader']
+        );
+    }
+
+    /**
+     * @covers Zepto\Zepto::__construct()
+     */
+    public function testTwigAdded()
+    {
+        $zepto = $this->object;
+        $this->assertArrayHasKey('twig', $zepto->container);
+        $this->assertInstanceOf(
+            '\Twig_Environment',
+            $zepto->container['twig']
+        );
+    }
+
+    /**
      * @covers Zepto\Zepto::run
      * @todo   Implement testRun().
      */
