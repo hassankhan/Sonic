@@ -1,6 +1,15 @@
 Changelog
 =========
 
+#### 2013.11.28 - v0.5
+- [How embarrassing. All changelog links were pointing to an incorrect link. Fixed now.](http://github.com/hassankhan/Zepto/commit/fe175e45d4b020a52c0377cabe79bf9a86763d47)
+- [Updated TODO.md](http://github.com/hassankhan/Zepto/commit/4e6e6d198c50092b8d59aecc29b2656605f00128)
+- [Added tests for ``Zepto\Zepto``](http://github.com/hassankhan/Zepto/commit/3c31479d6b78016c8cad324d566a34f25992635f)
+- [Added more comments and stuff](http://github.com/hassankhan/Zepto/commit/22ed769a08f77f28a0438a71a04e900262832d5e)
+- [Added test class for ``Zepto\Zepto`` and fixed it so it didn’t break tests](http://github.com/hassankhan/Zepto/commit/b5c03868803f6b29c8ba09abcfe05140471f42d0)
+- [Removed useless loaders, never gonna look back (hopefully)](http://github.com/hassankhan/Zepto/commit/3b23d0b54716e88a4d4d9a0f5895b5fdd9a8f161)
+- [Moved tests under own namespace as per PSR-0](http://github.com/hassankhan/Zepto/commit/89c2fd2c9c951cfa1470e10c0a0bf6673ea4ee09)
+- [Updated CHANGELOG.md and README.md](http://github.com/hassankhan/Zepto/commit/4669af33ea1b0b3997ea67d6bba01d8d7144bbc8)
 - [Added more comments to ``Zepto\Zepto``](http://github.com/hassankhan/Zepto/commit/7b345e155805a68c0d140a0e725cd4f6168b0e7c)
 
 #### 2013.11.18 - v0.4.1-3 feature/add-hooks
