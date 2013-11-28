@@ -39,13 +39,4 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
           'This test has not been implemented yet.'
         );
     }
-
-    /**
-     * @covers Zepto\FileWriter::write()
-     * @expectedException Exception
-     */
-    public function testWriteToExistingFile()
-    {
-        // assertions
-    }
 }
