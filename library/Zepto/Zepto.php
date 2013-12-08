@@ -112,7 +112,7 @@ class Zepto {
         $this->load_plugins();
 
         // Load content from files
-        $this->load_files();
+        $this->load_content();
 
         // Create navigation object
         $this->create_nav_links();
@@ -188,7 +188,7 @@ class Zepto {
      *
      * @return
      */
-    protected function load_files()
+    protected function load_content()
     {
         // Get local reference to file loader
         $container   = $this->container;
