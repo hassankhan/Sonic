@@ -3,6 +3,11 @@ To-Do
 
 ## Project organisation
 
+## Frontend
+- Rewrite CSS to LESS
+- Probably try and use Bootstrap
+- Grunt/NPM support
+
 ## Documentation
 - Router/routing
 - Hooks
@@ -12,7 +17,7 @@ To-Do
 - Decide whether to make a separate skeleton project that uses this or just to use this as is
 
 ## Application
-- Abstract-ify Whoops and Twig
+- Abstract-ify Whoops
 
 ## Router
 - How to test router
@@ -25,6 +30,7 @@ To-Do
 - Add Twig extensions
 
 ## Plugins
+- Can't disable plugins without breaking program
 - Add hooks to important parts of application
 - Make plugins Pimple Objects
 - Remove all hardcoded paths from PluginLoader

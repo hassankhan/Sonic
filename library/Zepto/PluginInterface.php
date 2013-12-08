@@ -17,11 +17,11 @@ interface PluginInterface {
 
     public function after_plugins_load();
 
-    public function request_url(&$url);
-
     public function before_file_load(&$content_dir);
 
     public function after_file_load(&$content);
+
+    public function request_url(&$url);
 
     // Move all these methods into their own classes
     // public function before_file_meta_parsed(&$headers);

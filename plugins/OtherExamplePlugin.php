@@ -21,11 +21,6 @@ class OtherExamplePlugin implements \Zepto\PluginInterface {
         echo __CLASS__ . '::after_plugins_load';
     }
 
-    public function request_url(&$url)
-    {
-        echo __CLASS__ . '::request_url';
-    }
-
     public function before_file_load(&$content_dir)
     {
         echo __CLASS__ . '::before_file_load';
@@ -34,6 +29,11 @@ class OtherExamplePlugin implements \Zepto\PluginInterface {
     public function after_file_load(&$content)
     {
         echo __CLASS__ . '::after_file_load';
+    }
+
+    public function request_url(&$url)
+    {
+        echo __CLASS__ . '::request_url';
     }
 
 }
