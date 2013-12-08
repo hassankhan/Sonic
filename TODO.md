@@ -30,6 +30,7 @@ To-Do
 - Add Twig extensions
 
 ## Plugins
+- Can't disable plugins without breaking program
 - Add hooks to important parts of application
 - Make plugins Pimple Objects
 - Remove all hardcoded paths from PluginLoader
