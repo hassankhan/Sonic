@@ -13,7 +13,9 @@ namespace Zepto\FileWriter;
 
 class MarkdownWriter extends \Zepto\FileWriter {
 
-    protected static $file_template = <<<MARKDOWN
+    public function __construct()
+    {
+        $this->file_template = <<<MARKDOWN
 /*
 Title: %s
 Description: %s
@@ -22,10 +24,6 @@ Date: %s
 %s
 */
 MARKDOWN;
-
-    public function __construct()
-    {
-
     }
 
     // Seems to work, meh
