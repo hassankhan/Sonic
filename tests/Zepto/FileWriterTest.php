@@ -26,17 +26,20 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
+        if (file_exists(ROOT_DIR . 'tests/testfile.txt')) {
+            unlink(ROOT_DIR . 'tests/testfile.txt');
+        }
     }
 
     /**
      * @covers Zepto\FileWriter::write
-     * @todo   Implement testWrite().
      */
     public function testWrite()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $writer = $this->object;
+        $writer->write(ROOT_DIR . 'tests/testfile.txt', 'Test content');
+
+        $this->assertFileExists(ROOT_DIR . 'tests/testfile.txt');
     }
+
 }

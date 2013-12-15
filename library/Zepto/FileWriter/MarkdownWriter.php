@@ -13,7 +13,9 @@ namespace Zepto\FileWriter;
 
 class MarkdownWriter extends \Zepto\FileWriter {
 
-    protected static $file_template = <<<MARKDOWN
+    public function __construct()
+    {
+        $this->file_template = <<<MARKDOWN
 /*
 Title: %s
 Description: %s
@@ -22,23 +24,21 @@ Date: %s
 %s
 */
 MARKDOWN;
-
-    public function __construct()
-    {
-
     }
 
     // Seems to work, meh
     public function write($file_path, $file_data)
     {
-        list($title, $date, $content) = $file_data;
+        list($title, $desc, $date, $content) = $file_data;
 
         $clean_title   = htmlentities($title,   ENT_HTML5, 'UTF-8');
+        $clean_desc    = htmlentities($desc,    ENT_HTML5, 'UTF-8');
         $clean_date    = htmlentities($date,    ENT_HTML5, 'UTF-8');
         $clean_content = htmlentities($content, ENT_HTML5, 'UTF-8');
 
         $data          = array(
             $clean_title,
+            $clean_desc,
             $clean_date,
             $clean_content
         );
