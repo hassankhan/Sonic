@@ -136,12 +136,19 @@ class Zepto {
      * Runs all hooks registered to the specified hook name
      *
      * @param  string  $hook
-     * @return boolean Returns true on successful execution of all hooks
+     * @return boolean Returns true on successful execution of all hooks, false if plugins are disabled
      */
     public function run_hooks($hook_id, $args = array())
     {
         $container = $this->container;
+        $settings  = $container['settings']['zepto'];
         $hooks     = $container['hooks'];
+
+        // If plugins are disabled, do not run
+        if ($settings['plugins_enabled'] === false) {
+            return false;
+        }
+
         $plugins   = $container['plugins'];
 
         // Check if event name exists
