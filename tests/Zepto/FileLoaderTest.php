@@ -30,19 +30,35 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\FileLoader::load()
+     * @covers            Zepto\FileLoader::load()
      * @expectedException Exception
      */
-    public function testLoad()
+    public function testLoadWithException()
     {
         $this->object->load('@£@', 'aa');
     }
 
     /**
-     * @covers Zepto\FileLoader::load
-     * @todo   Implement testLoad().
+     * @covers       Zepto\FileLoader::load
+     * @dataProvider providerTestLoadSingleFile
      */
-    public function testLoadSingleFile()
+    public function testLoadSingleFile($files)
+    {
+        $result = $this->object->load(ROOT_DIR . 'content/404.md', array('md'));
+        $this->assertEquals($files, $result);
+    }
+
+    /**
+     * @covers       Zepto\FileLoader::load()
+     * @dataProvider providerTestLoadMultipleFiles
+     */
+    public function testLoadMultipleFiles($files)
+    {
+        $result = $this->object->load(ROOT_DIR . 'content/sub', array('md'));
+        $this->assertEquals($files, $result);
+    }
+
+    public function providerTestLoadSingleFile()
     {
         $files['404.md'] = '/*' . PHP_EOL
             . 'Title: Error 404' . PHP_EOL
@@ -52,15 +68,14 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
             . '=========' . PHP_EOL . PHP_EOL
             . 'Woops. Looks like this page doesn\'t exist.';
 
-        $result = $this->object->load(ROOT_DIR . 'content/404.md', array('md'));
-
-        $this->assertEquals($files, $result);
+        return array(array( $files ));
     }
 
     /**
-     * @covers Zepto\FileLoader::load()
+     * Data provider for tests
+     * @return array
      */
-    public function testLoadMultipleFiles()
+    public function providerTestLoadMultipleFiles()
     {
         $files = array(
             'sub/page.md' => '/*' . PHP_EOL
@@ -82,15 +97,6 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
                 . 'Phasellus id massa eget nisl congue blandit sit amet id ligula.' . PHP_EOL
         );
 
-
-        $result = $this->object->load(ROOT_DIR . 'content/sub', array('md'));
-    }
-
-    /**
-     * @covers class::()
-     */
-    public function testCache()
-    {
-        $this->markTestIncomplete('Not yet implemented');
+        return array(array( $files ));
     }
 }
