@@ -267,6 +267,10 @@ class Zepto {
                     ? $content['meta']['template']
                     : $container['settings']['zepto']['default_template'];
 
+                if ($file === '404') {
+                    header("HTTP/1.0 404 Not Found");
+                }
+
                 // Render template with Twig
                 echo $twig->render($template_name, $options);
             });
