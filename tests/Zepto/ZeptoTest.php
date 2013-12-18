@@ -49,6 +49,10 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::__construct()
+     * @covers Zepto\Zepto::load_plugins()
+     * @covers Zepto\Zepto::load_content()
+     * @covers Zepto\Zepto::create_nav_links()
+     * @covers Zepto\Zepto::setup_router()
      */
     public function testRouterAdded()
     {
