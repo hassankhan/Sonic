@@ -99,7 +99,7 @@ class Router
      *
      * @var array
      */
-    protected $routes_original = array();
+    protected $original_routes = array();
 
     /**
      * A sanitized version of the URL, excluding the domain and base component
@@ -186,7 +186,7 @@ class Router
                         $this->callback = $callback;
 
                         // Return the callback and params, useful for unit testing
-                        return array('callback' => $callback, 'params' => $params, 'route' => $route, 'original_route' => $this->routes_original[$request_method][$route]);
+                        return array('callback' => $callback, 'params' => $params, 'route' => $route, 'original_route' => $this->original_routes[$request_method][$route]);
                     }
                 }
             }
@@ -287,7 +287,7 @@ class Router
 
         // Add the route to our routing array
         $this->routes[$request_method][$route]          = $callback;
-        $this->routes_original[$request_method][$route] = $original_route;
+        $this->original_routes[$request_method][$route] = $original_route;
 
         return true;
     }
