@@ -257,7 +257,6 @@ class Zepto {
                 // Set Twig options
                 $twig_options = array(
                     'config'     => $container['settings'],
-                    'base_dir'   => '/zepto',
                     'base_url'   => $container['settings']['site']['site_root'],
                     'site_title' => $container['settings']['site']['site_title']
                 );
