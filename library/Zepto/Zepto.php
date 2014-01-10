@@ -291,23 +291,24 @@ class Zepto {
         $content      = $container['content'];
 
         // Calls protected function which returns formatted array
-        $nav_items    = $this->map_directory_to_array();
+        $nav_items    = $this->get_sitemap();
 
         // Add to ``$container``
         $this->container['nav'] = $nav_items;
     }
 
-    protected function map_directory_to_array()
+    protected function get_sitemap()
     {
 
         $container    = $this->container;
         $settings     = $container['settings'];
-        $structure    = $container['folder_structure'];
+        $file_loader  = $container['file_loader'];
 
-        $content_ext  = $container['settings']['zepto']['content_ext'];
+        // Could add a hook here maybe?
+        $structure    = $file_loader->get_directory_map($settings['zepto']['content_dir']);
 
         // Remove 'index' along with any file extensions from URL
-        $filth = array_merge(array('index'), $content_ext);
+        $filth = array_merge(array('index'), $settings['zepto']['content_ext']);
 
         foreach ($structure as $key => $value) {
 
