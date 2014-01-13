@@ -13,11 +13,6 @@ namespace Zepto;
 
 class FileWriter {
 
-    public function __construct()
-    {
-
-    }
-
     // Seems to work, meh
     public function write($file_path, $file_data)
     {

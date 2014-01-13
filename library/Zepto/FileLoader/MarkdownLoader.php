@@ -63,33 +63,17 @@ class MarkdownLoader extends \Zepto\FileLoader {
      */
     private function parse_meta($file)
     {
-        // Define metadata
-        $meta = array(
-            'title'         => 'Title',
-            'description'   => 'Description',
-            'author'        => 'Author',
-            'date'          => 'Date',
-            'robots'        => 'Robots',
-            'template'      => 'Template'
-        );
+        // Grab meta section between '/* ... */' in the content file
+        preg_match_all('#/\*(.*?)\*/#s', $file, $meta);
 
-        // Grab meta fields between '/* ... */' in the content file
-        foreach ($meta as $field => $regex) {
-            if (
-                preg_match(
-                    '/^[ \t\/*#@]*' . preg_quote($regex, '/') . ':(.*)$/mi',
-                    $file,
-                    $match
-                ) && $match[1]
-            ) {
-                $meta[$field] = trim(preg_replace("/\s*(?:\*\/|\?>).*/", '', $match[1]));
-            }
-            else {
-                unset($meta[$field]);
-            }
+        // Retrieve individual meta fields
+        preg_match_all('/^[\t\/*#@]*(.*):(.*)$/mi', $meta[1][0], $match);
+
+        for ($i=0; $i < count($match[1]); $i++) {
+            $result[strtolower($match[1][$i])] = trim(htmlentities($match[2][$i]));
         }
 
-        return $meta;
+        return $result;
     }
 
     /**
