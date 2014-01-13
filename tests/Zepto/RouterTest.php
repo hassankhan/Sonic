@@ -250,7 +250,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Router::get
+     * @covers Zepto\Router::get_routes()
      */
     public function testGetRoutes()
     {
