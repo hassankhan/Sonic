@@ -8,4 +8,5 @@
 
     require_once realpath(__DIR__ . '/../vendor/autoload.php');
 
-    define('ROOT_DIR', realpath(dirname(__FILE__) . '/..') . '/');
+    defined('ROOT_DIR')
+    || define('ROOT_DIR', realpath(dirname(__FILE__) . '/..') . '/');
