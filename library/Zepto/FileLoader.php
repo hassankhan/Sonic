@@ -71,4 +71,29 @@ class FileLoader extends \Pimple {
         }
     }
 
+    /**
+     * Returns structure of folder as a multidimensional array. Used for
+     * creating navigation links
+     * @param  string $file_path Path to map
+     * @return array
+     */
+    public function get_directory_map($file_path)
+    {
+        foreach (scandir($file_path) as $node) {
+            if ($node == '.' || $node == '..') continue;
+            if (is_dir($file_path . '/' . $node)) {
+                $contents[$node] = $this->get_directory_map($file_path . '/' . $node);
+            } else {
+                if (preg_match('#^\.(\w+)#', $node) === 0) {
+                    $contents[] = $node;
+                }
+            }
+        }
+
+        // Cache it somewhere?
+        $this['folder_structure'] = $contents;
+
+        return $contents;
+    }
+
 }

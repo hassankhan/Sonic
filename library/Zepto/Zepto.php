@@ -210,6 +210,9 @@ class Zepto {
             $settings['content_ext']
         );
 
+        // Could add a hook here maybe?
+        $container['folder_structure'] = $file_loader->get_directory_map($content_dir);
+
         $this->run_hooks('after_file_load', array(&$content));
         $container['content'] = $content;
     }
@@ -254,7 +257,6 @@ class Zepto {
                 // Set Twig options
                 $twig_options = array(
                     'config'     => $container['settings'],
-                    'base_dir'   => '/zepto',
                     'base_url'   => $container['settings']['site']['site_root'],
                     'site_title' => $container['settings']['site']['site_title']
                 );
@@ -286,30 +288,63 @@ class Zepto {
     {
         $container    = $this->container;
         $content      = $container['content'];
-        $content_ext  = $container['settings']['zepto']['content_ext'];
 
-        $nav_items = array();
+        // Calls protected function which returns formatted array
+        $nav_items    = $this->get_sitemap();
 
-        foreach ($content as $file_name => $item) {
+        // Add to ``$container``
+        $this->container['nav'] = $nav_items;
+    }
 
-            // Remove 'index' along with any file extensions from URL
-            $filth = array_merge(array('index'), $content_ext);
+    protected function get_sitemap()
+    {
 
-            // Don't add 40x, 50x error pages to navigation items
-            if (preg_match('/^[4|5]0\d\.md$/', $file_name) === 0) {
-                array_push(
-                    $nav_items,
-                    array(
-                        'title' => $item['meta']['title'],
-                        'url'   => '/zepto/' . str_replace($filth, '', $file_name)
-                    )
-                );
+        $container    = $this->container;
+        $settings     = $container['settings'];
+        $file_loader  = $container['file_loader'];
+
+        // Could add a hook here maybe?
+        $structure    = $file_loader->get_directory_map($settings['zepto']['content_dir']);
+
+        // Remove 'index' along with any file extensions from URL
+        $filth = array_merge(array('index'), $settings['zepto']['content_ext']);
+
+        foreach ($structure as $key => $value) {
+
+            // Check if ``$value`` is an array
+            if (is_array($value)) {
+
+                foreach ($value as $file_name) {
+
+                    // Add folder name to file name
+                    $full_file_name = $key . '/' . $file_name;
+
+                    // Get title of content file
+                    $title = $container['content'][$full_file_name]['meta']['title'];
+
+                    // Create URL
+                    $url = $settings['site']['site_root'] . '/' . str_replace($filth, '', $key . '/' . $file_name);
+
+                    // Run ``ucfirst()`` on ``$key`` to make it look nice
+                    $nav_items[ucfirst($key)][$title] = $url;
+                }
+            }
+            // If not then add to ``$nav_items``
+            else {
+                if (preg_match('#^[4|5]0\d\.md$#i', $value) === 0) {
+
+                    // Get title of content file
+                    $title = $container['content'][$value]['meta']['title'];
+
+                    // Create URL
+                    $url = $settings['site']['site_root'] . '/' . str_replace($filth, '', $value);
+
+                    $nav_items[$title] = $url;
+                }
             }
         }
 
-        $nav = array('nav' => $nav_items);
-
-        $this->container['nav'] = $nav;
+        return $nav_items;
     }
 
     // This should be moved into a plugin
@@ -319,7 +354,7 @@ class Zepto {
         $error_handler = $this->container['error_handler'];
 
         // Configure the PrettyPageHandler:
-        $errorPage = new Whoops\Handler\PrettyPageHandler();
+        $errorPage     = new Whoops\Handler\PrettyPageHandler();
 
         $errorPage->setPageTitle('Shit hit the fan!');
         $errorPage->setEditor('sublime');
