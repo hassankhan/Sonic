@@ -13,12 +13,6 @@ namespace Zepto\FileLoader;
 
 class PluginLoader extends \Zepto\FileLoader {
 
-    // public function __construct($plugin_dir)
-    // {
-        // parent::__construct();
-        // $this->plugin_dir = $plugin_dir;
-    // }
-
     /**
      * Loads in a single file or all files in a directory if $file_path is a folder
      *
