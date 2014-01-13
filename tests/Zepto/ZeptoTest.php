@@ -49,10 +49,8 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::__construct()
-     * @covers Zepto\Zepto::load_plugins()
      * @covers Zepto\Zepto::load_content()
      * @covers Zepto\Zepto::create_nav_links()
-     * @covers Zepto\Zepto::setup_router()
      */
     public function testRouterAdded()
     {
@@ -66,6 +64,8 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::__construct()
+     * @covers Zepto\Zepto::load_content()
+     * @covers Zepto\Zepto::create_nav_links()
      */
     public function testPluginLoaderAdded()
     {
@@ -79,6 +79,8 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::__construct()
+     * @covers Zepto\Zepto::load_content()
+     * @covers Zepto\Zepto::create_nav_links()
      */
     public function testFileLoaderAdded()
     {
@@ -92,6 +94,8 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::__construct()
+     * @covers Zepto\Zepto::load_content()
+     * @covers Zepto\Zepto::create_nav_links()
      */
     public function testTwigAdded()
     {
@@ -104,11 +108,87 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * INITIALIZATION TESTS
+     */
+
+    /**
+     * @covers Zepto\Zepto::load_plugins()
+     */
+    public function testLoadPlugins()
+    {
+        $zepto = $this->object;
+        $this->assertArrayHasKey('plugins', $zepto->container);
+        $plugins = $zepto->container['plugins'];
+        $this->assertArrayHasKey('ExamplePlugin', $zepto->container['plugins']);
+        $this->assertArrayHasKey('OtherExamplePlugin', $zepto->container['plugins']);
+    }
+
+    /**
+     * @covers Zepto\Zepto::load_plugins()
+     */
+    public function testLoadPluginsWhenDisabled()
+    {
+        include ROOT_DIR . 'config.php';
+        $config['zepto']['plugins_enabled'] = false;
+        $zepto = new Zepto($config);
+        $this->assertArrayNotHasKey('plugins', $zepto->container);
+    }
+
+    /**
+     * @covers Zepto\Zepto::load_content()
+     */
+    public function testLoad_content()
+    {
+        $this->markTestIncomplete('Not yet implemented');
+    }
+
+    /**
+     * @covers Zepto\Zepto::create_nav_links()
+     * @covers Zepto\Zepto::get_sitemap()
+     */
+    public function testCreateNavLinks()
+    {
+        $expected = array(
+            'Welcome' => 'Site root URL goes here/',
+            'Sub'     => array(
+                'Sub Page Index' => 'Site root URL goes here/sub/',
+                'Sub Page'       => 'Site root URL goes here/sub/page'
+            )
+        );
+
+        $zepto = $this->object;
+        $this->assertEquals($expected, $zepto->container['nav']);
+    }
+
+    /**
+     * @covers Zepto\Zepto::setup_router()
+     */
+    public function testSetupRouter()
+    {
+        $zepto  = $this->object;
+        $routes = $zepto->container['router']->get_routes();
+
+        // Check that routes were added as HTTP GET requests
+        $this->assertArrayHasKey('GET', $routes);
+
+        // Check to see only expected routes
+        $expected = array('#^/404/$#', '#^/$#', '#^/sub/$#', '#^/sub/page/$#');
+
+        // Check that all routes have a callback function
+        $this->assertContainsOnly('Closure', $routes['GET']);
+
+        foreach ($expected as $route_regex) {
+            $this->assertArrayHasKey($route_regex, $routes['GET']);
+        }
+    }
+
+    /**
      * @covers Zepto\Zepto::run
      * @todo   Implement testRun().
      */
     public function testRun()
     {
+        // Check to see that the index page has loaded
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
           'This test has not been implemented yet.'
