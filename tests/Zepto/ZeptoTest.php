@@ -148,13 +148,15 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateNavLinks()
     {
-        $expected = '<li><a href="Site root URL goes here/"> Welcome </a></li>' . PHP_EOL
+        $expected = '<ul class="nav">' . PHP_EOL
+            . '<li><a href="Site root URL goes here/"> Welcome </a></li>' . PHP_EOL
             . '<li class="dropdown">' . PHP_EOL
             . '<a href="index.md" class="dropdown-toggle" data-toggle="dropdown"> Sub <b class="caret"></b></a>' . PHP_EOL
             . '<ul class="dropdown-menu">' . PHP_EOL
             . '<li><a href="Site root URL goes here/sub/"> Sub Page Index </a></li>' . PHP_EOL
             . '<li><a href="Site root URL goes here/sub/page"> Sub Page </a></li>' . PHP_EOL
-            . '</ul></li>' . PHP_EOL;
+            . '</ul></li>' . PHP_EOL
+            . '</ul>' . PHP_EOL;
 
         $zepto = $this->object;
         $this->assertEquals(array('nav' => $expected), $zepto->container['nav']);

@@ -303,7 +303,9 @@ class Zepto {
         $settings     = $container['settings'];
         $file_loader  = $container['file_loader'];
 
-        $nav_html     = '';
+        // Opening ``<ul>`` tag and adding class name
+        $nav_html     = sprintf('<ul class="%s">' . PHP_EOL, $settings['site']['nav']['class']);
+
         // Could add a hook here maybe?
         $structure    = $file_loader->get_directory_map($settings['zepto']['content_dir']);
 
@@ -315,10 +317,16 @@ class Zepto {
             // Check if ``$value`` is an array
             if (is_array($value)) {
 
-                $dropdown_html = '<li class="dropdown">' . PHP_EOL
+                // Generate HTML for dropdown menu
+                $dropdown_html = '<li class="%s">' . PHP_EOL
                    . '<a href="%s" class="dropdown-toggle" data-toggle="dropdown"> %s <b class="caret"></b></a>' . PHP_EOL
-                   . '<ul class="dropdown-menu">' . PHP_EOL;
-                $nav_html .= sprintf($dropdown_html, reset($value), ucfirst($key));
+                   . '<ul class="%s">' . PHP_EOL;
+                $nav_html .= sprintf($dropdown_html,
+                    $settings['site']['nav']['dropdown_li_class'],
+                    reset($value), // Reset to get first value from array
+                    ucfirst($key), // Capitalise first letter of folder name
+                    $settings['site']['nav']['dropdown_ul_class']
+                );
 
                 foreach ($value as $file_name) {
 
@@ -335,6 +343,7 @@ class Zepto {
                     $nav_html  .= sprintf('<li><a href="%s"> %s </a></li>' . PHP_EOL, $url, $title);
                 }
 
+                // Close dropdown menu HTML tags
                 $nav_html .= '</ul></li>' . PHP_EOL;
             }
             // If not then add to ``$nav_items``
@@ -352,6 +361,8 @@ class Zepto {
             }
         }
 
+        // Close ``<ul>`` tag
+        $nav_html .= '</ul>' . PHP_EOL;
         return $nav_html;
     }
 
