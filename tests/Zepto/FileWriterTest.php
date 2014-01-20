@@ -42,4 +42,24 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
         $this->assertFileExists(ROOT_DIR . 'tests/testfile.txt');
     }
 
+    /**
+     * @covers Zepto\FileWriter::write
+     * @expectedException Exception
+     */
+    public function testWriteWithNoPath()
+    {
+        $writer = $this->object;
+        $writer->write('', 'Test content');
+    }
+
+    /**
+     * @covers Zepto\FileWriter::write
+     * @expectedException Exception
+     */
+    public function testWriteToNonexistentDirectory()
+    {
+        $writer = $this->object;
+        $writer->write(ROOT_DIR . 'tests/fail/testfile.txt', 'Test content');
+    }
+
 }
