@@ -290,19 +290,20 @@ class Zepto {
         $content      = $container['content'];
 
         // Calls protected function which returns formatted array
-        $nav_items    = $this->get_sitemap();
+        $nav_html    = $this->generate_nav_html();
 
         // Add to ``$container``
-        $this->container['nav'] = $nav_items;
+        $this->container['nav'] = array('nav' => $nav_html);
     }
 
-    protected function get_sitemap()
+    protected function generate_nav_html()
     {
 
         $container    = $this->container;
         $settings     = $container['settings'];
         $file_loader  = $container['file_loader'];
 
+        $nav_html     = '';
         // Could add a hook here maybe?
         $structure    = $file_loader->get_directory_map($settings['zepto']['content_dir']);
 
@@ -313,6 +314,11 @@ class Zepto {
 
             // Check if ``$value`` is an array
             if (is_array($value)) {
+
+                $dropdown_html = '<li class="dropdown">' . PHP_EOL
+                   . '<a href="%s" class="dropdown-toggle" data-toggle="dropdown"> %s <b class="caret"></b></a>' . PHP_EOL
+                   . '<ul class="dropdown-menu">' . PHP_EOL;
+                $nav_html .= sprintf($dropdown_html, reset($value), ucfirst($key));
 
                 foreach ($value as $file_name) {
 
@@ -326,8 +332,10 @@ class Zepto {
                     $url = $settings['site']['site_root'] . '/' . str_replace($filth, '', $key . '/' . $file_name);
 
                     // Run ``ucfirst()`` on ``$key`` to make it look nice
-                    $nav_items[ucfirst($key)][$title] = $url;
+                    $nav_html  .= sprintf('<li><a href="%s"> %s </a></li>' . PHP_EOL, $url, $title);
                 }
+
+                $nav_html .= '</ul></li>' . PHP_EOL;
             }
             // If not then add to ``$nav_items``
             else {
@@ -339,12 +347,12 @@ class Zepto {
                     // Create URL
                     $url = $settings['site']['site_root'] . '/' . str_replace($filth, '', $value);
 
-                    $nav_items[$title] = $url;
+                    $nav_html .= sprintf('<li><a href="%s"> %s </a></li>' . PHP_EOL, $url, $title);
                 }
             }
         }
 
-        return $nav_items;
+        return $nav_html;
     }
 
     // This should be moved into a plugin

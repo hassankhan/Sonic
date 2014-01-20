@@ -22,11 +22,7 @@
 		<div class="inner clearfix">
 			<h1><a href="{{ base_url }}">{{ site_title }}</a></h1>
 			<ul class="nav">
-			{% block nav %}
-				{% for item in nav %}
-				<li><a href="{{ item.url }}">{{ item.title }}</a></li>
-				{% endfor %}
-			{% endblock %}
+			{{ nav | raw }}
 			</ul>
 		</div>
 	</header>

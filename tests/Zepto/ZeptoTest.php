@@ -144,20 +144,20 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::create_nav_links()
-     * @covers Zepto\Zepto::get_sitemap()
+     * @covers Zepto\Zepto::generate_nav_html()
      */
     public function testCreateNavLinks()
     {
-        $expected = array(
-            'Welcome' => 'Site root URL goes here/',
-            'Sub'     => array(
-                'Sub Page Index' => 'Site root URL goes here/sub/',
-                'Sub Page'       => 'Site root URL goes here/sub/page'
-            )
-        );
+        $expected = '<li><a href="Site root URL goes here/"> Welcome </a></li>' . PHP_EOL
+            . '<li class="dropdown">' . PHP_EOL
+            . '<a href="index.md" class="dropdown-toggle" data-toggle="dropdown"> Sub <b class="caret"></b></a>' . PHP_EOL
+            . '<ul class="dropdown-menu">' . PHP_EOL
+            . '<li><a href="Site root URL goes here/sub/"> Sub Page Index </a></li>' . PHP_EOL
+            . '<li><a href="Site root URL goes here/sub/page"> Sub Page </a></li>' . PHP_EOL
+            . '</ul></li>' . PHP_EOL;
 
         $zepto = $this->object;
-        $this->assertEquals($expected, $zepto->container['nav']);
+        $this->assertEquals(array('nav' => $expected), $zepto->container['nav']);
     }
 
     /**
