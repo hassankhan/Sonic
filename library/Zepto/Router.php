@@ -65,7 +65,7 @@ class Router
     /**
      * Contains the callback function to execute, retrieved during run()
      *
-     * @var string|array
+     * @var Closure
      */
     protected $callback = null;
 
@@ -73,7 +73,7 @@ class Router
      * Contains the callback function to execute if none of the given routes can
      * be matched to the current URL.
      *
-     * @var Callable
+     * @var Closure
      */
     public $error_404 = null;
 
@@ -207,9 +207,9 @@ class Router
         }
         catch (Exception $e) {
             // Add logging stuff here - maybe?
+            // Maybe make it do a HTTP 500 error?
         }
 
-        // Removing this makes testing easier, how can I fix this?
         $this->error_404 = $this->routes['GET']['#^/404/$#'];
 
         if ($this->callback == null || $this->params == null) {
@@ -221,13 +221,12 @@ class Router
     }
 
     /**
-     * Convenience method for HTTP GET routes
-     *
-     * @param  string $route
-     * @param  Callable $callback
+     * Convenience method for HTTP GET routes* [get description]
+     * @param  string  $route
+     * @param  Closure $callback
      * @return boolean
      */
-    public function get($route, $callback)
+    public function get($route, \Closure $callback)
     {
         return $this->route($route, $callback, 'GET');
     }
@@ -235,11 +234,11 @@ class Router
     /**
      * Convenience method for HTTP POST routes
      *
-     * @param  string $route
-     * @param  Callable $callback
+     * @param  string  $route
+     * @param  Closure $callback
      * @return boolean
      */
-    public function post($route, $callback)
+    public function post($route, \Closure $callback)
     {
         return $this->route($route, $callback, 'POST');
     }
@@ -248,12 +247,12 @@ class Router
      * Adds a new URL routing rule to the routing table, after converting any of
      * our special tokens into proper regular expressions.
      *
-     * @param  string   $route
-     * @param  Callable $callback
-     * @param  integer  $request_method
+     * @param  string  $route
+     * @param  Closure $callback
+     * @param  string  $request_method
      * @return boolean
      */
-    public function route($route, $callback, $request_method = 'GET')
+    public function route($route, \Closure $callback, $request_method = 'GET')
     {
         // Keep the original routing rule for debugging/unit tests
         $original_route = $route;
@@ -303,11 +302,13 @@ class Router
     }
 
     /**
-     * Sets the 404 callback
+     * Sets the 404 callback. If a callable function is provided as a parameter,
+     * then that is set as the callback for HTTP 404 errors
      */
     public function set_404_callback()
     {
-        if (func_num_args() === 1 && gettype(func_get_arg(0)) === 'Callable') {
+        // If a callable function is passed to
+        if (func_num_args() === 1 && gettype(func_get_arg(0)) === 'Closure') {
             return $callback;
         }
         return function() {
