@@ -1,10 +1,8 @@
-# Zepto
+# Zepto [![Latest Stable Version](https://poser.pugx.org/hassankhan/zepto/v/stable.png)](https://packagist.org/packages/hassankhan/zepto) [![Total Downloads](https://poser.pugx.org/hassankhan/zepto/downloads.png)](https://packagist.org/packages/hassankhan/zepto) [![Latest Unstable Version](https://poser.pugx.org/hassankhan/zepto/v/unstable.png)](https://packagist.org/packages/hassankhan/zepto) [![License](https://poser.pugx.org/hassankhan/zepto/license.png)](https://packagist.org/packages/hassankhan/zepto)
 
 Master: [![Build Status](https://travis-ci.org/hassankhan/Zepto.png?branch=master)](https://travis-ci.org/hassankhan/Zepto) [![Coverage Status](https://coveralls.io/repos/hassankhan/Zepto/badge.png?branch=master)](https://coveralls.io/r/hassankhan/Zepto?branch=master)
 
 Develop: [![Build Status](https://travis-ci.org/hassankhan/Zepto.png?branch=develop)](https://travis-ci.org/hassankhan/Zepto) [![Coverage Status](https://coveralls.io/repos/hassankhan/Zepto/badge.png?branch=develop)](https://coveralls.io/r/hassankhan/Zepto?branch=develop)
-
-[![Latest Stable Version](https://poser.pugx.org/hassankhan/Zepto/v/stable.png)](https://packagist.org/packages/hassankhan/Zepto) [![Montly Downloads](https://poser.pugx.org/hassankhan/Zepto/d/monthly.png)](https://packagist.org/packages/hassankhan/Zepto)
 
 Zepto is a stupidly simple, blazing fast, flat-file CMS based on [Pico](http://pico.dev7studios.com).
 
@@ -31,7 +29,9 @@ Its interface is _supposed_ to be simple and is in process of documentation. Tha
 ### Install
 
 #### Composer install
-    composer create-project hassankhan/zepto
+    composer install hassankhan/zepto
+
+If that doesn't work, try setting ``minimum-stability`` to ``dev`` in your ``composer.json`` file.
 
 Then add the following to the top of your ``index.php`` file:
 

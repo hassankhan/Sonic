@@ -12,33 +12,29 @@ To-Do
 - Router/routing
 - Hooks
 - Extending Zepto
-
-## Composer
-- Decide whether to make a separate skeleton project that uses this or just to use this as is
+- Fix headers for consistency
 
 ## Application
 - Abstract-ify Whoops
 
 ## Router
-- How to test router
 - Add functionality to allow for
     - DELETE
-
-## File Loader
 
 ## Templating Engine
 - Add Twig extensions
 
 ## Plugins
-- Can't disable plugins without breaking program
-- Add hooks to important parts of application
 - Make plugins Pimple Objects
 - Remove all hardcoded paths from PluginLoader
-- Add ``run_hooks()`` calls
+- Add hooks to important parts of application by adding ``run_hooks()`` calls
     - ``after_config_load`` isn't working at the minute, need to decouple it some
 
 ## Tests
-- Write unit tests
+- Write MORE unit tests
+- Maybe get some benchmarks up?
 
 ## Miscellanea
 - Move ``index.php`` to ``public`` folder
+- Check for PHP version and use newer functions where available
+- Create a CLI-type tool for initial setup
