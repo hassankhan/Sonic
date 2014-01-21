@@ -1,0 +1,40 @@
+#!/usr/bin/php
+<?php
+
+if ($argc != 2 || in_array($argv[1], array('--help', '-help', '-h', '-?'))) {
+?>
+
+This is zli, a stupidly simple way to get
+you up and running with Zepto.
+
+  Usage:
+  zli init          Initial setup of Zepto app, creates
+                    like, folders and things
+  zli new <option>  <option> is either plugin or content
+
+  With the --help, -help, -h, or -? options, you
+  can get this help.
+
+<?php
+
+    // zep init
+    // First ask if they want to continue. This will create
+    // all required folders
+    //
+    // If they agree, then create 'content', 'plugins',
+    // 'templates' folders.
+
+    // zep new template (?)
+
+    // zep new plugin
+    // Ask for plugin name
+    // Create plugin in folder
+
+    // zep new content
+    // Ask for title, desc, author, bla bla
+    // Generate .md file in content folder
+
+} else {
+    echo $argv[1];
+}
+?>
