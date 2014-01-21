@@ -1,16 +1,18 @@
 #!/usr/bin/php
 <?php
 
-if ($argc != 2 || in_array($argv[1], array('--help', '-help', '-h', '-?'))) {
+$cwd = getcwd();
+
+if ($argc === 1 || in_array($argv[1], array('--help', '-help', '-h', '-?')) || empty($argv[1])) {
 ?>
 
-This is zli, a stupidly simple way to get
+This is zep, a stupidly simple way to get
 you up and running with Zepto.
 
   Usage:
-  zli init          Initial setup of Zepto app, creates
+  zep init          Initial setup of Zepto app, creates
                     like, folders and things
-  zli new <option>  <option> is either plugin or content
+  zep new <option>  <option> is either plugin or content
 
   With the --help, -help, -h, or -? options, you
   can get this help.
@@ -35,6 +37,26 @@ you up and running with Zepto.
     // Generate .md file in content folder
 
 } else {
-    echo $argv[1];
+    if ($argv[1] === 'init') {
+        // Check if folders already exist
+        // Otherwise create them
+
+
+?>
+  Init innit
+
+<?php
+    } elseif ($argv[1] === 'new' && $argc === 3) {
+      if ($argv[2] === 'plugin') {
+        echo getcwd();
+?>
+  New plugin
+<?php
+        // Create plugin
+      }
+      elseif ($argv[2] === 'content') {
+        // Create content
+      }
+    }
 }
 ?>
