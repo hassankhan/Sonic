@@ -29,7 +29,9 @@ Its interface is _supposed_ to be simple and is in process of documentation. Tha
 ### Install
 
 #### Composer install
-    composer create-project hassankhan/zepto
+    composer install hassankhan/zepto
+
+If that doesn't work, try setting ``minimum-stability`` to ``dev`` in your ``composer.json`` file.
 
 Then add the following to the top of your ``index.php`` file:
 

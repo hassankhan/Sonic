@@ -13,9 +13,6 @@ To-Do
 - Hooks
 - Extending Zepto
 
-## Composer
-- Decide whether to make a separate skeleton project that uses this or just to use this as is
-
 ## Application
 - Abstract-ify Whoops
 
