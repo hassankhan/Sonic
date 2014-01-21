@@ -58,6 +58,23 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($files, $result);
     }
 
+    /**
+     * @covers Zepto\FileLoader::get_directory_map()
+     */
+    public function testGet_directory_map()
+    {
+        $expected = array(
+            0 => '404.md',
+            1 => 'index.md',
+            'sub' => array(
+                0 => 'index.md',
+                1 => 'page.md'
+            )
+        );
+
+        $this->assertEquals($expected, $this->object->get_directory_map(ROOT_DIR . 'content'));
+    }
+
     public function providerTestLoadSingleFile()
     {
         $files['404.md'] = '/*' . PHP_EOL
