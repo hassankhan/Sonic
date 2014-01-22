@@ -2,7 +2,7 @@
 <?php
 
 // Require stuff
-require(__DIR__ . '/../vendor/autoload.php');
+require(__DIR__ . "/../vendor/autoload.php");
 
 $zep = new Zepto\Console($argv);
 
@@ -43,11 +43,11 @@ class %sPlugin implements \Zepto\PluginInterface {
 PLUGIN;
 
 // Add parameter
-$zep->param('option', 'Choose from init or new', true);
+$zep->param("option", "Choose from init or new", true);
 
 // Add options
-$zep->option('-p, --plugin',  'Create new plugin');
-$zep->option('-c, --content', 'Create new content');
+$zep->option("-p, --plugin",  "Create new plugin");
+$zep->option("-c, --content", "Create new content");
 
 // Exit if ``parse()`` fails
 if(!$zep->parse()) {
@@ -58,44 +58,68 @@ if(!$zep->parse()) {
 $input = $zep->getInputs();
 
 // If ``zep init`` is run
-if ($zep->get('option') === 'init') {
-    $zep->out('init');
+if ($zep->get("option") === "init") {
+    $zep->out("init");
     // do init shit
 }
 // If ``zep new`` is run
-elseif ($zep->get('option') === 'new') {
+elseif ($zep->get("option") === "new") {
 
     // Get the flag specified by user
     $key = array_search(true, $input);
 
     // If creating a new plugin
-    if ($key === '-p') {
+    if ($key === "-p") {
 
         // Make sure current directory has 'content' and 'plugins' folders
         try {
             check_current_directory();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $zep->out($e->getMessage());
         }
 
         // Ask for name, format it so only the first character is uppercase
         // and add it to the plugin template
-        $name = ucfirst(strtolower($zep->prompt('What would you like to call the plugin?')));
+        $name = ucfirst(strtolower($zep->prompt("Plugin name:")));
 
         // Create file in 'plugins' directory
-        file_put_contents(getcwd() . '/plugins/' . $name . 'Plugin.php', sprintf($plugin_template, $name));
+        $path = getcwd() . "/plugins/" . $name . "Plugin.php";
+        file_put_contents($path, sprintf($plugin_template, $name));
+
+        $zep->out("File created as " . $path);
     }
     // If creating new content
-    elseif ($key === '-c') {
-        $zep->out('new contenthaha');
+    elseif ($key === "-c") {
+
+        // Make sure current directory has 'content' and 'plugins' folders
+        try {
+            check_current_directory();
+        }
+        catch (\Exception $e) {
+            $zep->out($e->getMessage());
+        }
+
+        // Ask for name and add it to the content template
+        $filename = strtolower($zep->prompt("Filename:")); // Check for extension and add one if not
+        $title    = ucfirst($zep->prompt("Title:"));
+        $desc     = $zep->prompt("Description: (Optional)");
+        $date     = (!$zep->prompt("Date: (Leave empty for today's date)"))
+                        ? $date = date('d m Y')
+                        : $date;
+
+        // DRY, innit?
+        $writer   = new Zepto\FileWriter\MarkdownWriter;
+        $path     = getcwd() . "/content/" . $filename;
+        $writer->write($path, array($title, $desc, $date, ""));
     }
 }
 
+// Checks to see if current directory has a 'plugins' and 'content' folder
 function check_current_directory()
 {
     $current_dir = getcwd();
 
-    if (is_dir($current_dir . '/plugins') && is_dir($current_dir . '/content')) {
+    if (is_dir($current_dir . "/plugins") && is_dir($current_dir . "/content")) {
         return;
     }
     else {
