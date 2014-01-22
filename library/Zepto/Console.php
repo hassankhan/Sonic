@@ -350,7 +350,7 @@ class Console
     public static function prompt($msg, $password = null)
     {
         // output message
-        echo $msg;
+        echo $msg . ' ';
         // if password then disable text output
         if ($password != null) {
             system('stty -echo');
@@ -386,6 +386,7 @@ class Console
 
     /**
      * Output any text wrapped with end-of-line constants
+     *
      * @param  string $msg
      */
     public function out($msg)
