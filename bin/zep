@@ -6,6 +6,42 @@ require(__DIR__ . '/../vendor/autoload.php');
 
 $zep = new Zepto\Console($argv);
 
+$plugin_template = <<<PLUGIN
+<?php
+
+class %sPlugin implements \Zepto\PluginInterface {
+
+    public function after_config_load(&$settings)
+    {
+        // code here
+    }
+
+    public function after_plugins_load()
+    {
+        // code here
+    }
+
+    public function before_file_load(&$content_dir)
+    {
+        // code here
+    }
+
+    public function after_file_load(&$content)
+    {
+        // code here
+    }
+
+    public function request_url(&$url)
+    {
+        // code here
+    }
+
+}
+
+?>
+
+PLUGIN;
+
 // Add parameter
 $zep->param('option', 'Choose from init or new', true);
 
@@ -13,21 +49,56 @@ $zep->param('option', 'Choose from init or new', true);
 $zep->option('-p, --plugin',  'Create new plugin');
 $zep->option('-c, --content', 'Create new content');
 
+// Exit if ``parse()`` fails
 if(!$zep->parse()) {
     exit(1);
 }
 
+// Get input
 $input = $zep->getInputs();
 
+// If ``zep init`` is run
 if ($zep->get('option') === 'init') {
     $zep->out('init');
     // do init shit
 }
+// If ``zep new`` is run
 elseif ($zep->get('option') === 'new') {
-    if (in_array(array('-p', '--plugin'), $input) && $input['-p'] === true) {
-        $zep->out('new plugin');
+
+    // Get the flag specified by user
+    $key = array_search(true, $input);
+
+    // If creating a new plugin
+    if ($key === '-p') {
+
+        // Make sure current directory has 'content' and 'plugins' folders
+        try {
+            check_current_directory();
+        } catch (Exception $e) {
+            $zep->out($e->getMessage());
+        }
+
+        // Ask for name, format it so only the first character is uppercase
+        // and add it to the plugin template
+        $name = ucfirst(strtolower($zep->prompt('What would you like to call the plugin?')));
+
+        // Create file in 'plugins' directory
+        file_put_contents(getcwd() . '/plugins/' . $name . 'Plugin.php', sprintf($plugin_template, $name));
     }
-    elseif (in_array(array('-c', '--content'), $input) && $input['-c'] === true) {
-        $zep->out('new content');
+    // If creating new content
+    elseif ($key === '-c') {
+        $zep->out('new contenthaha');
+    }
+}
+
+function check_current_directory()
+{
+    $current_dir = getcwd();
+
+    if (is_dir($current_dir . '/plugins') && is_dir($current_dir . '/content')) {
+        return;
+    }
+    else {
+        throw new Exception("No content or plugins directory found, please run zep init");
     }
 }
