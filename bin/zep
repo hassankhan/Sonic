@@ -1,0 +1,33 @@
+#!/usr/bin/php
+<?php
+
+// Require stuff
+require(__DIR__ . '/../vendor/autoload.php');
+
+$zep = new Zepto\Console($argv);
+
+// Add parameter
+$zep->param('option', 'Choose from init or new', true);
+
+// Add options
+$zep->option('-p, --plugin',  'Create new plugin');
+$zep->option('-c, --content', 'Create new content');
+
+if(!$zep->parse()) {
+    exit(1);
+}
+
+$input = $zep->getInputs();
+
+if ($zep->get('option') === 'init') {
+    $zep->out('init');
+    // do init shit
+}
+elseif ($zep->get('option') === 'new') {
+    if (in_array(array('-p', '--plugin'), $input) && $input['-p'] === true) {
+        $zep->out('new plugin');
+    }
+    elseif (in_array(array('-c', '--content'), $input) && $input['-c'] === true) {
+        $zep->out('new content');
+    }
+}
