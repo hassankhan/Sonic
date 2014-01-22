@@ -346,6 +346,7 @@ class Console
      * @param null   $password
      * @static
      * @return string
+     * @codeCoverageIgnore
      */
     public static function prompt($msg, $password = null)
     {
@@ -368,9 +369,10 @@ class Console
     /**
      * Add a confirmation
      *
-     * @param string $msg - question to ask
+     * @param  string $msg
      * @static
      * @return bool
+     * @codeCoverageIgnore
      */
     public static function confirm($msg)
     {
@@ -388,8 +390,9 @@ class Console
      * Output any text wrapped with end-of-line constants
      *
      * @param  string $msg
+     * @static
      */
-    public function out($msg)
+    public static function out($msg)
     {
         echo PHP_EOL . $msg . PHP_EOL;
     }

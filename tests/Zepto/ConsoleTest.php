@@ -130,7 +130,7 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test parsing non options
+     * @covers Zepto\Console::parse()
      */
     public function testParsingNonOptions() {
         $cli = new Console(array(
@@ -156,6 +156,91 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('extra', $cli->get(0));
         $this->assertEquals('-b', $cli->get(1));
         $this->assertEquals('info', $cli->get(2));
+    }
+
+    /**
+     * @covers Zepto\Console::getParams()
+     */
+    public function testGetParams()
+    {
+        $cli = new Console(array(
+            'cli.php',
+            '-t',
+            '-p',
+        ));
+
+        $cli->param('option',  'Name of option');
+        $cli->param('option2', 'Name of option 2', true);
+
+        $expected = array(
+            0 => array(
+                'name' => "option",
+                'help' => "[option] Name of option",
+                'required' => false
+            ),
+            1 => array(
+                'name' => "option2",
+                'help' => "[option] Name of option 2",
+                'required' => true
+            ),
+        );
+    }
+
+    /**
+     * @covers Zepto\Console::get()
+     */
+    public function testGet()
+    {
+        $cli = new Console(array(
+            'cli.php',
+            '-t',
+            '-p',
+        ));
+
+        $cli->option('-t, --test', 'Test');
+        $cli->option('-p, --pest', 'Pest');
+
+        $cli->parse();
+
+        $this->assertTrue($cli->get('-t'));
+        $this->assertTrue($cli->get('-p'));
+    }
+
+    /**
+     * @covers Zepto\Console::get()
+     * @expectedException Exception
+     */
+    public function testGetNonexistentOption()
+    {
+        $cli = new Console(array(
+            'cli.php',
+            '--test'
+        ));
+
+        $cli->get('unreal');
+    }
+
+    /**
+     * @covers Zepto\Console::out()
+     */
+    public function testOut()
+    {
+        $cli = new Console(array(
+            'cli.php',
+            '-test'
+        ));
+
+        $cli->out('HAHA');
+        $this->expectOutputString(PHP_EOL . 'HAHA' . PHP_EOL);
+    }
+
+    /**
+     * @covers Zepto\Console::out()
+     */
+    public function testOutAsStaticMethod()
+    {
+        Console::out('HAHA');
+        $this->expectOutputString(PHP_EOL . 'HAHA' . PHP_EOL);
     }
 
     /**
