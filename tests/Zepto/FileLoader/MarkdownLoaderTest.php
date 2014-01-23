@@ -49,8 +49,8 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
                 'title'         => 'Error 404',
                 'robots'        => 'noindex,nofollow'
             ),
-            'content' => '<h1>Error 404</h1>' . PHP_EOL
-                . '<p>Woops. Looks like this page doesn\'t exist.</p>'
+            'content' => '<h1>Error 404</h1>' . PHP_EOL. PHP_EOL
+                . '<p>Woops. Looks like this page doesn\'t exist.</p>'. PHP_EOL
         );
 
         $result = $this->object->load(ROOT_DIR . 'content/404.md', array('md'));
@@ -66,22 +66,22 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
             'meta'    => array(
                 'title'         => 'Sub Page Index'
             ),
-            'content' => '<h2>This is a Sub Page Index</h2>' . PHP_EOL
-                . '<p>This is index.md in the "sub" folder.</p>' . PHP_EOL
-                . '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>' . PHP_EOL
-                . '<p>Donec ultricies tristique nulla et mattis.</p>' . PHP_EOL
-                . '<p>Phasellus id massa eget nisl congue blandit sit amet id ligula.</p>'
+            'content' => '<h2>This is a Sub Page Index</h2>' . PHP_EOL. PHP_EOL
+                . '<p>This is index.md in the "sub" folder.</p>' . PHP_EOL. PHP_EOL
+                . '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>' . PHP_EOL. PHP_EOL
+                . '<p>Donec ultricies tristique nulla et mattis.</p>' . PHP_EOL. PHP_EOL
+                . '<p>Phasellus id massa eget nisl congue blandit sit amet id ligula.</p>'. PHP_EOL
         );
 
         $files['sub/page.md'] = array(
             'meta'    => array(
                 'title'         => 'Sub Page'
             ),
-            'content' => '<h2>This is a Sub Page</h2>' . PHP_EOL
-                . '<p>This is page.md in the "sub" folder.</p>' . PHP_EOL
-                . '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>' . PHP_EOL
-                . '<p>Donec ultricies tristique nulla et mattis.</p>' . PHP_EOL
-                . '<p>Phasellus id massa eget nisl congue blandit sit amet id ligula.</p>'
+            'content' => '<h2>This is a Sub Page</h2>' . PHP_EOL. PHP_EOL
+                . '<p>This is page.md in the "sub" folder.</p>' . PHP_EOL. PHP_EOL
+                . '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>' . PHP_EOL. PHP_EOL
+                . '<p>Donec ultricies tristique nulla et mattis.</p>' . PHP_EOL. PHP_EOL
+                . '<p>Phasellus id massa eget nisl congue blandit sit amet id ligula.</p>'. PHP_EOL
         );
 
         $result = $this->object->load(ROOT_DIR . 'content/sub', array('md'));

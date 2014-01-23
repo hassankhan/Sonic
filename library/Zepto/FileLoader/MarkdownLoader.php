@@ -11,7 +11,7 @@
 
 namespace Zepto\FileLoader;
 
-use Parsedown;
+use \Michelf\MarkdownExtra;
 
 class MarkdownLoader extends \Zepto\FileLoader {
 
@@ -85,7 +85,7 @@ class MarkdownLoader extends \Zepto\FileLoader {
     private function parse_content($file)
     {
         $content = preg_replace('#/\*.+?\*/#s', '', $file);
-        return Parsedown::instance()->parse($content);
+        return MarkdownExtra::defaultTransform($content);
     }
 
 }
