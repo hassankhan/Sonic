@@ -11,9 +11,17 @@
 
 namespace Zepto\FileLoader;
 
-use \Michelf\MarkdownExtra;
-
 class MarkdownLoader extends \Zepto\FileLoader {
+
+    /**
+     * An object which parses Markdown to HTML
+     * @var Michelf\MarkdownInterface
+     */
+    protected $parser;
+
+    function __construct(\Michelf\MarkdownInterface $parser) {
+        $this->parser = $parser;
+    }
 
     /**
      * Basically does the same job as the superclass, except this time we run
@@ -29,12 +37,19 @@ class MarkdownLoader extends \Zepto\FileLoader {
     }
 
     /**
-     * Where the magic happens, ladies and gentlemen
+     * Returns the parser object
+     * @return Michelf\MarkdownInterface
+     */
+    public function get_parser()
+    {
+        return $this->parser;
+    }
+
+    /**
+     * Where the magic happens, ladies and gentlemen. An array with the keys set to the name of
+     * the file and the values set to the processed Markdown text
      * @codeCoverageIgnore
-     * @param  Parsedown $processor Instance of Parsedown
-     * @return array                An array with the keys set to the name of
-     *                              the file and the values set to the processed
-     *                              Markdown text
+     * @return array
      */
     private function post_process()
     {
@@ -85,7 +100,7 @@ class MarkdownLoader extends \Zepto\FileLoader {
     private function parse_content($file)
     {
         $content = preg_replace('#/\*.+?\*/#s', '', $file);
-        return MarkdownExtra::defaultTransform($content);
+        return $this->parser->defaultTransform($content);
     }
 
 }
