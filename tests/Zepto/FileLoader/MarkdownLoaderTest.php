@@ -7,53 +7,55 @@ namespace Zepto\FileLoader;
 class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var MarkdownLoader
+     * @covers Zepto\FileLoader\MarkdownLoader::__construct()
+     * @covers Zepto\FileLoader\MarkdownLoader::get_parser()
      */
-    protected $object;
-
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    protected function setUp()
+    public function testConstructWithMarkdown()
     {
-        $this->object = new MarkdownLoader();
+        $parser = $this->getMock('Michelf\Markdown', array('defaultTransform'));
+        $loader = new MarkdownLoader($parser);
+
+        $this->assertInstanceOf('Michelf\Markdown', $loader->get_parser());
     }
 
     /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
+     * @covers Zepto\FileLoader\MarkdownLoader::__construct()
+     * @covers Zepto\FileLoader\MarkdownLoader::get_parser()
      */
-    protected function tearDown()
+    public function testConstructWithMarkdownExtra()
     {
-        $this->object = null;
-    }
+        $parser = $this->getMock('Michelf\MarkdownExtra', array('defaultTransform'));
+        $loader = new MarkdownLoader($parser);
 
-    /**
-     * @covers Zepto\FileLoader\MarkdownLoader::load()
-     * @expectedException Exception
-     */
-    public function testLoad()
-    {
-        $this->object->load('@£@', 'aa');
+        $this->assertInstanceOf('Michelf\MarkdownExtra', $loader->get_parser());
     }
 
     /**
      * @covers Zepto\FileLoader\MarkdownLoader::load
-     * @todo   Implement testLoad().
      */
-    public function testLoadSingleFile()
+    public function testLoad()
     {
+        $parsed_text = "<h1>Error 404</h1>" . PHP_EOL. PHP_EOL
+            . "<p>Woops. Looks like this page doesn't exist.</p>". PHP_EOL;
+
+        // Create a stub for the SomeClass class.
+        $parser = $this->getMock('Michelf\MarkdownInterface', array('defaultTransform', 'transform'));
+
+        $parser::staticExpects($this->any())
+                ->method('defaultTransform')
+                ->will($this->returnValue($parsed_text));
+
+        $loader = new MarkdownLoader($parser);
+
         $files['404.md'] = array(
             'meta'    => array(
                 'title'         => 'Error 404',
                 'robots'        => 'noindex,nofollow'
             ),
-            'content' => '<h1>Error 404</h1>' . PHP_EOL
-                . '<p>Woops. Looks like this page doesn\'t exist.</p>'
+            'content' => $parsed_text
         );
 
-        $result = $this->object->load(ROOT_DIR . 'content/404.md', array('md'));
+        $result = $loader->load(ROOT_DIR . 'content/404.md', array('md'));
         $this->assertEquals($files, $result);
     }
 
@@ -62,29 +64,42 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadMultipleFiles()
     {
+        $done_text_1 = "<h2>This is a Sub Page Index</h2>" . PHP_EOL . PHP_EOL
+            . "<p>This is index.md in the 'sub' folder.</p>" . PHP_EOL . PHP_EOL
+            . "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>" . PHP_EOL . PHP_EOL
+            . "<p>Donec ultricies tristique nulla et mattis.</p>" . PHP_EOL. PHP_EOL
+            . "<p>Phasellus id massa eget nisl congue blandit sit amet id ligula.</p>" . PHP_EOL;
+
+        $done_text_2 = "<h2>This is a Sub Page</h2>" . PHP_EOL . PHP_EOL
+                . "<p>This is page.md in the 'sub' folder.</p>" . PHP_EOL . PHP_EOL
+                . "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>" . PHP_EOL . PHP_EOL
+                . "<p>Donec ultricies tristique nulla et mattis.</p>" . PHP_EOL . PHP_EOL
+                . "<p>Phasellus id massa eget nisl congue blandit sit amet id ligula.</p>". PHP_EOL;
+
+        // Create a stub for the SomeClass class.
+        $parser = $this->getMock('Michelf\MarkdownInterface', array('defaultTransform', 'transform'));
+
+        $parser::staticExpects($this->any())
+                ->method('defaultTransform')
+                ->will($this->onConsecutiveCalls($done_text_1, $done_text_2));
+
+        $loader = new MarkdownLoader($parser);
+
         $files['sub/index.md'] = array(
             'meta'    => array(
                 'title'         => 'Sub Page Index'
             ),
-            'content' => '<h2>This is a Sub Page Index</h2>' . PHP_EOL
-                . '<p>This is index.md in the "sub" folder.</p>' . PHP_EOL
-                . '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>' . PHP_EOL
-                . '<p>Donec ultricies tristique nulla et mattis.</p>' . PHP_EOL
-                . '<p>Phasellus id massa eget nisl congue blandit sit amet id ligula.</p>'
+            'content' => $done_text_1
         );
 
         $files['sub/page.md'] = array(
             'meta'    => array(
                 'title'         => 'Sub Page'
             ),
-            'content' => '<h2>This is a Sub Page</h2>' . PHP_EOL
-                . '<p>This is page.md in the "sub" folder.</p>' . PHP_EOL
-                . '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>' . PHP_EOL
-                . '<p>Donec ultricies tristique nulla et mattis.</p>' . PHP_EOL
-                . '<p>Phasellus id massa eget nisl congue blandit sit amet id ligula.</p>'
+            'content' => $done_text_2
         );
 
-        $result = $this->object->load(ROOT_DIR . 'content/sub', array('md'));
+        $result = $loader->load(ROOT_DIR . 'content/sub', array('md'));
         $this->assertEquals($files, $result);
     }
 
