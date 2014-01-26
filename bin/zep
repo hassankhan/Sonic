@@ -81,6 +81,8 @@ if ($zep->get("option") === "init") {
             exit(1);
         }
     }
+
+    $zep->out("You seem to have already run zep init. Stop wasting my time.");
 }
 // If ``zep new`` is run
 elseif ($zep->get("option") === "new") {
