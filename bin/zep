@@ -59,12 +59,17 @@ $input = $zep->getInputs();
 
 // If ``zep init`` is run
 if ($zep->get("option") === "init") {
+    // Check to see if current directory has 'content', 'plugins' folders
+    // @todo Doesn't seem like the best way of doing this
     try {
         check_current_directory();
     } catch (Exception $e) {
+        // If it doesn't, then confirm initial setup and create folders
         $zep->out("No content, plugins or templates folder found.");
         if ($zep->confirm("Are you sure you want to continue with folder creation?")) {
             $zep->out("Creating folders in current directory...");
+
+            // Ideally, set these with some sort of permissions.
             mkdir(getcwd() . "/plugins/");
             mkdir(getcwd() . "/content/");
             mkdir(getcwd() . "/templates/");
@@ -76,7 +81,6 @@ if ($zep->get("option") === "init") {
             exit(1);
         }
     }
-    // do init shit
 }
 // If ``zep new`` is run
 elseif ($zep->get("option") === "new") {
