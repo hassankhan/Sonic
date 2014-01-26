@@ -106,6 +106,10 @@ All pull requests should ideally be accompanied by passing unit tests and comple
 
 Zepto is created and maintained by [Hassan Khan](http://hassankhan.me).
 
+## Credits
+
+Clearly a lot of help from [Slim](), as is apparent from the source code. This also would not have been possible without [Pico](), [Parsedown]() and many others. This project would not be available without the efforts of open-source PHP community.
+
 ## License
 
 Zepto is released under the MIT public license.

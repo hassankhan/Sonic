@@ -32,9 +32,12 @@ To-Do
 
 ## Tests
 - Write MORE unit tests
+    - Add @dataProvider to ConsoleTest
 - Maybe get some benchmarks up?
+- Add support for HHVM
 
 ## Miscellanea
 - Move ``index.php`` to ``public`` folder
+- Add support for environments ``[production|dev]``
 - Check for PHP version and use newer functions where available
-- Create a CLI-type tool for initial setup
+- Create a CLI-type tool for initial setup [IN PROGRESS]
