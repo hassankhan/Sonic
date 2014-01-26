@@ -19,6 +19,8 @@
  * Parses command line inputs, and provides an easy, OOP approach to complex-ish
  * CLI scripts.
  *
+ * All output is wrapped with ``PHP_EOL``, and this cannot be changed.
+ *
  * <code>
  * use Zepto\Console as Console;
  *
@@ -60,10 +62,10 @@ class Console
      * Add option
      *
      * Example:
-     *    $cli->option('-p, --peppers', 'Add peppers');
-     *    $cli->option('-c, --cheese [type]', 'Add a cheese', true);
-     *    $cli->get('-p'); // true/false
-     *    $cli->get('-c'); // cheese type
+     *    $zep->option('-p, --peppers', 'Add peppers');
+     *    $zep->option('-c, --cheese [type]', 'Add a cheese', true);
+     *    $zep->get('-p'); // true/false
+     *    $zep->get('-c'); // cheese type
      *
      * @param string $flags
      * @param string $help_text
@@ -73,13 +75,13 @@ class Console
     {
         $options = $this->parseOption($flags);
 
-        $options['help'] = $flags . ' ' . $help_text;
+        $options["help"] = $flags . " " . $help_text;
 
         if ($required) {
-            $options['required'] = true;
+            $options["required"] = true;
         }
 
-        $this->setOption($options['short'], $options);
+        $this->setOption($options["short"], $options);
     }
 
 
@@ -87,8 +89,8 @@ class Console
      * Add param
      *
      * Example:
-     * $cli->param('client', 'Name of client', true);
-     * $cli->get('client');
+     * $zep->param('client', 'Name of client', true);
+     * $zep->get('client');
      *
      * @param string $param
      * @param string $help_text
@@ -98,13 +100,13 @@ class Console
     {
         $options = array();
 
-        $options['name'] = $param;
+        $options["name"] = $param;
         if ($required) {
-            $options['help'] = '<' . $param . '> ' . $help_text;
-            $options['required'] = true;
+            $options["help"] = "<" . $param . "> " . $help_text;
+            $options["required"] = true;
         } else {
-            $options['help'] = '[' . $param . '] ' . $help_text;
-            $options['required'] = false;
+            $options["help"] = "[" . $param . "] " . $help_text;
+            $options["required"] = false;
         }
 
         $this->setParam($options);
@@ -119,17 +121,17 @@ class Console
     private function parseOption($string)
     {
         $output = array();
-        $exploded = explode(',', $string);
+        $exploded = explode(",", $string);
 
-        $output['short'] = $exploded[0]; // short flag
+        $output["short"] = $exploded[0]; // short flag
 
-        $regex = '/\[(.*)\]/';
-        $output['long'] = $exploded[1];
+        $regex = "/\[(.*)\]/";
+        $output["long"] = $exploded[1];
         if (preg_match($regex, $exploded[1])) { // check for input
-            $output['long'] = preg_replace($regex, '', $exploded[1]); // replace input from string
-            $output['input'] = true; // set input as true
+            $output["long"] = preg_replace($regex, "", $exploded[1]); // replace input from string
+            $output["input"] = true; // set input as true
         }
-        $output['long'] = trim($output['long']);
+        $output["long"] = trim($output["long"]);
 
         return $output;
     }
@@ -146,9 +148,9 @@ class Console
     {
         // check if a help flag is set
         try {
-            $key = $this->checkInputs('-h', '--help');
+            $key = $this->checkInputs("-h", "--help");
             if ($key !== false) {
-                throw new \Exception('Help flag is set');
+                throw new \Exception("Help flag is set");
             }
         } catch (\Exception $e) {
             $this->outputHelp();
@@ -158,20 +160,20 @@ class Console
         // loop through options and see if they are in the inputs
         foreach ($this->options as $option => $info) {
             // if option is in inputs
-            $key = $this->checkInputs($info['short'], $info['long']);
+            $key = $this->checkInputs($info["short"], $info["long"]);
             if ($key === false) {
-                $this->pinputs[$info['short']] = false;
-                $this->pinputs[$info['long']] = false;
+                $this->pinputs[$info["short"]] = false;
+                $this->pinputs[$info["long"]] = false;
             } else {
                 // check if next input should be in input
-                if (array_key_exists('input', $info) && $info['input'] == true) {
-                    $this->pinputs[$info['short']] = $this->inputs[$key + 1];
-                    $this->pinputs[$info['long']] = $this->inputs[$key + 1];
+                if (array_key_exists("input", $info) && $info["input"] == true) {
+                    $this->pinputs[$info["short"]] = $this->inputs[$key + 1];
+                    $this->pinputs[$info["long"]] = $this->inputs[$key + 1];
                     unset($this->inputs[$key]); // remove flag from inputs array
                     unset($this->inputs[$key + 1]);
                 } else {
-                    $this->pinputs[$info['short']] = true;
-                    $this->pinputs[$info['long']] = true;
+                    $this->pinputs[$info["short"]] = true;
+                    $this->pinputs[$info["long"]] = true;
                     unset($this->inputs[$key]);
                 }
             }
@@ -183,7 +185,7 @@ class Console
         foreach ($this->inputs as $key => $input) {
             // If parameter for input exists
             if (array_key_exists($count, $this->params)) {
-                $this->pinputs[$this->params[$count]['name']] = $input;
+                $this->pinputs[$this->params[$count]["name"]] = $input;
                 unset($this->inputs[$key]); // remove input from inputs
             }
             $count++;
@@ -239,9 +241,9 @@ class Console
     {
         // Loop through all params
         foreach ($this->params as $param) {
-            if (array_key_exists('required', $param) && $param['required'] == true) {
-                if (!array_key_exists($param['name'], $this->pinputs)) {
-                    throw new \Exception('Parameter "' . $param['name'] . '" is required');
+            if (array_key_exists("required", $param) && $param["required"] == true) {
+                if (!array_key_exists($param["name"], $this->pinputs)) {
+                    throw new \Exception("Parameter '{$param["name"]}' is required");
                 }
             }
         }
@@ -249,10 +251,10 @@ class Console
         // Loop through all options
         foreach ($this->options as $key => $option) {
             // if option is required
-            if (array_key_exists('required', $option) && $option['required'] == true) {
+            if (array_key_exists("required", $option) && $option["required"] == true) {
                 // check that it is defined in pinputs
-                if ($this->pinputs[$option['short']] == false) {
-                    throw new \Exception('Option "' . $option['help'] . '" is required');
+                if ($this->pinputs[$option["short"]] == false) {
+                    throw new \Exception("Option '{$option["help"]}' is required");
                 }
             }
         }
@@ -330,7 +332,7 @@ class Console
     public function get($flag)
     {
         if (!array_key_exists($flag, $this->pinputs)) {
-            throw new \Exception('Input ' . $flag . ' cannot be found');
+            throw new \Exception("Input $flag cannot be found");
         } else {
             return $this->pinputs[$flag];
         }
@@ -351,16 +353,16 @@ class Console
     public static function prompt($msg, $password = null)
     {
         // output message
-        echo $msg . ' ';
+        echo PHP_EOL . "$msg ";
         // if password then disable text output
         if ($password != null) {
-            system('stty -echo');
+            system("stty -echo");
         }
 
         $input = trim(fgets(STDIN));
 
         if ($password != null) {
-            system('stty echo');
+            system("stty echo");
             echo PHP_EOL; // output end of line because the user's CR won't have been outputted
         }
         return $input;
@@ -376,10 +378,10 @@ class Console
      */
     public static function confirm($msg)
     {
-        echo $msg . ' ';
+        echo PHP_EOL . "$msg ";
         $input = trim(fgets(STDIN));
 
-        if (strtolower($input) == 'y' || strtolower($input) == 'yes') {
+        if (strtolower($input) == "y" || strtolower($input) == "yes") {
             return true;
         } else {
             return false;
@@ -414,13 +416,13 @@ class Console
      */
     public function outputHelp($short = false)
     {
-        echo PHP_EOL . "Usage: " . $this->getName() . " ";
+        echo PHP_EOL . "Usage: {$this->getName()} ";
         if (!empty($this->params)) {
             foreach ($this->params as $param) {
-                if ($param['required'] == true) {
-                    echo '<' . $param['name'] . '> ';
+                if ($param["required"] === true) {
+                    echo "<{$param["name"]}> ";
                 } else {
-                    echo '[' . $param['name'] . '] ';
+                    echo "[{$param["name"]}] ";
                 }
             }
         }
@@ -432,21 +434,21 @@ class Console
             if (!empty($this->params)) {
                 echo "Parameters:" . PHP_EOL;
                 foreach ($this->params as $param) {
-                    echo "\t" . $param['help'] . PHP_EOL;
+                    echo "\t{$param["help"]}" . PHP_EOL;
                 }
                 echo PHP_EOL;
             }
 
             echo "Options:" . PHP_EOL;
             foreach ($this->options as $option) {
-                $output = "\t" . $option['help'];
-                if (array_key_exists('required', $option) && $option['required'] == true) {
+                $output = "\t{$option["help"]}";
+                if (array_key_exists("required", $option) && $option["required"] === true) {
                     $output .= " [required]";
                 }
                 $output .= PHP_EOL;
                 echo $output;
             }
-            echo "\t" . $this->helpOption . PHP_EOL;
+            echo "\t{$this->helpOption}" . PHP_EOL;
         } else {
             echo PHP_EOL;
         }

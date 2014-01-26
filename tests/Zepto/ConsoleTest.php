@@ -12,15 +12,15 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
      * @covers Zepto\Console::getInputs()
      */
     public function testGetName() {
-        $cli = new Console(array(
-          'cli.php',
+        $zep = new Console(array(
+          'zep',
           '-p'
         ));
 
-        $cli->parse();
-        $inputs = $cli->getInputs();
+        $zep->parse();
+        $inputs = $zep->getInputs();
 
-        $this->assertEquals('cli.php', $cli->getName());
+        $this->assertEquals('zep', $zep->getName());
         $this->assertEquals('-p', $inputs[0]);
     }
 
@@ -29,11 +29,11 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
      * @covers Zepto\Console::getOptions
      */
     public function testOption() {
-        $cli = new Console(array('cli.php'));
-        $cli->option('-p, --peppers', 'Add peppers');
-        $cli->option('-c, --cheese [type]', 'Add a cheese');
+        $zep = new Console(array('zep'));
+        $zep->option('-p, --peppers', 'Add peppers');
+        $zep->option('-c, --cheese [type]', 'Add a cheese');
 
-        $options = $cli->getOptions();
+        $options = $zep->getOptions();
 
         $this->assertCount(2, $options);
         $this->assertArrayHasKey('-p', $options);
@@ -46,21 +46,21 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
      * @covers Zepto\Console::parse
      */
     public function testRequiredOption() {
-        $cli = new Console(array(
-          'cli.php',
+        $zep = new Console(array(
+          'zep',
           '-p'
         ));
 
-        $cli->option('-h, --ham', 'Add ham');
-        $cli->option('-b, --bread [type]', 'Type of bread', true);
+        $zep->option('-h, --ham', 'Add ham');
+        $zep->option('-b, --bread [type]', 'Type of bread', true);
 
-        $cli->parse();
+        $zep->parse();
 
         // expect parse to throw an exception that input is not defined
         $this->expectOutputString(
-            "Option \"-b, --bread [type] Type of bread\" is required"
+            "Option '-b, --bread [type] Type of bread' is required"
             . PHP_EOL . PHP_EOL . PHP_EOL
-            . "Usage: cli.php [options]" . PHP_EOL
+            . "Usage: zep [options]" . PHP_EOL
         );
     }
 
@@ -68,37 +68,37 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
      * Test params
      */
     public function testParams() {
-        $cli = new Console(array(
-          'cli.php',
+        $zep = new Console(array(
+          'zep',
           'test',
           'uk'
         ));
-        $cli->param('client', 'Name of client', true);
-        $cli->param('locale', 'Client locale');
-        $cli->parse();
+        $zep->param('client', 'Name of client', true);
+        $zep->param('locale', 'Client locale');
+        $zep->parse();
 
         // expect parse to throw an exception that input is not defined
-        $this->assertEquals("test", $cli->get('client'));
-        $this->assertEquals("uk", $cli->get('locale'));
+        $this->assertEquals("test", $zep->get('client'));
+        $this->assertEquals("uk", $zep->get('locale'));
     }
 
     /**
      * Test required
      */
     public function testRequiredParam() {
-        $cli = new Console(array(
-          'cli.php'
+        $zep = new Console(array(
+          'zep'
         ));
 
-        $cli->param('client', 'Specify client', true);
+        $zep->param('client', 'Specify client', true);
 
-        $cli->parse();
+        $zep->parse();
 
         // expect parse to throw an exception that input is not defined
         $this->expectOutputString(
-            "Parameter \"client\" is required"
+            "Parameter 'client' is required"
             . PHP_EOL . PHP_EOL . PHP_EOL
-            . "Usage: cli.php <client> [options]" . PHP_EOL
+            . "Usage: zep <client> [options]" . PHP_EOL
         );
     }
 
@@ -107,34 +107,34 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
      * @covers Zepto\Console::parse
      */
     public function testParse() {
-        $cli = new Console(array(
-          'cli.php',
+        $zep = new Console(array(
+          'zep',
           '-p',
           '--cheese',
           'cheddar'
         ));
-        $cli->option('-p, --peppers', 'Add peppers');
-        $cli->option('-c, --cheese [type]', 'Add a cheese');
-        $cli->option('-m, --mayo', 'Add mayonaise');
+        $zep->option('-p, --peppers', 'Add peppers');
+        $zep->option('-c, --cheese [type]', 'Add a cheese');
+        $zep->option('-m, --mayo', 'Add mayonaise');
 
-        $cli->parse();
+        $zep->parse();
 
-        $this->assertTrue($cli->get('-p'));
-        $this->assertTrue($cli->get('--peppers'));
+        $this->assertTrue($zep->get('-p'));
+        $this->assertTrue($zep->get('--peppers'));
 
-        $this->assertEquals('cheddar', $cli->get('-c'));
-        $this->assertEquals('cheddar', $cli->get('--cheese'));
+        $this->assertEquals('cheddar', $zep->get('-c'));
+        $this->assertEquals('cheddar', $zep->get('--cheese'));
 
-        $this->assertFalse($cli->get('-m'));
-        $this->assertFalse($cli->get('--mayo'));
+        $this->assertFalse($zep->get('-m'));
+        $this->assertFalse($zep->get('--mayo'));
     }
 
     /**
      * @covers Zepto\Console::parse()
      */
     public function testParsingNonOptions() {
-        $cli = new Console(array(
-          'cli.php',
+        $zep = new Console(array(
+          'zep',
           '-p',
           '--cheese',
           'cheddar',
@@ -142,20 +142,20 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
           '-b',
           'info'
         ));
-        $cli->option('-p, --peppers', 'Add peppers');
-        $cli->option('-c, --cheese [type]', 'Add a cheese');
+        $zep->option('-p, --peppers', 'Add peppers');
+        $zep->option('-c, --cheese [type]', 'Add a cheese');
 
-        $cli->parse();
+        $zep->parse();
 
-        $this->assertTrue($cli->get('-p'));
-        $this->assertTrue($cli->get('--peppers'));
+        $this->assertTrue($zep->get('-p'));
+        $this->assertTrue($zep->get('--peppers'));
 
-        $this->assertEquals('cheddar', $cli->get('-c'));
-        $this->assertEquals('cheddar', $cli->get('--cheese'));
+        $this->assertEquals('cheddar', $zep->get('-c'));
+        $this->assertEquals('cheddar', $zep->get('--cheese'));
 
-        $this->assertEquals('extra', $cli->get(0));
-        $this->assertEquals('-b', $cli->get(1));
-        $this->assertEquals('info', $cli->get(2));
+        $this->assertEquals('extra', $zep->get(0));
+        $this->assertEquals('-b', $zep->get(1));
+        $this->assertEquals('info', $zep->get(2));
     }
 
     /**
@@ -163,14 +163,14 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetParams()
     {
-        $cli = new Console(array(
-            'cli.php',
+        $zep = new Console(array(
+            'zep',
             '-t',
             '-p',
         ));
 
-        $cli->param('option',  'Name of option');
-        $cli->param('option2', 'Name of option 2', true);
+        $zep->param('option',  'Name of option');
+        $zep->param('option2', 'Name of option 2', true);
 
         $expected = array(
             0 => array(
@@ -191,19 +191,19 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
      */
     public function testGet()
     {
-        $cli = new Console(array(
-            'cli.php',
+        $zep = new Console(array(
+            'zep',
             '-t',
             '-p',
         ));
 
-        $cli->option('-t, --test', 'Test');
-        $cli->option('-p, --pest', 'Pest');
+        $zep->option('-t, --test', 'Test');
+        $zep->option('-p, --pest', 'Pest');
 
-        $cli->parse();
+        $zep->parse();
 
-        $this->assertTrue($cli->get('-t'));
-        $this->assertTrue($cli->get('-p'));
+        $this->assertTrue($zep->get('-t'));
+        $this->assertTrue($zep->get('-p'));
     }
 
     /**
@@ -212,12 +212,12 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetNonexistentOption()
     {
-        $cli = new Console(array(
-            'cli.php',
+        $zep = new Console(array(
+            'zep',
             '--test'
         ));
 
-        $cli->get('unreal');
+        $zep->get('unreal');
     }
 
     /**
@@ -225,12 +225,12 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
      */
     public function testOut()
     {
-        $cli = new Console(array(
-            'cli.php',
+        $zep = new Console(array(
+            'zep',
             '-test'
         ));
 
-        $cli->out('HAHA');
+        $zep->out('HAHA');
         $this->expectOutputString(PHP_EOL . 'HAHA' . PHP_EOL);
     }
 
@@ -247,23 +247,23 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
      * Test help text
      */
     public function testHelp() {
-        $cli = new Console(array(
-            'cli.php',
+        $zep = new Console(array(
+            'zep',
             '-p',
             '--help'
         ));
 
-        $cli->option('-p, --peppers', 'Add peppers');
-        $cli->option('-c, --cheese [type]', 'Add a cheese');
-        $cli->option('-m, --mayo', 'Add mayonaise');
-        $cli->option('-b, --bread [type]', 'Type of bread', true);
+        $zep->option('-p, --peppers', 'Add peppers');
+        $zep->option('-c, --cheese [type]', 'Add a cheese');
+        $zep->option('-m, --mayo', 'Add mayonaise');
+        $zep->option('-b, --bread [type]', 'Type of bread', true);
 
-        $cli->param('client', 'Name of client', true);
-        $cli->param('locale', 'Client locale');
+        $zep->param('client', 'Name of client', true);
+        $zep->param('locale', 'Client locale');
 
-        $cli->parse();
+        $zep->parse();
 
-        $this->expectOutputString(PHP_EOL . "Usage: cli.php <client> [locale] [options]\n\nParameters:\n\t<client> Name of client\n\t[locale] Client locale\n\nOptions:\n\t-p, --peppers Add peppers\n\t-c, --cheese [type] Add a cheese\n\t-m, --mayo Add mayonaise\n\t-b, --bread [type] Type of bread [required]\n\t-h, --help Output usage information\n");
+        $this->expectOutputString(PHP_EOL . "Usage: zep <client> [locale] [options]\n\nParameters:\n\t<client> Name of client\n\t[locale] Client locale\n\nOptions:\n\t-p, --peppers Add peppers\n\t-c, --cheese [type] Add a cheese\n\t-m, --mayo Add mayonaise\n\t-b, --bread [type] Type of bread [required]\n\t-h, --help Output usage information\n");
     }
 
 }
