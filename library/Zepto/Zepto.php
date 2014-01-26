@@ -17,10 +17,14 @@ defined('ROOT_DIR')
 
 use Pimple;
 use Whoops;
+use Michelf\MarkdownExtra;
 
 class Zepto {
 
-    const VERSION = '0.4';
+    /**
+     *
+     */
+    const VERSION = '0.6';
 
     public $container;
 
@@ -92,7 +96,7 @@ class Zepto {
 
         $container['file_loader'] = $container->share(
             function ($container) {
-                return new FileLoader\MarkdownLoader();
+                return new FileLoader\MarkdownLoader(new \Michelf\MarkdownExtra);
             }
         );
 
