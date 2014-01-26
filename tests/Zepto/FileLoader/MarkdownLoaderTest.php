@@ -64,13 +64,13 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadMultipleFiles()
     {
-        $done_text_1 = "<h2>This is a Sub Page Index</h2>" . PHP_EOL . PHP_EOL
+        $sub_page_index_content = "<h2>This is a Sub Page Index</h2>" . PHP_EOL . PHP_EOL
             . "<p>This is index.md in the 'sub' folder.</p>" . PHP_EOL . PHP_EOL
             . "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>" . PHP_EOL . PHP_EOL
             . "<p>Donec ultricies tristique nulla et mattis.</p>" . PHP_EOL. PHP_EOL
             . "<p>Phasellus id massa eget nisl congue blandit sit amet id ligula.</p>" . PHP_EOL;
 
-        $done_text_2 = "<h2>This is a Sub Page</h2>" . PHP_EOL . PHP_EOL
+        $sub_page_content = "<h2>This is a Sub Page</h2>" . PHP_EOL . PHP_EOL
                 . "<p>This is page.md in the 'sub' folder.</p>" . PHP_EOL . PHP_EOL
                 . "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>" . PHP_EOL . PHP_EOL
                 . "<p>Donec ultricies tristique nulla et mattis.</p>" . PHP_EOL . PHP_EOL
@@ -81,7 +81,7 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
 
         $parser::staticExpects($this->any())
                 ->method('defaultTransform')
-                ->will($this->onConsecutiveCalls($done_text_1, $done_text_2));
+                ->will($this->onConsecutiveCalls($sub_page_index_content, $sub_page_content));
 
         $loader = new MarkdownLoader($parser);
 
@@ -89,14 +89,14 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
             'meta'    => array(
                 'title'         => 'Sub Page Index'
             ),
-            'content' => $done_text_1
+            'content' => $sub_page_index_content
         );
 
         $files['sub/page.md'] = array(
             'meta'    => array(
                 'title'         => 'Sub Page'
             ),
-            'content' => $done_text_2
+            'content' => $sub_page_content
         );
 
         $result = $loader->load(ROOT_DIR . 'content/sub', array('md'));
