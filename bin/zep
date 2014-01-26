@@ -59,7 +59,23 @@ $input = $zep->getInputs();
 
 // If ``zep init`` is run
 if ($zep->get("option") === "init") {
-    $zep->out("init");
+    try {
+        check_current_directory();
+    } catch (Exception $e) {
+        $zep->out("No content, plugins or templates folder found.");
+        if ($zep->confirm("Are you sure you want to continue with folder creation?")) {
+            $zep->out("Creating folders in current directory...");
+            mkdir(getcwd() . "/plugins/");
+            mkdir(getcwd() . "/content/");
+            mkdir(getcwd() . "/templates/");
+            $zep->out("All done, enjoy");
+            exit(1);
+        }
+        else {
+            $zep->out("Initial setup was cancelled. Zepto has not been set up properly.");
+            exit(1);
+        }
+    }
     // do init shit
 }
 // If ``zep new`` is run
@@ -111,6 +127,8 @@ elseif ($zep->get("option") === "new") {
         $writer   = new Zepto\FileWriter\MarkdownWriter;
         $path     = getcwd() . "/content/" . $filename;
         $writer->write($path, array($title, $desc, $date, ""));
+
+        $zep->out("File created as " . $path);
     }
 }
 
