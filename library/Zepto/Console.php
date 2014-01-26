@@ -376,7 +376,7 @@ class Console
      */
     public static function confirm($msg)
     {
-        echo $msg;
+        echo $msg . ' ';
         $input = trim(fgets(STDIN));
 
         if (strtolower($input) == 'y' || strtolower($input) == 'yes') {
