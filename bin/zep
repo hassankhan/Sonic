@@ -2,7 +2,7 @@
 <?php
 
 // Require stuff
-require(__DIR__ . "/../vendor/autoload.php");
+require(realpath(getcwd() . "/vendor/autoload.php"));
 
 $zep = new Zepto\Console($argv);
 
@@ -126,7 +126,7 @@ elseif ($zep->get("option") === "new") {
         $title    = ucfirst($zep->prompt("Title:"));
         $desc     = $zep->prompt("Description: (Optional)");
         $date     = (!$zep->prompt("Date: (Leave empty for today's date)"))
-                        ? $date = date('d m Y')
+                        ? $date = date("d m Y")
                         : $date;
 
         // DRY, innit?
@@ -147,6 +147,6 @@ function check_current_directory()
         return;
     }
     else {
-        throw new Exception("No content or plugins directory found, please run zep init");
+        throw new \Exception("No content or plugins directory found, please run zep init");
     }
 }
