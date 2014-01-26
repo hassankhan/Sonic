@@ -1,0 +1,152 @@
+#!/usr/bin/php
+<?php
+
+// Require stuff
+require(__DIR__ . "/../vendor/autoload.php");
+
+$zep = new Zepto\Console($argv);
+
+$plugin_template = <<<PLUGIN
+<?php
+
+class %sPlugin implements \Zepto\PluginInterface {
+
+    public function after_config_load(&$settings)
+    {
+        // code here
+    }
+
+    public function after_plugins_load()
+    {
+        // code here
+    }
+
+    public function before_file_load(&$content_dir)
+    {
+        // code here
+    }
+
+    public function after_file_load(&$content)
+    {
+        // code here
+    }
+
+    public function request_url(&$url)
+    {
+        // code here
+    }
+
+}
+
+?>
+
+PLUGIN;
+
+// Add parameter
+$zep->param("option", "Choose from init or new", true);
+
+// Add options
+$zep->option("-p, --plugin",  "Create new plugin");
+$zep->option("-c, --content", "Create new content");
+
+// Exit if ``parse()`` fails
+if(!$zep->parse()) {
+    exit(1);
+}
+
+// Get input
+$input = $zep->getInputs();
+
+// If ``zep init`` is run
+if ($zep->get("option") === "init") {
+    // Check to see if current directory has 'content', 'plugins' folders
+    // @todo Doesn't seem like the best way of doing this
+    try {
+        check_current_directory();
+    } catch (Exception $e) {
+        // If it doesn't, then confirm initial setup and create folders
+        $zep->out("No content, plugins or templates folder found.");
+        if ($zep->confirm("Are you sure you want to continue with folder creation?")) {
+            $zep->out("Creating folders in current directory...");
+
+            // Ideally, set these with some sort of permissions.
+            mkdir(getcwd() . "/plugins/");
+            mkdir(getcwd() . "/content/");
+            mkdir(getcwd() . "/templates/");
+            $zep->out("All done, enjoy");
+            exit(1);
+        }
+        else {
+            $zep->out("Initial setup was cancelled. Zepto has not been set up properly.");
+            exit(1);
+        }
+    }
+
+    $zep->out("You seem to have already run zep init. Stop wasting my time.");
+}
+// If ``zep new`` is run
+elseif ($zep->get("option") === "new") {
+
+    // Get the flag specified by user
+    $key = array_search(true, $input);
+
+    // If creating a new plugin
+    if ($key === "-p") {
+
+        // Make sure current directory has 'content' and 'plugins' folders
+        try {
+            check_current_directory();
+        } catch (\Exception $e) {
+            $zep->out($e->getMessage());
+        }
+
+        // Ask for name, format it so only the first character is uppercase
+        // and add it to the plugin template
+        $name = ucfirst(strtolower($zep->prompt("Plugin name:")));
+
+        // Create file in 'plugins' directory
+        $path = getcwd() . "/plugins/" . $name . "Plugin.php";
+        file_put_contents($path, sprintf($plugin_template, $name));
+
+        $zep->out("File created as " . $path);
+    }
+    // If creating new content
+    elseif ($key === "-c") {
+
+        // Make sure current directory has 'content' and 'plugins' folders
+        try {
+            check_current_directory();
+        }
+        catch (\Exception $e) {
+            $zep->out($e->getMessage());
+        }
+
+        // Ask for name and add it to the content template
+        $filename = strtolower($zep->prompt("Filename:")); // Check for extension and add one if not
+        $title    = ucfirst($zep->prompt("Title:"));
+        $desc     = $zep->prompt("Description: (Optional)");
+        $date     = (!$zep->prompt("Date: (Leave empty for today's date)"))
+                        ? $date = date('d m Y')
+                        : $date;
+
+        // DRY, innit?
+        $writer   = new Zepto\FileWriter\MarkdownWriter;
+        $path     = getcwd() . "/content/" . $filename;
+        $writer->write($path, array($title, $desc, $date, ""));
+
+        $zep->out("File created as " . $path);
+    }
+}
+
+// Checks to see if current directory has a 'plugins' and 'content' folder
+function check_current_directory()
+{
+    $current_dir = getcwd();
+
+    if (is_dir($current_dir . "/plugins") && is_dir($current_dir . "/content")) {
+        return;
+    }
+    else {
+        throw new Exception("No content or plugins directory found, please run zep init");
+    }
+}
