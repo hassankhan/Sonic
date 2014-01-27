@@ -1,8 +1,6 @@
 To-Do
 ====
 
-## Project organisation
-
 ## Frontend
 - Rewrite CSS to LESS
 - Probably try and use Bootstrap
@@ -15,29 +13,27 @@ To-Do
 - Fix headers for consistency
 
 ## Application
+- [Add support for environments ``[production|dev]``](https://github.com/hassankhan/Zepto/issues/4)
 - Abstract-ify Whoops
+- Move ``index.php`` to ``public`` folder
+- Check for PHP version and use newer functions where available
 
 ## Router
-- Add functionality to allow for
-    - DELETE
+- Add functionality to allow for other HTTP verbs
 
 ## Templating Engine
 - Add Twig extensions
 
 ## Plugins
-- Make plugins Pimple Objects
-- Remove all hardcoded paths from PluginLoader
 - Add hooks to important parts of application by adding ``run_hooks()`` calls
-    - ``after_config_load`` isn't working at the minute, need to decouple it some
+    - [``after_config_load`` isn't working at the minute, need to decouple it some](https://github.com/hassankhan/Zepto/issues/5)
 
-## Tests
+## [Tests](https://github.com/hassankhan/Zepto/issues?milestone=1&state=open)
 - Write MORE unit tests
     - Add @dataProvider to ConsoleTest
 - Maybe get some benchmarks up?
-- Add support for HHVM
+- [Add support for HHVM](https://github.com/hassankhan/Zepto/issues/3)
 
-## Miscellanea
-- Move ``index.php`` to ``public`` folder
-- Add support for environments ``[production|dev]``
-- Check for PHP version and use newer functions where available
-- Create a CLI-type tool for initial setup [IN PROGRESS]
+## ``zep``
+- Make init wizard
+- Make shortcuts for ``zep new`` like ``zep new -p Test`` for a new plugin called TestPlugin.php

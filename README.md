@@ -26,6 +26,10 @@ Its interface is _supposed_ to be simple and is in process of documentation. Tha
 
 ## Getting Started
 
+### System Requirements
+
+You need **PHP >= 5.3.0**.
+
 ### Install
 
 #### Composer install
@@ -42,19 +46,30 @@ Then add the following to the top of your ``index.php`` file:
 
 ***Coming soon***
 
-### System Requirements
+### Project setup
 
-You need **PHP >= 5.3.0**.
+After installing the package via Composer, pop open a terminal window, navigate to your project root and type in ``vendor/bin/zep init`` to set up Zepto for its' first run.
+
 
 ### First Run
 
-Instantiate a Zepto application:
+Your project root should now look like this:
 
-    $zepto = new \Zepto\Zepto();
+    .
+    ├── .htaccess
+    ├── composer.json
+    ├── composer.lock
+    ├── config.php
+    ├── index.php
+    └── vendor/
 
-Run the Zepto application:
+Crack open ``index.php`` in your text editor and you'll see
 
-    $zepto->run();
+    require('vendor/autoload.php' );
+    require('config.php');
+
+    $zepto = new Zepto\Zepto($config); // Create instance of Zepto
+    $zepto->run();                     // Run app
 
 ### Setup your web server
 
@@ -80,12 +95,14 @@ You can check out more in-depth documentation [here](https://github.com/hassankh
 
 1. Fork the Zepto repository
 2. Create a new branch for each feature or improvement
+3. Write tests so my precious code coverage doesn't decrease (too much)
 3. Send a pull request from each feature branch to the **develop** branch
 
-It is very important to separate new features or improvements into separate feature branches, and to send a pull request for each branch. This allows me to review and pull in new features or improvements individually.
+It's pretty important to separate new features or improvements into separate feature branches, and to send a pull request for each branch. This allows me to review and pull in new features or improvements individually.
 
 ### Style Guide
 
+4 space tabs, snake case method names please.
 ***Coming soon***
 
 ### Unit Testing
@@ -93,6 +110,8 @@ It is very important to separate new features or improvements into separate feat
 All pull requests should ideally be accompanied by passing unit tests and complete code coverage. Zepto uses [PHPUnit](https://github.com/sebastianbergmann/phpunit/) for testing.
 
 ## Community
+
+Don't make me laugh
 
 ### Forum and Knowledgebase
 
