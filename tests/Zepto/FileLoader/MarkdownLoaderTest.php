@@ -79,9 +79,13 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
         // Create a stub for the SomeClass class.
         $parser = $this->getMock('Michelf\MarkdownInterface', array('defaultTransform', 'transform'));
 
-        $parser::staticExpects($this->any())
+        $parser::staticExpects($this->at(0))
                 ->method('defaultTransform')
-                ->will($this->onConsecutiveCalls($index_content, $sub_page_content));
+                ->will($this->returnValue($index_content));
+
+        $parser::staticExpects($this->at(1))
+                ->method('defaultTransform')
+                ->will($this->returnValue($sub_page_content));
 
         $loader = new MarkdownLoader($parser);
 
