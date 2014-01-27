@@ -67,11 +67,11 @@ class Zepto {
 
         // Create application hooks
         $container['hooks']         = array(
-            'after_config_load'   => array(),
-            'after_plugins_load'  => array(),
-            'request_url'         => array(),
-            'before_file_load'    => array(),
-            'after_file_load'     => array()
+            'after_plugins_load'   => array(),
+            'before_config_load'   => array(),
+            'request_url'          => array(),
+            'before_file_load'     => array(),
+            'after_file_load'      => array()
         );
 
         // Configure error handler
@@ -108,12 +108,17 @@ class Zepto {
             }
         );
 
+        // Set this particular setting now
+        $container['plugins_enabled'] = $settings['zepto']['plugins_enabled'];
 
-        // Set application settings
+        // Load plugins if they're enabled
+        if ($container['plugins_enabled'] === true) {
+            $this->load_plugins($settings['zepto']['plugins_dir']);
+        }
+
+        // Run application hooks and set application settings
+        $this->run_hooks('before_config_load', array(&$settings));
         $container['settings'] = $settings;
-
-        // Load plugins
-        $this->load_plugins();
 
         // Load content from files
         $this->load_content();
@@ -140,16 +145,16 @@ class Zepto {
      * Runs all hooks registered to the specified hook name
      *
      * @param  string  $hook
+     * @param  string  $args
      * @return boolean Returns true on successful execution of all hooks, false if plugins are disabled
      */
     public function run_hooks($hook_id, $args = array())
     {
         $container = $this->container;
-        $settings  = $container['settings']['zepto'];
         $hooks     = $container['hooks'];
 
         // If plugins are disabled, do not run
-        if ($settings['plugins_enabled'] === false) {
+        if ($container['plugins_enabled'] === false) {
             return false;
         }
 
@@ -177,17 +182,16 @@ class Zepto {
      *
      * @return
      */
-    protected function load_plugins()
+    protected function load_plugins($plugins_dir)
     {
         $container     = $this->container;
-        $settings      = $container['settings']['zepto'];
 
-        if ($settings['plugins_enabled'] === true) {
+        if ($container['plugins_enabled'] === true) {
             $plugin_loader = $container['plugin_loader'];
 
             // Load plugins from 'plugins' folder
             $container['plugins'] = $plugin_loader->load(
-                $settings['plugins_dir'],
+                $plugins_dir,
                 array('.php')
             );
         }
