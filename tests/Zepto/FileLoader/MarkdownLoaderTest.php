@@ -64,7 +64,7 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadMultipleFiles()
     {
-        $sub_page_index_content = "<h2>This is a Sub Page Index</h2>" . PHP_EOL . PHP_EOL
+        $index_content = "<h2>This is a Sub Page Index</h2>" . PHP_EOL . PHP_EOL
             . "<p>This is index.md in the 'sub' folder.</p>" . PHP_EOL . PHP_EOL
             . "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>" . PHP_EOL . PHP_EOL
             . "<p>Donec ultricies tristique nulla et mattis.</p>" . PHP_EOL. PHP_EOL
@@ -81,7 +81,7 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
 
         $parser::staticExpects($this->any())
                 ->method('defaultTransform')
-                ->will($this->onConsecutiveCalls($sub_page_index_content, $sub_page_content));
+                ->will($this->onConsecutiveCalls($index_content, $sub_page_content));
 
         $loader = new MarkdownLoader($parser);
 
@@ -89,7 +89,7 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
             'meta'    => array(
                 'title'         => 'Sub Page Index'
             ),
-            'content' => $sub_page_index_content
+            'content' => $index_content
         );
 
         $files['sub/page.md'] = array(
