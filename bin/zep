@@ -11,7 +11,7 @@ $plugin_template = <<<PLUGIN
 
 class %sPlugin implements \Zepto\PluginInterface {
 
-    public function after_config_load(&$settings)
+    public function after_config_load(&\$settings)
     {
         // code here
     }
@@ -21,17 +21,17 @@ class %sPlugin implements \Zepto\PluginInterface {
         // code here
     }
 
-    public function before_file_load(&$content_dir)
+    public function before_file_load(&\$content_dir)
     {
         // code here
     }
 
-    public function after_file_load(&$content)
+    public function after_file_load(&\$content)
     {
         // code here
     }
 
-    public function request_url(&$url)
+    public function request_url(&\$url)
     {
         // code here
     }

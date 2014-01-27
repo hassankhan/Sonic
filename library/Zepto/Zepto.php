@@ -13,7 +13,7 @@ namespace Zepto;
 
 // Define constant for root directory
 defined('ROOT_DIR')
-    || define('ROOT_DIR', str_replace('library/Zepto', '', realpath(dirname(__FILE__))));
+    || define('ROOT_DIR', realpath(getcwd()) . '/');
 
 use Pimple;
 use Whoops;
