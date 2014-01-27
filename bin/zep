@@ -6,7 +6,7 @@ require(realpath(getcwd() . "/vendor/autoload.php"));
 
 $zep = new Zepto\Console($argv);
 
-$plugin_template = <<<PLUGIN
+$template_plugin = <<<PLUGIN
 <?php
 
 class %sPlugin implements \Zepto\PluginInterface {
@@ -68,12 +68,19 @@ if ($zep->get("option") === "init") {
         $zep->out("No content, plugins or templates folder found.");
         if ($zep->confirm("Are you sure you want to continue with folder creation?")) {
             $zep->out("Creating folders in current directory...");
+            $cwd = getcwd();
 
             // Ideally, set these with some sort of permissions.
-            mkdir(getcwd() . "/plugins/");
-            mkdir(getcwd() . "/content/");
-            mkdir(getcwd() . "/templates/");
-            $zep->out("All done, enjoy");
+            mkdir($cwd . "/plugins/");
+            mkdir($cwd . "/content/");
+            mkdir($cwd . "/templates/");
+
+            $lib_path = realpath(__DIR__ . "/..");
+            file_put_contents($cwd . "/index.php",  file_get_contents($lib_path . "/index.php"));
+            file_put_contents($cwd . "/.htaccess",  file_get_contents($lib_path . "/.htaccess"));
+            file_put_contents($cwd . "/config.php", file_get_contents($lib_path . "/config.php"));
+
+            $zep->out("All done, enjoy" . PHP_EOL);
             exit(1);
         }
         else {
@@ -105,8 +112,8 @@ elseif ($zep->get("option") === "new") {
         $name = ucfirst(strtolower($zep->prompt("Plugin name:")));
 
         // Create file in 'plugins' directory
-        $path = getcwd() . "/plugins/" . $name . "Plugin.php";
-        file_put_contents($path, sprintf($plugin_template, $name));
+        $path = getcwd() . "/plugins/{$name}Plugin.php";
+        file_put_contents($path, sprintf($template_plugin, $name));
 
         $zep->out("File created as " . $path);
     }
