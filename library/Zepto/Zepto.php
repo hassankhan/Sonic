@@ -83,25 +83,25 @@ class Zepto {
         $whoops = $this->_configure_error_handler();
 
         $container['router'] = $container->share(
-            function ($container) {
+            function () {
                 return new Router;
             }
         );
 
         $container['plugin_loader'] = $container->share(
-            function ($container) {
+            function () {
                 return new FileLoader\PluginLoader();
             }
         );
 
         $container['file_loader'] = $container->share(
-            function ($container) {
+            function () {
                 return new FileLoader\MarkdownLoader(new \Michelf\MarkdownExtra);
             }
         );
 
         $container['twig'] = $container->share(
-            function ($container) {
+            function () {
                 return new \Twig_Environment(
                     new \Twig_Loader_Filesystem(ROOT_DIR . 'templates')
                 );
