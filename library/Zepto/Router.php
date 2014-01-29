@@ -64,11 +64,28 @@ class Router
 {
 
     /**
+     * Supported HTTP Methods
+     */
+    const METHOD_HEAD    = 'HEAD';
+    const METHOD_GET     = 'GET';
+    const METHOD_POST    = 'POST';
+    const METHOD_PUT     = 'PUT';
+    const METHOD_PATCH   = 'PATCH';
+    const METHOD_DELETE  = 'DELETE';
+    const METHOD_OPTIONS = 'OPTIONS';
+
+    /**
      * Request object
      *
      * @var Symfony\Component\HttpFoundation\Request
      */
     protected $request;
+
+    /**
+     * Response object
+     * @var Symfony\Component\HttpFoundation\Response
+     */
+    protected $response;
 
     /**
      * Currently matched route, if one has been set
@@ -105,10 +122,17 @@ class Router
      * @param string $url
      * @codeCoverageIgnore
      */
-    public function __construct(\Symfony\Component\HttpFoundation\Request $request)
-    {
-        $this->request = $request;
+    public function __construct(
+        \Symfony\Component\HttpFoundation\Request  $request,
+        \Symfony\Component\HttpFoundation\Response $response
+    ) {
+        $this->request  = $request;
+        $this->response = $response;
     }
+
+    /**
+     * ROUTING
+     */
 
     /**
      * Add HTTP GET route
@@ -133,7 +157,7 @@ class Router
      */
     public function post($route, \Closure $callback)
     {
-        $this->route(new Route($route, $callback), 'POST');
+        $this->route(new Route($route, $callback), self::METHOD_POST);
     }
 
     /**
@@ -143,7 +167,7 @@ class Router
      * @param  string $url
      * @return Zepto\Route|null
      */
-    public function match($http_method = 'GET', $url)
+    public function match($http_method = self::METHOD_GET, $url)
     {
         // Make sure there is a trailing slash
         $url = rtrim($url, '/') . '/';
@@ -157,8 +181,32 @@ class Router
     }
 
     /**
-     * Tries to match one of the URL routes to the current URL, otherwise
-     * execute the not found handler
+     * Adds a new URL routing rule to the routing table, after converting any of
+     * our special tokens into proper regular expressions.
+     *
+     * @param  Route  $route
+     * @param  string $http_method
+     * @throws Exception If the route already exists in the routing table
+     */
+    protected function route(Route $route, $http_method = self::METHOD_GET)
+    {
+        // Does this URL already exist in the routing table?
+        if (isset($this->routes[$http_method][$route->get_pattern()])) {
+            // Trigger a new error and exception if errors are on
+            throw new \Exception('The URI {htmlspecialchars($route->get_url())} already exists in the routing table');
+        }
+
+        // Add the route to the routing table
+        $this->routes[$http_method][$route->get_pattern()] = $route;
+    }
+
+    /**
+     * ROUTE EXECUTION
+     */
+
+    /**
+     * Runs the router matching engine and then calls the matching route's
+     * callback. otherwise execute the not found handler
      *
      * @return
      */
@@ -183,17 +231,20 @@ class Router
             // Get parameters from request
             $params = $this->parse_parameters($route);
 
-            // Execute callback
-            call_user_func_array($route->get_callback(), $params);
+            // Execute callback, and set returned string as response content
+            $this->response->setContent(call_user_func_array($route->get_callback(), $params));
+
+            // Send response
+            $this->response->send();
         }
     }
 
     /**
-     * Runs the router matching engine and then calls the matching route's callback.
-     * If no matching route is found, then returns false
+     * Tries to run the routing engine and generate a response, if any exceptions
+     * are thrown then it executes the error handler
      *
      * @uses Router::run()
-     * @return mixed
+     * @return
      */
     public function execute()
     {
@@ -201,11 +252,16 @@ class Router
             $this->run();
         }
         catch (Exception $e) {
-            echo $e->getMessage();
+
+            $this->error($e->getMessage());
             // Add logging stuff here - maybe?
             // Maybe make it do a HTTP 500 error?
         }
     }
+
+    /**
+     * ACCESSORS
+     */
 
     /**
      * Returns all routes mapped on the routing table.
@@ -227,43 +283,89 @@ class Router
         return $this->current_route;
     }
 
-    public function not_found($callback = null)
+    /**
+     * ERROR HANDLING
+     */
+
+    /**
+     * This method can either set the callback to execute on a 'Server error' (50x)
+     * error, or it invokes the callback
+     * To set the callback, provide a function to the method
+     * To invoke the callback, call the method with a string detailing the error
+     * as a parameter
+     *
+     * @param  Closure|string $arg
+     * @return
+     */
+    public function error($arg = null)
     {
-        if (is_callable($callback)) {
-            $this->not_found_handler = $callback;
+        if (is_callable($arg)) {
+            // Set provided callback function as error handler
+            $this->error_handler = $arg;
         }
         else {
-            if (is_callable($this->not_found_handler)) {
-                call_user_func(array($this, 'not_found_handler'));
+            // Execute error handler and set result as response content
+            if (is_callable($this->error_handler)) {
+                $this->response->setContent(call_user_func(array($this, 'error_handler'), $arg));
             }
             else {
-                call_user_func(array($this, 'default_not_found_handler'));
+                $this->response->setContent(call_user_func(array($this, 'default_error_handler'), $arg));
             }
+
+            // Set response's status code
+            $this->response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
+
+            // Send response
+            $this->response->send();
         }
     }
 
     /**
-     * Adds a new URL routing rule to the routing table, after converting any of
-     * our special tokens into proper regular expressions.
+     * This method can either set the callback to execute on a 'Page not found' (404)
+     * error, or it invokes the callback
+     * To set the callback, provide a function to the method
+     * To invoke the callback, call the method without any parameters
      *
-     * @param  Route  $route
-     * @param  string $request_method
-     * @return boolean
-     * @throws Exception If the route already exists in the routing table
+     * @param  Closure $callback
+     * @return
      */
-    protected function route(Route $route, $http_method = 'GET')
+    public function not_found($callback = null)
     {
-        // Does this URL already exist in the routing table?
-        if (isset($this->routes[$http_method][$route->get_pattern()])) {
-            // Trigger a new error and exception if errors are on
-            throw new \Exception('The URI {htmlspecialchars($route->get_url())} already exists in the routing table');
+        if (is_callable($callback)) {
+            // Set provided callback function as not found handler
+            $this->not_found_handler = $callback;
         }
+        else {
+            // Execute not found handler and set result as response content
+            if (is_callable($this->not_found_handler)) {
+                $this->response->setContent(call_user_func(array($this, 'not_found_handler')));
+            }
+            else {
+                $this->response->setContent(call_user_func(array($this, 'default_not_found_handler')));
+            }
+            // Set response's status code
+            $this->response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
 
-        // Add the route to the routing array
-        $this->routes[$http_method][$route->get_pattern()] = $route;
-
-        return true;
+            // Send response
+            $this->response->send();
+        }
     }
+
+    protected function default_not_found_handler()
+    {
+        // Use Twig to do something nice
+        // Generate a response
+        return "Didn't find anything";
+    }
+
+    protected function default_error_handler($error = '')
+    {
+        return 'Server error: ' . $error;
+    }
+
+    /**
+     * HELPER FUNCTIONS
+     */
 
     /**
      * Parses parameters from URI as per the given route's pattern
@@ -286,18 +388,6 @@ class Router
         }
 
         return $params;
-    }
-
-    protected function default_not_found_handler()
-    {
-        // Use Twig to do something nice
-        // Generate a response
-        echo 'Didn\'t find anything';
-    }
-
-    protected function default_error_handler($error = '')
-    {
-        echo 'Server error';
     }
 
 }
