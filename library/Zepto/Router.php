@@ -146,8 +146,11 @@ class Router
      */
     public function match($http_method = 'GET', $url)
     {
+        // Make sure there is a trailing slash
+        $url = rtrim($url, '/') . '/';
+
         foreach ($this->routes[$http_method] as $route) {
-            if ($route->get_url() === $url) {
+            if (preg_match($route->get_pattern(), $url)) {
                 return $route;
             }
         }
