@@ -97,7 +97,7 @@ class Route
      * @param string $url
      * @codeCoverageIgnore
      */
-    public function __construct($pattern, $callback)
+    public function __construct($pattern, \Closure $callback)
     {
         // Keep the original route pattern
         $url = $pattern;
