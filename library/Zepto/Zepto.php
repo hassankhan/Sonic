@@ -18,6 +18,9 @@ defined('ROOT_DIR')
 use Pimple;
 use Whoops;
 use Michelf\MarkdownExtra;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class Zepto {
 
@@ -81,6 +84,22 @@ class Zepto {
             }
         );
         $whoops = $this->_configure_error_handler();
+
+        $container['request'] = $container->share(
+            function() {
+                return Request::createFromGlobals();
+            }
+        );
+
+        $container['response'] = $container->share(
+            function() {
+                return new Response(
+                    'Content',
+                    Response::HTTP_OK,
+                    array('content-type' => 'text/html')
+                );
+            }
+        );
 
         $container['router'] = $container->share(
             function () {
