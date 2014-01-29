@@ -83,14 +83,6 @@ class Route
     protected $callback = null;
 
     /**
-     * An array containing the parameters to pass to the callback function, as
-     * parsed from $pattern
-     *
-     * @var array
-     */
-    protected $params = array();
-
-    /**
      * Initializes the route by creating a regex pattern from the provided URL,
      * and assigns the callable function for this route
      *
