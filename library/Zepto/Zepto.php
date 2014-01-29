@@ -103,7 +103,7 @@ class Zepto {
 
         $container['router'] = $container->share(
             function($c) {
-                return new Router($c['request']);
+                return new Router($c['request'], $c['response']);
             }
         );
 
@@ -300,7 +300,7 @@ class Zepto {
                 }
 
                 // Render template with Twig
-                echo $twig->render($template_name, $options);
+                return $twig->render($template_name, $options);
             });
         }
     }
