@@ -59,7 +59,7 @@ class Zepto {
      *     )
      * );
      * </code>
-     * @param array $settings An array of options - see above
+     * @param array $settings
      */
     public function __construct(array $settings = array())
     {
@@ -102,25 +102,25 @@ class Zepto {
         );
 
         $container['router'] = $container->share(
-            function () {
-                return new Router;
+            function($c) {
+                return new Router($c['request']);
             }
         );
 
         $container['plugin_loader'] = $container->share(
-            function () {
+            function() {
                 return new FileLoader\PluginLoader();
             }
         );
 
         $container['file_loader'] = $container->share(
-            function () {
+            function() {
                 return new FileLoader\MarkdownLoader(new \Michelf\MarkdownExtra);
             }
         );
 
         $container['twig'] = $container->share(
-            function () {
+            function() {
                 return new \Twig_Environment(
                     new \Twig_Loader_Filesystem(ROOT_DIR . 'templates')
                 );
@@ -156,8 +156,7 @@ class Zepto {
      */
     public function run()
     {
-        $router = $this->container['router'];
-        return $router->execute();
+        return $this->container['router']->execute();
     }
 
     /**
@@ -275,7 +274,7 @@ class Zepto {
                 ? '/' . str_replace('index', '', $file)
                 : '/' . $file;
 
-            $router->route($route, function() use ($container, $file, $nav) {
+            $router->get($route, function() use ($container, $file, $nav) {
 
                 // Get local references to Twig and content
                 $twig    = $container['twig'];
