@@ -111,7 +111,7 @@ class Router
     }
 
     /**
-     * Add HTTP GET routes
+     * Add HTTP GET route
      *
      * @see    Zepto\Router::route()
      * @param  string  $route
@@ -121,11 +121,10 @@ class Router
     public function get($route, \Closure $callback)
     {
         $this->route(new Route($route, $callback));
-        // return $this->route($route, $callback, 'GET');
     }
 
     /**
-     * Add HTTP POST routes
+     * Add HTTP POST route
      *
      * @see    Zepto\Router::route()
      * @param  string  $route
@@ -159,9 +158,9 @@ class Router
 
     /**
      * Tries to match one of the URL routes to the current URL, otherwise
-     * execute the default function and return false.
+     * execute the not found handler
      *
-     * @return array
+     * @return
      */
     public function run()
     {
@@ -170,6 +169,7 @@ class Router
             throw new \Exception('No routes exist in the routing table. Add some');
         }
 
+        // Try and get a matching route for the current URL
         $route = $this->match($this->request->getMethod(), $this->request->getPathInfo());
 
         // Call not found handler if no match was found
@@ -177,8 +177,13 @@ class Router
             $this->not_found();
         }
         else {
+            // Set current route
             $this->current_route = $route;
-            $params = array();
+
+            // Get parameters from request
+            $params = $this->parse_parameters($route);
+
+            // Execute callback
             call_user_func_array($route->get_callback(), $params);
         }
     }
@@ -258,6 +263,29 @@ class Router
         $this->routes[$http_method][$route->get_pattern()] = $route;
 
         return true;
+    }
+
+    /**
+     * Parses parameters from URI as per the given route's pattern
+     *
+     * @param  Route  $route
+     * @return array
+     */
+    protected function parse_parameters(Route $route)
+    {
+        // Get all parameter matches from URL for this route
+        preg_match($route->get_pattern(), "{$this->request->getPathInfo()}/", $matches);
+
+        $params = array();
+
+        // Retrieve any matches
+        foreach ($matches as $key => $value) {
+            if (is_string($key)) {
+                $params[] = $value;
+            }
+        }
+
+        return $params;
     }
 
     protected function default_not_found_handler()
