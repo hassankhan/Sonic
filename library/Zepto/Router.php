@@ -252,7 +252,7 @@ class Router
         }
 
         // Add the route to the routing array
-        $this->routes[$http_method][$route->get_url()] = $route;
+        $this->routes[$http_method][$route->get_pattern()] = $route;
 
         return true;
     }
