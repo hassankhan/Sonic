@@ -134,7 +134,7 @@ class Router
      */
     public function post($route, \Closure $callback)
     {
-        return $this->route($route, $callback, 'POST');
+        $this->route(new Route($route, $callback), 'POST');
     }
 
     /**
