@@ -173,7 +173,7 @@ class Router
         $url = rtrim($url, '/') . '/';
 
         foreach ($this->routes[$http_method] as $route) {
-            if (preg_match($route->get_pattern(), $url)) {
+            if (preg_match($route->pattern(), $url)) {
                 return $route;
             }
         }
@@ -191,13 +191,13 @@ class Router
     protected function route(Route $route, $http_method = self::METHOD_GET)
     {
         // Does this URL already exist in the routing table?
-        if (isset($this->routes[$http_method][$route->get_pattern()])) {
+        if (isset($this->routes[$http_method][$route->pattern()])) {
             // Trigger a new error and exception if errors are on
-            throw new \Exception('The URI {htmlspecialchars($route->get_url())} already exists in the routing table');
+            throw new \Exception('The URI {htmlspecialchars($route->url())} already exists in the routing table');
         }
 
         // Add the route to the routing table
-        $this->routes[$http_method][$route->get_pattern()] = $route;
+        $this->routes[$http_method][$route->pattern()] = $route;
     }
 
     /**
@@ -268,7 +268,7 @@ class Router
      *
      * @return array[Zepto\Route]
      */
-    public function get_routes()
+    public function routes()
     {
         return $this->routes;
     }
@@ -278,7 +278,7 @@ class Router
      *
      * @return Zepto\Route
      */
-    public function get_current_route()
+    public function current_route()
     {
         return $this->current_route;
     }
@@ -376,7 +376,7 @@ class Router
     protected function parse_parameters(Route $route)
     {
         // Get all parameter matches from URL for this route
-        preg_match($route->get_pattern(), "{$this->request->getPathInfo()}/", $matches);
+        preg_match($route->pattern(), "{$this->request->getPathInfo()}/", $matches);
 
         $params = array();
 
