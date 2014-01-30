@@ -156,7 +156,7 @@ class Zepto {
      */
     public function run()
     {
-        return $this->container['router']->execute();
+        return $this->container['router']->run();
     }
 
     /**

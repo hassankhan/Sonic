@@ -64,7 +64,7 @@ class Router
 {
 
     /**
-     * Supported HTTP Methods
+     * Supported HTTP Methods (might not be strictly accurate ... yet - I've only tested GET and POST')
      */
     const METHOD_HEAD    = 'HEAD';
     const METHOD_GET     = 'GET';
@@ -227,6 +227,7 @@ class Router
         if ($route === null) {
             $this->not_found();
         }
+        // If route is a valid Route object, then try and execute its callback
         else {
             // Set current route
             $this->current_route = $route;
@@ -234,31 +235,18 @@ class Router
             // Get parameters from request
             $params = $this->parse_parameters($route);
 
-            // Execute callback, and set returned string as response content
-            $this->response->setContent(call_user_func_array($route->get_callback(), $params));
+            // Try to execute callback for route, if it fails, catch the exception
+            // and generate a HTTP 500 error
+            try {
+                // Set response content
+                $this->response->setContent(call_user_func_array($route->callback(), array($params)));
 
-            // Send response
-            $this->response->send();
-        }
-    }
-
-    /**
-     * Tries to run the routing engine and generate a response, if any exceptions
-     * are thrown then it executes the error handler
-     *
-     * @uses Router::run()
-     * @return
-     */
-    public function execute()
-    {
-        try{
-            $this->run();
-        }
-        catch (Exception $e) {
-
-            $this->error($e->getMessage());
-            // Add logging stuff here - maybe?
-            // Maybe make it do a HTTP 500 error?
+                // Send response
+                $this->response->send();
+            }
+            catch (\Exception $e) {
+                $this->error($e->getMessage());
+            }
         }
     }
 
