@@ -354,16 +354,15 @@ class Router
         }
     }
 
+
     protected function default_not_found_handler()
     {
-        // Use Twig to do something nice
-        // Generate a response
-        return "Didn't find anything";
+        return $this->generate_error_template("Page Not Found", "Couldn't find your, like, page, dude");
     }
 
-    protected function default_error_handler($error = '')
+    protected function default_error_handler($error = "Something fucked up big time")
     {
-        return 'Server error: ' . $error;
+        return $this->generate_error_template("Server Error", $error);
     }
 
     /**
@@ -391,6 +390,18 @@ class Router
         }
 
         return $params;
+    }
+
+    /**
+     * Returns a standard template for error messages. Thanks, Slim
+     *
+     * @param  string $title
+     * @param  string $body
+     * @return string
+     */
+    protected function generate_error_template($title, $body)
+    {
+        return sprintf('<html><head><title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,sans-serif;}h1{margin:0;font-size:48px;font-weight:normal;line-height:48px;}strong{display:inline-block;width:65px;}</style></head><body><h1>%s</h1><p>%s</p></body></html>', $title, $title, $body);
     }
 
 }
