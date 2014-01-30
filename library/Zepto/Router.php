@@ -163,11 +163,11 @@ class Router
     /**
      * Returns a Route object if matching URL is found
      *
-     * @param  string $http_method
      * @param  string $url
+     * @param  string $http_method
      * @return Zepto\Route|null
      */
-    public function match($http_method = self::METHOD_GET, $url)
+    public function match($url, $http_method = self::METHOD_GET)
     {
         // Make sure there is a trailing slash
         $url = rtrim($url, '/') . '/';
@@ -218,7 +218,10 @@ class Router
         }
 
         // Try and get a matching route for the current URL
-        $route = $this->match($this->request->getMethod(), $this->request->getPathInfo());
+        $route = $this->match(
+            $this->request->getPathInfo(),
+            $this->request->getMethod()
+        );
 
         // Call not found handler if no match was found
         if ($route === null) {
