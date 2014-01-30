@@ -84,17 +84,36 @@ class Route
         $this->callback = $callback;
     }
 
-    public function get_url()
+    /**
+     * ACCESSORS
+     */
+
+    /**
+     * Returns this route's raw URL as specified in the constructor
+     *
+     * @return string
+     */
+    public function url()
     {
         return $this->url;
     }
 
-    public function get_pattern()
+    /**
+     * Returns the route's pattern
+     *
+     * @return string
+     */
+    public function pattern()
     {
         return $this->pattern;
     }
 
-    public function get_callback()
+    /**
+     * Returns the callable function to be invoked for this route
+     *
+     * @return Closure
+     */
+    public function callback()
     {
         return $this->callback;
     }
