@@ -60,6 +60,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Router::get
+     * @covers Zepto\Router::route()
      */
     public function testGet()
     {
@@ -76,6 +77,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Router::post
+     * @covers Zepto\Router::route()
      */
     public function testPost()
     {
@@ -92,6 +94,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Router::get
+     * @covers Zepto\Router::route()
      * @expectedException Exception
      */
     public function testAddingSameRouteTwice()
@@ -106,19 +109,63 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Zepto\Router::route()
+     */
+    public function testRouteWithValidHttpMethod()
+    {
+        $this->router->route(new \Zepto\Route('/test', function() {
+            return 'New test route';
+        }), Router::METHOD_GET);
+
+        $routes = $this->router->routes();
+
+        $this->assertArrayHasKey('GET', $routes);
+        $this->assertArrayHasKey('#^/test/$#', $routes['GET']);
+        $this->assertInstanceOf('Zepto\Route', $routes['GET']['#^/test/$#']);
+    }
+
+    /**
+     * @covers Zepto\Router::route()
+     * @expectedException Exception
+     */
+    public function testRouteWithInvalidHttpMethod()
+    {
+        $this->router->route(new \Zepto\Route('/test', function() {
+            return 'New test route';
+        }), 'NO_SUCH_METHOD');
+
+        $routes = $this->router->routes();
+
+        $this->assertArrayNotHasKey('NO_SUCH_METHOD', $routes);
+    }
+
+    /**
      * @covers Zepto\Router::match
-     * @todo   Implement testMatch().
      */
     public function testMatch()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->router->get('/get', function() {
+            return 'This is a get route';
+        });
+
+        $this->assertInstanceOf('Zepto\Route', $this->router->match('/get/', Router::METHOD_GET));
+    }
+
+    /**
+     * @covers Zepto\Router::match
+     */
+    public function testMatchFail()
+    {
+        $this->router->get('/notget', function() {
+            return 'This is not a get route';
+        });
+
+        $this->assertNull($this->router->match('/get/', Router::METHOD_GET));
     }
 
     /**
      * @covers Zepto\Router::run
+     * @covers Zepto\Router::match
      * @covers Zepto\Router::parse_parameters
      * @covers Zepto\Router::current_route
      * @covers Zepto\Router::current_http_status
@@ -145,6 +192,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Router::run
+     * @covers Zepto\Router::match
      * @covers Zepto\Router::parse_parameters
      * @covers Zepto\Router::current_route
      * @covers Zepto\Router::current_http_status
@@ -179,6 +227,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Router::run
+     * @covers Zepto\Router::match
      * @covers Zepto\Router::not_found
      */
     public function testRunWithNotFoundError()
@@ -201,6 +250,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Router::run
+     * @covers Zepto\Router::match
      * @covers Zepto\Router::error
      */
     public function testRunWithError()
@@ -247,27 +297,28 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Router::error
-     * @todo   Implement testError().
      */
     public function testError()
     {
-        // Try adding custom callback
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->router->error(function() {
+            echo '!!!';
+        });
+        $this->router->error();
+
+        $this->expectOutputString('!!!');
+
     }
 
     /**
      * @covers Zepto\Router::not_found
-     * @todo   Implement testNot_found().
      */
     public function testNotFound()
     {
-        // Try adding custom callback
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->router->not_found(function() {
+            echo '???';
+        });
+        $this->router->not_found();
+
+        $this->expectOutputString('???');
     }
 }
