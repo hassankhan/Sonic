@@ -161,6 +161,27 @@ class Router
     }
 
     /**
+     * Adds a new URL routing rule to the routing table, after converting any of
+     * our special tokens into proper regular expressions.
+     * @todo Make the method check to see if the http method exists or not
+     *
+     * @param  Route  $route
+     * @param  string $http_method
+     * @throws Exception If the route already exists in the routing table
+     */
+    public function route(Route $route, $http_method = self::METHOD_GET)
+    {
+        // Does this URL already exist in the routing table?
+        if (isset($this->routes[$http_method][$route->pattern()])) {
+            // Trigger a new error and exception if errors are on
+            throw new \Exception('The URI {htmlspecialchars($route->url())} already exists in the routing table');
+        }
+
+        // Add the route to the routing table
+        $this->routes[$http_method][$route->pattern()] = $route;
+    }
+
+    /**
      * Returns a Route object if matching URL is found
      *
      * @param  string $url
@@ -178,26 +199,6 @@ class Router
             }
         }
         return null;
-    }
-
-    /**
-     * Adds a new URL routing rule to the routing table, after converting any of
-     * our special tokens into proper regular expressions.
-     *
-     * @param  Route  $route
-     * @param  string $http_method
-     * @throws Exception If the route already exists in the routing table
-     */
-    protected function route(Route $route, $http_method = self::METHOD_GET)
-    {
-        // Does this URL already exist in the routing table?
-        if (isset($this->routes[$http_method][$route->pattern()])) {
-            // Trigger a new error and exception if errors are on
-            throw new \Exception('The URI {htmlspecialchars($route->url())} already exists in the routing table');
-        }
-
-        // Add the route to the routing table
-        $this->routes[$http_method][$route->pattern()] = $route;
     }
 
     /**
