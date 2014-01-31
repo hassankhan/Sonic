@@ -48,7 +48,12 @@ class Zepto {
      *         'site_root'         => 'Site root URL goes here',
      *         'site_title'        => 'Zepto',
      *         'date_format'       => 'jS M Y',
-     *         'excerpt_length'    => '50'
+     *         'excerpt_length'    => '50',
+     *         'nav'               => array(
+     *             'class'             => 'nav',
+     *             'dropdown_li_class' => 'dropdown',
+     *             'dropdown_ul_class' => 'dropdown-menu'
+     *         )
      *     ),
      *     'twig' => array(
      *         'charset'           => 'utf-8',
