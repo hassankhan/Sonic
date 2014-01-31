@@ -95,6 +95,12 @@ class Router
     protected $current_route;
 
     /**
+     * Current route's status code. Is either 200, 404 or 500
+     * @var integer
+     */
+    protected $current_http_status;
+
+    /**
      * An array containing the list of routing rules and their callback
      * functions, as well as their request method and any additional paramters.
      *
@@ -226,10 +232,12 @@ class Router
 
         // Call not found handler if no match was found
         if ($route === null) {
+            $this->current_http_status = \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND;
             $this->not_found();
         }
         // If route is a valid Route object, then try and execute its callback
         else {
+
             // Set current route
             $this->current_route = $route;
 
@@ -239,6 +247,8 @@ class Router
             // Try to execute callback for route, if it fails, catch the exception
             // and generate a HTTP 500 error
             try {
+                $this->current_http_status = \Symfony\Component\HttpFoundation\Response::HTTP_OK;
+
                 // Set response content
                 $this->response->setContent(call_user_func_array($route->callback(), array($params)));
 
@@ -246,6 +256,7 @@ class Router
                 $this->response->send();
             }
             catch (\Exception $e) {
+                $this->current_http_status = \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR;
                 $this->error($e->getMessage());
             }
         }
@@ -273,6 +284,16 @@ class Router
     public function current_route()
     {
         return $this->current_route;
+    }
+
+    /**
+     * Returns the HTTP status code of the currently matched route
+     *
+     * @return integer
+     */
+    public function current_http_status()
+    {
+        return $this->current_http_status;
     }
 
     /**
@@ -305,7 +326,7 @@ class Router
             }
 
             // Set response's status code
-            $this->response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
+            $this->response->setStatusCode($this->current_http_status);
 
             // Send response
             $this->response->send();
@@ -336,7 +357,7 @@ class Router
                 $this->response->setContent(call_user_func(array($this, 'default_not_found_handler')));
             }
             // Set response's status code
-            $this->response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
+            $this->response->setStatusCode($this->current_http_status);
 
             // Send response
             $this->response->send();
