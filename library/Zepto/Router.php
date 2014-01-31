@@ -319,7 +319,7 @@ class Router
         else {
             // Execute error handler and set result as response content
             if (is_callable($this->error_handler)) {
-                $this->response->setContent(call_user_func(array($this, 'error_handler'), $arg));
+                $this->response->setContent(call_user_func($this->error_handler, $arg));
             }
             else {
                 $this->response->setContent(call_user_func(array($this, 'default_error_handler'), $arg));
@@ -351,7 +351,7 @@ class Router
         else {
             // Execute not found handler and set result as response content
             if (is_callable($this->not_found_handler)) {
-                $this->response->setContent(call_user_func(array($this, 'not_found_handler')));
+                $this->response->setContent(call_user_func($this->not_found_handler));
             }
             else {
                 $this->response->setContent(call_user_func(array($this, 'default_not_found_handler')));
