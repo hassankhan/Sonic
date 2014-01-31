@@ -376,12 +376,25 @@ class Router
         }
     }
 
-
+    /**
+     * Default callback for any 404 errors
+     *
+     * @return string
+     * @codeCoverageIgnore
+     */
     protected function default_not_found_handler()
     {
         return $this->generate_error_template("Page Not Found", "Couldn't find your, like, page, dude");
     }
 
+    /**
+     * Default callback for any 500 errors. If $error is provided
+     * as a parameter, then the message is added to the HTML output
+     *
+     * @param  string $error
+     * @return string
+     * @codeCoverageIgnore
+     */
     protected function default_error_handler($error = "Something fucked up big time")
     {
         return $this->generate_error_template("Server Error", $error);
@@ -420,6 +433,7 @@ class Router
      * @param  string $title
      * @param  string $body
      * @return string
+     * @codeCoverageIgnore
      */
     protected function generate_error_template($title, $body)
     {
