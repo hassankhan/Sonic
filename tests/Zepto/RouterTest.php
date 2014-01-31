@@ -95,7 +95,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Zepto\Router::get
      * @covers Zepto\Router::route()
-     * @expectedException Exception
+     * @expectedException LogicException
      */
     public function testAddingSameRouteTwice()
     {
@@ -126,7 +126,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Router::route()
-     * @expectedException Exception
+     * @expectedException InvalidArgumentException
      */
     public function testRouteWithInvalidHttpMethod()
     {
@@ -218,7 +218,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Router::run
-     * @expectedException Exception
+     * @expectedException RuntimeException
      */
     public function testRunBeforeAddingRoutes()
     {

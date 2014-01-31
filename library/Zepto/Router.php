@@ -173,7 +173,8 @@ class Router
      *
      * @param  Route  $route
      * @param  string $http_method
-     * @throws Exception If the route already exists in the routing table
+     * @throws InvalidArgumentException If an invalid HTTP method is specified
+     * @throws LogicException           If the route already exists in the routing table
      */
     public function route(Route $route, $http_method = self::METHOD_GET)
     {
@@ -186,13 +187,13 @@ class Router
             self::METHOD_PATCH,
             self::METHOD_DELETE
         ))) {
-            throw new \Exception("The method {$http_method} is invalid");
+            throw new \InvalidArgumentException("The method {$http_method} is invalid");
         }
 
         // Does this URL already exist in the routing table?
         if (isset($this->routes[$http_method][$route->pattern()])) {
             // Trigger a new error and exception if errors are on
-            throw new \Exception("The URI {$route->url()} already exists in the routing table");
+            throw new \LogicException("The URI {$route->url()} already exists in the routing table");
         }
 
         // Add the route to the routing table
@@ -228,12 +229,13 @@ class Router
      * callback. otherwise execute the not found handler
      *
      * @return
+     * @throws RuntimeException If no routes exist in the routing table
      */
     public function run()
     {
         // If no routes have been added, then throw an exception
         if (empty($this->routes)) {
-            throw new \Exception('No routes exist in the routing table. Add some');
+            throw new \RuntimeException('No routes exist in the routing table. Add some');
         }
 
         // Try and get a matching route for the current URL
