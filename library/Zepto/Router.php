@@ -250,7 +250,7 @@ class Router
                 $this->current_http_status = \Symfony\Component\HttpFoundation\Response::HTTP_OK;
 
                 // Set response content
-                $this->response->setContent(call_user_func_array($route->callback(), array($params)));
+                $this->response->setContent(call_user_func_array($route->callback(), $params));
 
                 // Send response
                 $this->response->send();
