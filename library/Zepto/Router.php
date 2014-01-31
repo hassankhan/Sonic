@@ -177,10 +177,22 @@ class Router
      */
     public function route(Route $route, $http_method = self::METHOD_GET)
     {
+        // Is this a valid HTTP method?
+        if (!in_array($http_method, array(
+            self::METHOD_HEAD,
+            self::METHOD_GET,
+            self::METHOD_POST,
+            self::METHOD_PUT,
+            self::METHOD_PATCH,
+            self::METHOD_DELETE
+        ))) {
+            throw new \Exception("The method {$http_method} is invalid");
+        }
+
         // Does this URL already exist in the routing table?
         if (isset($this->routes[$http_method][$route->pattern()])) {
             // Trigger a new error and exception if errors are on
-            throw new \Exception('The URI {htmlspecialchars($route->url())} already exists in the routing table');
+            throw new \Exception("The URI {$route->url()} already exists in the routing table");
         }
 
         // Add the route to the routing table
