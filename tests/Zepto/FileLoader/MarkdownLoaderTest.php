@@ -81,10 +81,12 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
 
         $parser::staticExpects($this->at(0))
                 ->method('defaultTransform')
+                ->with($this->anything())
                 ->will($this->returnValue($index_content));
 
         $parser::staticExpects($this->at(1))
                 ->method('defaultTransform')
+                ->with($this->anything())
                 ->will($this->returnValue($sub_page_content));
 
         $loader = new MarkdownLoader($parser);
