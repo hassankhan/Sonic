@@ -32,7 +32,6 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
                 return $handler;
             }
         );
-
         $container["whoopsSlimInfoHandler"] = $container->protect(
             function() use ($container) {
 
@@ -83,6 +82,7 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
             }
         );
 
+        // Add actual Whoops\Run object
         $container['whoops'] = $container->share(
             function($container) {
                 $run = new Run();
@@ -93,7 +93,7 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
             }
         );
 
-        // Try to register Whoops handler, and set the callback function
+        // Try to register Whoops, and set the callback function
         try {
             $container['whoops']->register();
             $container['router']->error(array($container['whoops'], Run::EXCEPTION_HANDLER));
@@ -104,23 +104,18 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
 
     public function before_config_load(&$settings)
     {
-        // echo __CLASS__ . '::before_config_load';
     }
 
     public function before_file_load(&$content_dir)
     {
-        // echo __CLASS__ . '::before_file_load';
     }
 
     public function after_file_load(&$content)
     {
-        // $this->container['router']->error(array($container['whoops'], Run::EXCEPTION_HANDLER));
-        // echo __CLASS__ . '::after_file_load';
     }
 
     public function request_url(&$url)
     {
-        // echo __CLASS__ . '::request_url';
     }
 
 }
