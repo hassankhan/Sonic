@@ -218,7 +218,7 @@ class Zepto {
         $settings    = $container['settings']['zepto'];
 
         $content_dir = $settings['content_dir'];
-        $this->run_hooks('before_file_load', array(&$content_dir));
+        $this->run_hooks('before_content_load', array(&$content_dir));
 
         $content = $file_loader->load(
             $content_dir,
@@ -228,7 +228,7 @@ class Zepto {
         // Could add a hook here maybe?
         $container['folder_structure'] = $file_loader->get_directory_map($content_dir);
 
-        $this->run_hooks('after_file_load', array(&$content));
+        $this->run_hooks('after_content_load', array(&$content));
         $container['content'] = $content;
     }
 

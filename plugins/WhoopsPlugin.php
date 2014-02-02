@@ -106,11 +106,11 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
     {
     }
 
-    public function before_file_load(&$content_dir)
+    public function before_content_load(&$content_dir)
     {
     }
 
-    public function after_file_load(&$content)
+    public function after_content_load(&$content)
     {
     }
 
