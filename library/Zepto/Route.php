@@ -28,6 +28,7 @@ class Route
 
     /**
      * The raw route URL as specified when creating the route
+     *
      * @var string
      */
     protected $url;
@@ -35,6 +36,7 @@ class Route
     /**
      * The route URL regex pattern, including any parameters,
      * like "/post/<:id|[0-9]>")
+     *
      * @var string
      */
     protected $pattern;

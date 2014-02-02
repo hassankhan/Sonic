@@ -331,10 +331,8 @@ class Router
             $this->error_handler = $arg;
         }
         else {
-
             // Execute error handler and set result as response content
             if (is_callable($this->error_handler)) {
-
                 $this->response->setContent(call_user_func($this->error_handler, $arg));
             }
             else {
@@ -342,7 +340,7 @@ class Router
             }
 
             // Set response's status code
-            $this->response->setStatusCode($this->current_http_status);
+            $this->response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
 
             // Send response
             $this->response->send();
@@ -388,7 +386,7 @@ class Router
      */
     protected function default_not_found_handler()
     {
-        return $this->generate_error_template("Page Not Found", "Couldn't find your, like, page, dude");
+        return $this->generate_error_template('Page Not Found', "Couldn't find your, like, page, dude");
     }
 
     /**
@@ -401,7 +399,7 @@ class Router
      */
     protected function default_error_handler(\Exception $error)
     {
-        return $this->generate_error_template("Server Error", $error->getMessage());
+        return $this->generate_error_template('Server Error', $error->getMessage());
     }
 
     /**
