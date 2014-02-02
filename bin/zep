@@ -11,29 +11,39 @@ $template_plugin = <<<PLUGIN
 
 class %sPlugin implements \Zepto\PluginInterface {
 
-    public function after_config_load(&\$settings)
+    public function before_config_load(&\$settings)
     {
-        // code here
+
     }
 
-    public function after_plugins_load()
+    public function before_content_load(&\$content_dir)
     {
-        // code here
+
     }
 
-    public function before_file_load(&\$content_dir)
+    public function after_content_load(&\$content)
     {
-        // code here
+
     }
 
-    public function after_file_load(&\$content)
+    public function before_router_setup()
     {
-        // code here
+
     }
 
-    public function request_url(&\$url)
+    public function after_router_setup()
     {
-        // code here
+
+    }
+
+    public function before_response_send()
+    {
+
+    }
+
+    public function after_response_send()
+    {
+
     }
 
 }
