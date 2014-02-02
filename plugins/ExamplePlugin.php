@@ -31,9 +31,20 @@ class ExamplePlugin implements \Zepto\PluginInterface {
         echo __CLASS__ . '::after_file_load';
     }
 
-    public function request_url(&$url)
+    public function before_router_setup()
     {
-        echo __CLASS__ . '::request_url';
+    }
+
+    public function after_router_setup()
+    {
+    }
+
+    public function before_response_send()
+    {
+    }
+
+    public function after_response_send()
+    {
     }
 
 }

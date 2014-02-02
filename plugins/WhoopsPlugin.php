@@ -114,7 +114,19 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
     {
     }
 
-    public function request_url(&$url)
+    public function before_router_setup()
+    {
+    }
+
+    public function after_router_setup()
+    {
+    }
+
+    public function before_response_send()
+    {
+    }
+
+    public function after_response_send()
     {
     }
 
