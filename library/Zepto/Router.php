@@ -104,7 +104,7 @@ class Router
      * An array containing the list of routing rules and their callback
      * functions, as well as their request method and any additional paramters.
      *
-     * @var array
+     * @var array[Zepto\Route]
      */
     protected $routes = array();
 
@@ -271,7 +271,7 @@ class Router
             }
             catch (\Exception $e) {
                 $this->current_http_status = \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR;
-                $this->error($e->getMessage());
+                $this->error($e);
             }
         }
     }
@@ -321,7 +321,7 @@ class Router
      * To invoke the callback, call the method with a string detailing the error
      * as a parameter
      *
-     * @param  Closure|string $arg
+     * @param  Closure|Exception $arg
      * @return
      */
     public function error($arg = null)
@@ -331,8 +331,10 @@ class Router
             $this->error_handler = $arg;
         }
         else {
+
             // Execute error handler and set result as response content
             if (is_callable($this->error_handler)) {
+
                 $this->response->setContent(call_user_func($this->error_handler, $arg));
             }
             else {
@@ -397,9 +399,9 @@ class Router
      * @return string
      * @codeCoverageIgnore
      */
-    protected function default_error_handler($error = "Something fucked up big time")
+    protected function default_error_handler(\Exception $error)
     {
-        return $this->generate_error_template("Server Error", $error);
+        return $this->generate_error_template("Server Error", $error->getMessage());
     }
 
     /**
