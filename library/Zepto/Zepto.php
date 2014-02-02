@@ -134,7 +134,7 @@ class Zepto {
         $this->create_nav_links();
 
         // Add basic routes to router
-        $this->setup_router();
+        $this->router_setup();
     }
 
     /**
@@ -239,7 +239,7 @@ class Zepto {
      *
      * @return void
      */
-    protected function setup_router()
+    protected function router_setup()
     {
         // Get local references
         $container = $this->container;
@@ -313,7 +313,6 @@ class Zepto {
 
     protected function generate_nav_html()
     {
-
         $container    = $this->container;
         $settings     = $container['settings'];
         $file_loader  = $container['file_loader'];
