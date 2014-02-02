@@ -191,9 +191,9 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Zepto::setup_router()
+     * @covers Zepto\Zepto::router_setup()
      */
-    public function testSetupRouter()
+    public function testRouterSetup()
     {
         ob_start();
         $zepto = new Zepto($this->config);
