@@ -43,10 +43,7 @@ class PluginLoader extends \Zepto\FileLoader {
 
                 $plugin_name = $matches[1][0] . 'Plugin';
 
-                if (class_exists($plugin_name)) {
-                    $plugin                       = new $plugin_name;
-                    $loaded_plugins[$plugin_name] = $plugin;
-                }
+                $loaded_plugins[$plugin_name] = $this->_load($plugin_name);
             }
 
             // For a directory
@@ -60,10 +57,8 @@ class PluginLoader extends \Zepto\FileLoader {
                             include_once(ROOT_DIR . 'plugins/' . $entry);
 
                             $plugin_name = $matches[1][0] . 'Plugin';
-                            if (class_exists($plugin_name)) {
-                                $plugin                       = new $plugin_name;
-                                $loaded_plugins[$plugin_name] = $plugin;
-                            }
+
+                            $loaded_plugins[$plugin_name] = $this->_load($plugin_name);
                         }
                     }
                     closedir($handle);
@@ -74,6 +69,23 @@ class PluginLoader extends \Zepto\FileLoader {
             $this['file_cache'] = $loaded_plugins;
 
             return $loaded_plugins;
+        }
+    }
+
+    /**
+     * Protected method used to validate that a plugin implements
+     * ``Zepto\PluginInterface``
+     *
+     * @param  string $plugin_name
+     * @return Zepto\PluginInterface
+     */
+    protected function _load($plugin_name)
+    {
+        if (class_exists($plugin_name)) {
+            $interfaces = class_implements($plugin_name);
+            if(isset($interfaces['Zepto\PluginInterface'])) {
+                return new $plugin_name;
+            }
         }
     }
 
