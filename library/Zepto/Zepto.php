@@ -73,23 +73,6 @@ class Zepto {
         // Get local reference to container
         $container                  = $this->container;
 
-        // Create application hooks
-        $container['hooks']         = array(
-            'after_plugins_load'   => array(),
-            'before_config_load'   => array(),
-            'request_url'          => array(),
-            'before_file_load'     => array(),
-            'after_file_load'      => array()
-        );
-
-        // Configure error handler
-        $container['error_handler'] = $container->share(
-            function ($container) {
-                return new Whoops\Run();
-            }
-        );
-        $whoops = $this->_configure_error_handler();
-
         $container['request'] = $container->share(
             function() {
                 return Request::createFromGlobals();
@@ -161,7 +144,13 @@ class Zepto {
      */
     public function run()
     {
-        return $this->container['router']->run();
+        $this->run_hooks('before_response_send');
+        try {
+            return $this->container['router']->run();
+        } catch (\Exception $e) {
+            $this->container['router']->error($e);
+        }
+        $this->run_hooks('after_response_send');
     }
 
     /**
@@ -174,25 +163,17 @@ class Zepto {
     public function run_hooks($hook_id, $args = array())
     {
         $container = $this->container;
-        $hooks     = $container['hooks'];
 
         // If plugins are disabled, do not run
         if ($container['plugins_enabled'] === false) {
             return false;
         }
 
-        $plugins   = $container['plugins'];
-
-        // Check if event name exists
-        if (array_key_exists($hook_id, $hooks) === false) {
-            throw new \Exception('No such hook exists');
-        }
-
         // Send app reference to hooks
-        $args = array_merge($args, array($this));
+        $args = array_merge($args, array($this->container));
 
         // Run hooks associated with that event
-        foreach ($plugins as $plugin_id => $plugin) {
+        foreach ($container['plugins'] as $plugin_id => $plugin) {
             if (is_callable(array($plugin, $hook_id))) {
                 call_user_func_array(array($plugin, $hook_id), $args);
             }
@@ -207,16 +188,19 @@ class Zepto {
      */
     protected function load_plugins($plugins_dir)
     {
-        $container     = $this->container;
-
-        if ($container['plugins_enabled'] === true) {
-            $plugin_loader = $container['plugin_loader'];
+        if ($this->container['plugins_enabled'] === true) {
+            $plugin_loader = $this->container['plugin_loader'];
 
             // Load plugins from 'plugins' folder
-            $container['plugins'] = $plugin_loader->load(
-                $plugins_dir,
-                array('.php')
-            );
+            try {
+                $this->container['plugins'] = $plugin_loader->load(
+                    $plugins_dir,
+                    array('.php')
+                );
+            }
+            catch (\Exception $e) {
+                $this->container['router']->error($e);
+            }
         }
         $this->run_hooks('after_plugins_load');
     }
@@ -234,7 +218,7 @@ class Zepto {
         $settings    = $container['settings']['zepto'];
 
         $content_dir = $settings['content_dir'];
-        $this->run_hooks('before_file_load', array(&$content_dir));
+        $this->run_hooks('before_content_load', array(&$content_dir));
 
         $content = $file_loader->load(
             $content_dir,
@@ -244,7 +228,7 @@ class Zepto {
         // Could add a hook here maybe?
         $container['folder_structure'] = $file_loader->get_directory_map($content_dir);
 
-        $this->run_hooks('after_file_load', array(&$content));
+        $this->run_hooks('after_content_load', array(&$content));
         $container['content'] = $content;
     }
 
@@ -397,19 +381,7 @@ class Zepto {
         return $nav_html;
     }
 
-    // This should be moved into a plugin
-    private function _configure_error_handler()
     {
-        // Get local reference to error handler
-        $error_handler = $this->container['error_handler'];
-
-        // Configure the PrettyPageHandler:
-        $errorPage     = new Whoops\Handler\PrettyPageHandler();
-
-        $errorPage->setPageTitle('Shit hit the fan!');
-        $errorPage->setEditor('sublime');
-        $error_handler->pushHandler($errorPage);
-        $error_handler->register();
     }
 
 }

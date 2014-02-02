@@ -13,27 +13,38 @@ class OtherExamplePlugin implements \Zepto\PluginInterface {
 
     public function after_plugins_load()
     {
-        echo __CLASS__ . '::after_plugins_load';
+        // echo __CLASS__ . '::after_plugins_load';
     }
 
     public function before_config_load(&$settings)
     {
-        echo __CLASS__ . '::before_config_load';
+        // echo __CLASS__ . '::before_config_load';
     }
 
-    public function before_file_load(&$content_dir)
+    public function before_content_load(&$content_dir)
     {
-        echo __CLASS__ . '::before_file_load';
+        // echo __CLASS__ . '::before_file_load';
     }
 
-    public function after_file_load(&$content)
+    public function after_content_load(&$content)
     {
-        echo __CLASS__ . '::after_file_load';
+        // echo __CLASS__ . '::after_file_load';
     }
 
-    public function request_url(&$url)
+    public function before_router_setup()
     {
-        echo __CLASS__ . '::request_url';
+    }
+
+    public function after_router_setup()
+    {
+    }
+
+    public function before_response_send()
+    {
+    }
+
+    public function after_response_send()
+    {
     }
 
 }

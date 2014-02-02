@@ -17,10 +17,16 @@ interface PluginInterface {
 
     public function before_config_load(&$settings);
 
-    public function before_file_load(&$content_dir);
+    public function before_content_load(&$content_dir);
 
-    public function after_file_load(&$content);
+    public function after_content_load(&$content);
 
-    public function request_url(&$url);
+    public function before_router_setup();
+
+    public function after_router_setup();
+
+    public function before_response_send();
+
+    public function after_response_send();
 
 }
