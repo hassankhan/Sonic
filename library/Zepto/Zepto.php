@@ -82,14 +82,6 @@ class Zepto {
             'after_file_load'      => array()
         );
 
-        // Configure error handler
-        $container['error_handler'] = $container->share(
-            function ($container) {
-                return new Whoops\Run();
-            }
-        );
-        $whoops = $this->_configure_error_handler();
-
         $container['request'] = $container->share(
             function() {
                 return Request::createFromGlobals();
@@ -397,19 +389,7 @@ class Zepto {
         return $nav_html;
     }
 
-    // This should be moved into a plugin
-    private function _configure_error_handler()
     {
-        // Get local reference to error handler
-        $error_handler = $this->container['error_handler'];
-
-        // Configure the PrettyPageHandler:
-        $errorPage     = new Whoops\Handler\PrettyPageHandler();
-
-        $errorPage->setPageTitle('Shit hit the fan!');
-        $errorPage->setEditor('sublime');
-        $error_handler->pushHandler($errorPage);
-        $error_handler->register();
     }
 
 }
