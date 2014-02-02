@@ -15,15 +15,17 @@ use Whoops\Run;
 
 class WhoopsPlugin implements \Zepto\PluginInterface {
 
-    public function after_plugins_load($container)
+    public function after_plugins_load()
     {
-        $container["whoopsPrettyPageHandler"] = $container->share(
+        $container = func_get_arg(0);
+
+        // Add Whoops handlers
+        $container['whoopsPrettyPageHandler'] = $container->share(
             function() {
                 return new PrettyPageHandler();
             }
         );
-
-        $container["whoopsJsonResponseHandler"] = $container->share(
+        $container['whoopsJsonResponseHandler'] = $container->share(
             function() {
                 $handler = new JsonResponseHandler();
                 $handler->onlyForAjaxRequests(true);
@@ -32,76 +34,93 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
         );
 
         $container["whoopsSlimInfoHandler"] = $container->protect(
-            function($container) {
-                // Do a test to see if page failed
+            function() use ($container) {
 
-                $current_url_clean = $container['router']->get_current_route();
-                $current_url_dirty = $container['router']->get_current_route(false);
-
-                $headers = apache_request_headers();
-
-                $content_type = $headers["CONTENT_TYPE"];
+                // Check to see if there is a current route, otherwise
+                // ignore because router isn't set up yet
+                try{
+                    $current_route = $container['router']->current_route();
+                }
+                catch (\Exception $e) {
+                    return;
+                }
 
                 $route_details = array();
 
+                $container['whoopsPrettyPageHandler']->setPageTitle('Shit hit the fan!');
+                $container['whoopsPrettyPageHandler']->setEditor('sublime');
+
                 if ($current_route !== null) {
                     $route_details = array(
-                        "Route URL"     => $current_route,
-                        "Route Pattern" => ''
+                        'Route URL'     => $current_route->url(),
+                        'Route Pattern' => $current_route->pattern()
                     );
                 }
 
                 $container["whoopsPrettyPageHandler"]->addDataTable(
                     'Zepto Application',
                     array_merge(array(
-                        "Charset"           => $headers["ACCEPT_CHARSET"],
-                        "Locale"            => $content_type['charset']
+                        'Charset' => $container['request']->headers->get("Accept-Charset"),
+                        'Locale'  => $container['request']->getCharsets()
                     ), $route_details)
                 );
 
                 $container["whoopsPrettyPageHandler"]->addDataTable(
                     'Request Information',
-                    array_merge(array(
-                        "URI"         => $current_url_dirty,
-                        "Request URI" => $current_url_clean
-
-                    ), $route_details)
-                );
-
-                // $whoops_editor = get from config
-                $container["whoops"] = $container->share(
-                    function() {
-                        $run = new Run();
-                        $run->pushHandler($container["whoopsPrettyPageHandler"]);
-                        $run->pushHandler($container["whoopsJsonResponseHandler"]);
-                        $run->pushHandler($container["whoopsSlimInfoHandler"]);
-
-                        return $run;
-                    }
+                    array(
+                        'URI'          => $container['request']->getUri(),
+                        'Request URI'  => $container['request']->getRequestUri(),
+                        'Path'         => $container['request']->getPathInfo(),
+                        'Query String' => $container['request']->getQueryString(),
+                        'HTTP Method'  => $container['request']->getMethod(),
+                        'Script Name'  => $container['request']->getScriptName(),
+                        'Base URL'     => $container['request']->getBaseUrl(),
+                        'Scheme'       => $container['request']->getScheme(),
+                        'Port'         => $container['request']->getPort(),
+                        'Host'         => $container['request']->getHost()
+                    )
                 );
             }
         );
-        // echo __CLASS__ . '::after_plugins_load';
+
+        $container['whoops'] = $container->share(
+            function($container) {
+                $run = new Run();
+                $run->pushHandler($container['whoopsPrettyPageHandler']);
+                $run->pushHandler($container['whoopsJsonResponseHandler']);
+                $run->pushHandler($container['whoopsSlimInfoHandler']);
+                return $run;
+            }
+        );
+
+        // Try to register Whoops handler, and set the callback function
+        try {
+            $container['whoops']->register();
+            $container['router']->error(array($container['whoops'], Run::EXCEPTION_HANDLER));
+        } catch (\Exception $e) {
+            return;
+        }
     }
 
     public function before_config_load(&$settings)
     {
-        echo __CLASS__ . '::before_config_load';
+        // echo __CLASS__ . '::before_config_load';
     }
 
     public function before_file_load(&$content_dir)
     {
-        echo __CLASS__ . '::before_file_load';
+        // echo __CLASS__ . '::before_file_load';
     }
 
     public function after_file_load(&$content)
     {
-        echo __CLASS__ . '::after_file_load';
+        // $this->container['router']->error(array($container['whoops'], Run::EXCEPTION_HANDLER));
+        // echo __CLASS__ . '::after_file_load';
     }
 
     public function request_url(&$url)
     {
-        echo __CLASS__ . '::request_url';
+        // echo __CLASS__ . '::request_url';
     }
 
 }
