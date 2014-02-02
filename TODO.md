@@ -1,6 +1,9 @@
 To-Do
 ====
 
+## Router
+- Also, should request and response be protected or public?
+
 ## Frontend
 - Rewrite CSS to LESS
 - Probably try and use Bootstrap

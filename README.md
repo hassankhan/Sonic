@@ -129,7 +129,7 @@ Zepto is created and maintained by [Hassan Khan](http://hassankhan.me).
 
 ## Credits
 
-Clearly a lot of help from [Slim](), as is apparent from the source code. This also would not have been possible without [Pico](), [Parsedown]() and many others. This project would not be available without the efforts of open-source PHP community.
+Clearly a lot of help (especially) from [Slim](), as is apparent from the source code. This also would not have been possible without [Pico](), [Parsedown]() and many others. Also, the open-source PHP community.
 
 ## License
 
