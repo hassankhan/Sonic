@@ -73,15 +73,6 @@ class Zepto {
         // Get local reference to container
         $container                  = $this->container;
 
-        // Create application hooks
-        $container['hooks']         = array(
-            'after_plugins_load'   => array(),
-            'before_config_load'   => array(),
-            'request_url'          => array(),
-            'before_file_load'     => array(),
-            'after_file_load'      => array()
-        );
-
         $container['request'] = $container->share(
             function() {
                 return Request::createFromGlobals();
@@ -153,7 +144,13 @@ class Zepto {
      */
     public function run()
     {
-        return $this->container['router']->run();
+        $this->run_hooks('before_response_send');
+        try {
+            return $this->container['router']->run();
+        } catch (\Exception $e) {
+            $this->container['router']->error($e);
+        }
+        $this->run_hooks('after_response_send');
     }
 
     /**
@@ -166,25 +163,17 @@ class Zepto {
     public function run_hooks($hook_id, $args = array())
     {
         $container = $this->container;
-        $hooks     = $container['hooks'];
 
         // If plugins are disabled, do not run
         if ($container['plugins_enabled'] === false) {
             return false;
         }
 
-        $plugins   = $container['plugins'];
-
-        // Check if event name exists
-        if (array_key_exists($hook_id, $hooks) === false) {
-            throw new \Exception('No such hook exists');
-        }
-
         // Send app reference to hooks
-        $args = array_merge($args, array($this));
+        $args = array_merge($args, array($this->container));
 
         // Run hooks associated with that event
-        foreach ($plugins as $plugin_id => $plugin) {
+        foreach ($container['plugins'] as $plugin_id => $plugin) {
             if (is_callable(array($plugin, $hook_id))) {
                 call_user_func_array(array($plugin, $hook_id), $args);
             }
@@ -199,16 +188,19 @@ class Zepto {
      */
     protected function load_plugins($plugins_dir)
     {
-        $container     = $this->container;
-
-        if ($container['plugins_enabled'] === true) {
-            $plugin_loader = $container['plugin_loader'];
+        if ($this->container['plugins_enabled'] === true) {
+            $plugin_loader = $this->container['plugin_loader'];
 
             // Load plugins from 'plugins' folder
-            $container['plugins'] = $plugin_loader->load(
-                $plugins_dir,
-                array('.php')
-            );
+            try {
+                $this->container['plugins'] = $plugin_loader->load(
+                    $plugins_dir,
+                    array('.php')
+                );
+            }
+            catch (\Exception $e) {
+                $this->container['router']->error($e);
+            }
         }
         $this->run_hooks('after_plugins_load');
     }
