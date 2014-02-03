@@ -101,7 +101,7 @@ class Zepto {
             }
         );
 
-        $container['file_loader'] = $container->share(
+        $container['content_loader'] = $container->share(
             function() {
                 return new FileLoader\MarkdownLoader(new \Michelf\MarkdownExtra);
             }
@@ -219,19 +219,19 @@ class Zepto {
     {
         // Get local reference to file loader
         $container   = $this->container;
-        $file_loader = $container['file_loader'];
+        $content_loader = $container['content_loader'];
         $settings    = $container['settings']['zepto'];
 
         $content_dir = $settings['content_dir'];
         $this->run_hooks('before_content_load', array(&$content_dir));
 
-        $content = $file_loader->load(
+        $content = $content_loader->load(
             $content_dir,
             $settings['content_ext']
         );
 
         // Could add a hook here maybe?
-        $container['folder_structure'] = $file_loader->get_directory_map($content_dir);
+        $container['folder_structure'] = $content_loader->get_directory_map($content_dir);
 
         $this->run_hooks('after_content_load', array(&$content));
         $container['content'] = $content;
@@ -316,13 +316,13 @@ class Zepto {
     {
         $container    = $this->container;
         $settings     = $container['settings'];
-        $file_loader  = $container['file_loader'];
+        $content_loader  = $container['content_loader'];
 
         // Opening ``<ul>`` tag and adding class name
         $nav_html     = sprintf('<ul class="%s">' . PHP_EOL, $settings['site']['nav']['class']);
 
         // Could add a hook here maybe?
-        $structure    = $file_loader->get_directory_map($settings['zepto']['content_dir']);
+        $structure    = $content_loader->get_directory_map($settings['zepto']['content_dir']);
 
         // Remove 'index' along with any file extensions from URL
         $filth = array_merge(array('index'), $settings['zepto']['content_ext']);
