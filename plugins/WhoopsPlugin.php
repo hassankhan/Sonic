@@ -32,7 +32,7 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
                 return $handler;
             }
         );
-        $container["whoopsSlimInfoHandler"] = $container->protect(
+        $container["whoopsZeptoInfoHandler"] = $container->protect(
             function() use ($container) {
 
                 // Check to see if there is a current route, otherwise
@@ -59,8 +59,8 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
                 $container["whoopsPrettyPageHandler"]->addDataTable(
                     'Zepto Application',
                     array_merge(array(
-                        'Charset' => $container['request']->headers->get("Accept-Charset"),
-                        'Locale'  => $container['request']->getCharsets()
+                        'Charset' => $container['request']->headers->get('Accept-Charset'),
+                        'Locale'  => $container['request']->getPreferredLanguage()
                     ), $route_details)
                 );
 
@@ -88,7 +88,7 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
                 $run = new Run();
                 $run->pushHandler($container['whoopsPrettyPageHandler']);
                 $run->pushHandler($container['whoopsJsonResponseHandler']);
-                $run->pushHandler($container['whoopsSlimInfoHandler']);
+                $run->pushHandler($container['whoopsZeptoInfoHandler']);
                 return $run;
             }
         );
