@@ -1,70 +1,67 @@
 <?php
 
+namespace Zepto;
+
 /**
- * Router
+ * This is the Zepto URL Router, the layer of a web application between the URL
+ * and the route executed to perform a request.
  *
- * This is the Zepto URL Router, the layer of a web application between the
- * URL and the function executed to perform a request. The router determines
- * which function to execute for a given URL.
+ * The router controls the boring, base-framework-y stuff. This includes
+ * handling the request and response objects, adding routes, and figuring
+ * out which route to execute for a given request.
  *
+ * It supports adding routes to different HTTP methods (GET, POST and friends)
+ * ```php
+ * $router = new Zepto\Router;
+ *
+ * // Adding a basic HTTP GET route
+ * $router->get( '/get', 'get_page' );
+ *
+ * // Adding a basic HTTP POST route
+ * $router->post( '/post', 'post_page' );
+ *
+ * // Adding a route with a named alphanumeric capture, using the <:var_name> syntax
+ * $router->get( '/user/view/<:username>', 'view_username' );
+ *
+ * // Adding a route with a named numeric capture, using the <#var_name> syntax
+ * $router->get( '/user/view/<#user_id>', array( 'UserClass', 'view_user' ) );
+ *
+ * // Adding a route with a wildcard capture (Including directory separtors), using
+ * // the <*var_name> syntax
+ * $router->get( '/browse/<*categories>', 'category_browse' );
+ *
+ * // Adding a wildcard capture (Excludes directory separators), using the
+ * // <!var_name> syntax
+ * $router->get( '/browse/<!category>', 'browse_category' );
+ *
+ * // Adding a custom regex capture using the <:var_name|regex> syntax
+ * $router->get( '/lookup/zipcode/<:zipcode|[0-9]{5}>', 'zipcode_func' );
+ *
+ * // Specifying priorities
+ * $router->get( '/users/all', 'view_users', 1 ); // Executes first
+ * $router->get( '/users/<:status>', 'view_users_by_status', 100 ); // Executes after
+ *
+ * // Specifying a callback function if no other route is matched
+ * $router->not_found( 'page_404' );
+ *
+ * // Specifying a callback function if any errors occur
+ * $router->error( 'page_500' );
+ *
+ * // Run the router
+ * $router->run();
+ * ```
  * @package    Zepto
  * @subpackage Router
  * @author     Brandon Wamboldt <brandon.wamboldt@gmail.com>
  * @author     Hassan Khan <contact@hassankhan.me>
  * @license    MIT
+ * @since      0.2
  */
-
-/**
- * Zepto Router Class
- *
- * This is the Zepto URL Router, the layer of a web application between the
- * URL and the function executed to perform a request. The router determines
- * which function to execute for a given URL.
- *
- * <code>
- * $router = new Zepto\Router;
- *
- * // Adding a basic route
- * $router->route( '/login', 'login_function' );
- *
- * // Adding a route with a named alphanumeric capture, using the <:var_name> syntax
- * $router->route( '/user/view/<:username>', 'view_username' );
- *
- * // Adding a route with a named numeric capture, using the <#var_name> syntax
- * $router->route( '/user/view/<#user_id>', array( 'UserClass', 'view_user' ) );
- *
- * // Adding a route with a wildcard capture (Including directory separtors), using
- * // the <*var_name> syntax
- * $router->route( '/browse/<*categories>', 'category_browse' );
- *
- * // Adding a wildcard capture (Excludes directory separators), using the
- * // <!var_name> syntax
- * $router->route( '/browse/<!category>', 'browse_category' );
- *
- * // Adding a custom regex capture using the <:var_name|regex> syntax
- * $router->route( '/lookup/zipcode/<:zipcode|[0-9]{5}>', 'zipcode_func' );
- *
- * // Specifying priorities
- * $router->route( '/users/all', 'view_users', 1 ); // Executes first
- * $router->route( '/users/<:status>', 'view_users_by_status', 100 ); // Executes after
- *
- * // Specifying a default callback function if no other route is matched
- * $router->error_404( 'page_404' );
- *
- * // Run the router
- * $router->execute();
- * </code>
- *
- * @since 2.0.0
- */
-
-namespace Zepto;
-
 class Router
 {
 
     /**
-     * Supported HTTP Methods (might not be strictly accurate ... yet - I've only tested GET and POST')
+     * Supported HTTP Methods (might not be strictly accurate yet - I've only tested GET and POST')
      */
     const METHOD_HEAD    = 'HEAD';
     const METHOD_GET     = 'GET';
@@ -77,25 +74,26 @@ class Router
     /**
      * Request object
      *
-     * @var Symfony\Component\HttpFoundation\Request
+     * @var \Symfony\Component\HttpFoundation\Request
      */
     protected $request;
 
     /**
      * Response object
-     * @var Symfony\Component\HttpFoundation\Response
+     * @var \Symfony\Component\HttpFoundation\Response
      */
     protected $response;
 
     /**
      * Currently matched route, if one has been set
      *
-     * @var Zepto\Route
+     * @var Route
      */
     protected $current_route;
 
     /**
      * Current route's status code. Is either 200, 404 or 500
+     *
      * @var integer
      */
     protected $current_http_status;
@@ -104,28 +102,31 @@ class Router
      * An array containing the list of routing rules and their callback
      * functions, as well as their request method and any additional paramters.
      *
-     * @var array[Zepto\Route]
+     * @var Route[]
      */
     protected $routes = array();
 
     /**
      * Callback function to execute when no matching URL is found
      *
-     * @var Closure
+     * @var \Closure
      */
     protected $not_found_handler;
 
     /**
      * Callback function to execute on any other error
      *
-     * @var Closure
+     * @var \Closure
      */
     protected $error_handler;
 
     /**
-     * Initializes the router by getting the URL and cleaning it.
+     * Initializes the router, and handles the request and response objects
      *
-     * @param string $url
+     * @param \Symfony\Component\HttpFoundation\Request  $request
+     * @link http://api.symfony.com/2.4/Symfony/Component/HttpFoundation/Request.html Documentation for Request object
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     * @link http://api.symfony.com/2.4/Symfony/Component/HttpFoundation/Response.html Documentation for Response object
      * @codeCoverageIgnore
      */
     public function __construct(
@@ -143,10 +144,9 @@ class Router
     /**
      * Add HTTP GET route
      *
-     * @see    Zepto\Router::route()
-     * @param  string  $route
-     * @param  Closure $callback
-     * @return boolean
+     * @see    Router::route()
+     * @param  string   $route
+     * @param  \Closure $callback
      */
     public function get($route, \Closure $callback)
     {
@@ -156,10 +156,9 @@ class Router
     /**
      * Add HTTP POST route
      *
-     * @see    Zepto\Router::route()
-     * @param  string  $route
-     * @param  Closure $callback
-     * @return boolean
+     * @see    Router::route()
+     * @param  string   $route
+     * @param  \Closure $callback
      */
     public function post($route, \Closure $callback)
     {
@@ -173,8 +172,8 @@ class Router
      *
      * @param  Route  $route
      * @param  string $http_method
-     * @throws InvalidArgumentException If an invalid HTTP method is specified
-     * @throws LogicException           If the route already exists in the routing table
+     * @throws \InvalidArgumentException If an invalid HTTP method is specified
+     * @throws \LogicException           If the route already exists in the routing table
      */
     public function route(Route $route, $http_method = self::METHOD_GET)
     {
@@ -205,7 +204,7 @@ class Router
      *
      * @param  string $url
      * @param  string $http_method
-     * @return Zepto\Route|null
+     * @return Route|null
      */
     public function match($url, $http_method = self::METHOD_GET)
     {
@@ -229,7 +228,7 @@ class Router
      * callback. otherwise execute the not found handler
      *
      * @return
-     * @throws RuntimeException If no routes exist in the routing table
+     * @throws \RuntimeException If no routes exist in the routing table
      */
     public function run()
     {
@@ -283,7 +282,7 @@ class Router
     /**
      * Returns all routes mapped on the routing table.
      *
-     * @return array[Zepto\Route]
+     * @return Route[]
      */
     public function routes()
     {
@@ -293,7 +292,7 @@ class Router
     /**
      * Returns the currently matched route.
      *
-     * @return Zepto\Route
+     * @return Route
      */
     public function current_route()
     {
@@ -321,7 +320,7 @@ class Router
      * To invoke the callback, call the method with a string detailing the error
      * as a parameter
      *
-     * @param  Closure|Exception $arg
+     * @param  \Closure|\Exception $arg
      * @return
      */
     public function error($arg = null)
@@ -353,7 +352,7 @@ class Router
      * To set the callback, provide a function to the method
      * To invoke the callback, call the method without any parameters
      *
-     * @param  Closure $callback
+     * @param  \Closure $callback
      * @return
      */
     public function not_found($callback = null)
@@ -393,7 +392,7 @@ class Router
      * Default callback for any 500 errors. If $error is provided
      * as a parameter, then the message is added to the HTML output
      *
-     * @param  string $error
+     * @param  \Exception $error
      * @return string
      * @codeCoverageIgnore
      */

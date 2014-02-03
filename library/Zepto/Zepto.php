@@ -145,7 +145,7 @@ class Zepto {
     /**
      * Executes router and returns result of callback function for specified route
      *
-     * @return mixed
+     * @return
      */
     public function run()
     {
@@ -161,9 +161,9 @@ class Zepto {
     /**
      * Runs all hooks registered to the specified hook name
      *
-     * @param  string  $hook
+     * @param  string  $hook_id
      * @param  string  $args
-     * @return boolean Returns true on successful execution of all hooks, false if plugins are disabled
+     * @return boolean
      */
     public function run_hooks($hook_id, $args = array())
     {
