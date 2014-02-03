@@ -84,7 +84,7 @@ class Zepto {
                 return new Response(
                     'Content',
                     Response::HTTP_OK,
-                    array('content-type' => 'text/html')
+                    array('content-type' => 'text/html; charset=utf-8')
                 );
             }
         );
