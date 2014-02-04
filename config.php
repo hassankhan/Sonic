@@ -2,6 +2,7 @@
 
 $config = array(
     'zepto' => array(
+        'environment'       => 'dev',
         'content_dir'       => 'content',
         'plugins_dir'       => 'plugins',
         'templates_dir'     => 'templates',

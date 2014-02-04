@@ -37,6 +37,7 @@ class Zepto {
      * <code>
      * $config = array(
      *     'zepto' => array(
+     *         'environment'       => 'dev',
      *         'content_dir'       => 'content',
      *         'plugins_dir'       => 'plugins',
      *         'templates_dir'     => 'templates',
@@ -390,6 +391,7 @@ class Zepto {
     {
         return array(
             'zepto' => array(
+                'environment'       => 'dev',
                 'content_dir'       => 'content',
                 'plugins_dir'       => 'plugins',
                 'templates_dir'     => 'templates',
