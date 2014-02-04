@@ -11,4 +11,4 @@ Thumbs.db
 
 # User config
 my.config.php
-build
+tests/coverage

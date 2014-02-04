@@ -17,7 +17,7 @@
 
     <logging>
         <log type="coverage-html"
-            target="build/coverage"
+            target="tests/coverage"
             charset="UTF-8"
             yui="true"
             highlight="true"
