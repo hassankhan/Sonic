@@ -117,9 +117,13 @@ class Zepto {
         );
 
         // If settings array is empty, then get a default one
-        $settings = empty($settings) === true
-            ? $settings = $this->default_config()
-            : $settings;
+        if (empty($settings) === TRUE) {
+            $settings = $this->default_config();
+        }
+        else {
+            // @todo Wrap in try-catch
+            $this->validate_config($settings);
+        }
 
         // Set this particular setting now
         $container['plugins_enabled'] = $settings['zepto']['plugins_enabled'];
@@ -353,7 +357,7 @@ class Zepto {
                     $title = $container['content'][$full_file_name]['meta']['title'];
 
                     // Create URL
-                    $url = $settings['site']['site_root'] . '/' . str_replace($filth, '', $key . '/' . $file_name);
+                    $url = $settings['site']['site_root'] . str_replace($filth, '', $key . '/' . $file_name);
 
                     // Run ``ucfirst()`` on ``$key`` to make it look nice
                     $nav_html  .= sprintf('<li><a href="%s"> %s </a></li>' . PHP_EOL, $url, $title);
@@ -370,7 +374,8 @@ class Zepto {
                     $title = $container['content'][$value]['meta']['title'];
 
                     // Create URL
-                    $url = $settings['site']['site_root'] . '/' . str_replace($filth, '', $value);
+                    $url = $settings['site']['site_root'] . str_replace($filth, '', $value);
+                    $url = rtrim($url, '/') . '/';
 
                     $nav_html .= sprintf('<li><a href="%s"> %s </a></li>' . PHP_EOL, $url, $title);
                 }
@@ -418,6 +423,61 @@ class Zepto {
                 'auto_reload'       => true
             )
         );
+    }
+
+    /**
+     * Validates a configuration array
+     *
+     * @param  array   $config
+     * @return boolean
+     */
+    public static function validate_config($config)
+    {
+        $message = '';
+
+        while ($message === '') {
+            if (!is_dir($config['zepto']['content_dir'])) {
+                $message = 'Content directory does not exist';
+                break;
+            }
+
+            if (!is_dir($config['zepto']['plugins_dir'])) {
+                $message = 'Plugins directory does not exist';
+                break;
+            }
+
+            if (!is_dir($config['zepto']['templates_dir'])) {
+                $message = 'Templates directory does not exist';
+                break;
+            }
+
+            if (
+                !is_file("{$config['zepto']['templates_dir']}/{$config['zepto']['default_template']}")
+            ) {
+                $message = 'No default template exists';
+            break;
+            }
+
+            if ($config['zepto']['environment'] === 'dev') {
+                preg_match('#^(https?://)?(localhost)(\.[a-z\.]{2,6})?(\:[0-9]{1,5})?([/\w \.-]*)*/+$#', $config['site']['site_root']) === 0
+                    ? $message = "Something's up with your site root, man"
+                    : $message = '';
+            }
+            else {
+                preg_match('#^(https?://)?([\da-z\.-]+)\.([a-z\.]{2,6})([/\w \.-]*)*/+$#', $config['site']['site_root']) === 0
+                    ? $message = 'Site root is invalid. Should be like http://www.example.com/'
+                    : $message = '';
+            }
+            break;
+        }
+
+        if ($message === '') {
+            return TRUE;
+        }
+        else {
+            throw new \InvalidArgumentException($message);
+        }
+
     }
 
 }
