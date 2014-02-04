@@ -72,7 +72,7 @@ class Zepto {
         $this->container = new Pimple();
 
         // Get local reference to container
-        $container                  = $this->container;
+        $container = $this->container;
 
         $container['request'] = $container->share(
             function() {
@@ -319,8 +319,8 @@ class Zepto {
 
     protected function generate_nav_html()
     {
-        $container    = $this->container;
-        $settings     = $container['settings'];
+        $container       = $this->container;
+        $settings        = $container['settings'];
         $content_loader  = $container['content_loader'];
 
         // Opening ``<ul>`` tag and adding class name

@@ -333,6 +333,18 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
      * @covers            Zepto\Zepto::validate_config()
      * @expectedException InvalidArgumentException
      */
+    public function testConfigWithInvalidDefaultTemplate()
+    {
+        ob_start();
+        $config = Zepto::default_config();
+        $config['zepto']['default_template'] = 'no_such_file';
+        Zepto::validate_config($config);
+    }
+
+    /**
+     * @covers            Zepto\Zepto::validate_config()
+     * @expectedException InvalidArgumentException
+     */
     public function testConfigWithInvalidSiteRoot()
     {
         ob_start();
