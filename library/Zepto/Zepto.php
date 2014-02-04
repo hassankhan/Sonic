@@ -386,7 +386,7 @@ class Zepto {
      *
      * @return array
      */
-    protected static function default_config()
+    public static function default_config()
     {
         return array(
             'zepto' => array(
@@ -395,7 +395,7 @@ class Zepto {
                 'templates_dir'     => 'templates',
                 'default_template'  => 'base.twig',
                 'content_ext'       => array('.md', '.markdown'),
-                'plugins_enabled'   => false
+                'plugins_enabled'   => true
             ),
             'site' => array(
                 'site_root'         => 'http://localhost:8888/zepto/',
