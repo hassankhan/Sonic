@@ -11,70 +11,58 @@
 
 namespace Zepto;
 
-class FileLoader extends \Pimple {
+class FileLoader {
 
     /**
-     * Initialises file cache object
+     * The base path, used to trim from file paths when added to result array
+     *
+     * @var string
+     */
+    protected $base_path;
+
+    /**
+     * Initialises file cache object and sets base path
+     *
      * @codeCoverageIgnore
      */
-    public function __construct()
+    public function __construct($base_path)
     {
-        $this['file_cache'] = array();
+        $this->base_path = $base_path;
     }
 
     /**
-     * Loads in a single file, or all files in a directory and subdirectories under it
-     * @param  string $file_path     File path
-     * @param  array $file_extension File extensions
-     * @return array                 Loaded files
+     * Loads in a single file
+     *
+     * @param  string $file_path
+     * @return array
+     * @throws RuntimeException         If there is a problem with the file
+     * @throws UnexpectedValueException If path is a directory
      */
-    public function load($file_path, $file_extension)
+    public function load($file_path)
     {
-        // Create array to store loaded files
-        $loaded_files = array();
+        // Create full path
+        $full_path = $this->base_path . $file_path;
 
-        if (!is_file($file_path) && !is_dir($file_path)) {
-            throw new \Exception('There was an error trying to load ' . $file_path);
+        // Throw exception if path is a directory
+        if (is_dir($full_path)) {
+            throw new \UnexpectedValueException($full_path . 'is a directory not a file');
         }
-        // Load files
-        else {
 
-            // For a single file
-            if (is_file($file_path)) {
-                // Get rid of extraneous path details
-                $clean_file_name                = str_replace(ROOT_DIR, '', $file_path);
-                $clean_file_name                = str_replace('content/', '', $clean_file_name);
-                $loaded_files[$clean_file_name] = file_get_contents($file_path);
-            }
-
-            // For a directory
-            if (is_dir($file_path)) {
-
-                $iterator = new \RecursiveDirectoryIterator($file_path);
-                foreach(new \RecursiveIteratorIterator($iterator) as $file) {
-
-                    // To stop PHP error
-                    $exploded_file = explode('.', $file);
-                    if (in_array(strtolower(array_pop($exploded_file)), str_replace('.', '', $file_extension))) {
-                        // Get rid of extraneous path details
-                        $clean_file_name                = str_replace(ROOT_DIR, '', $file);
-                        $clean_file_name                = str_replace('content/', '', $clean_file_name);
-                        $loaded_files[$clean_file_name] = file_get_contents($file);
-                    }
-                }
-            }
-
-            // Cache loaded files for easy access
-            $this['file_cache'] = $loaded_files;
-
-            return $loaded_files;
+        // Throw exception if file doesn't exist
+        if (!is_file($full_path)) {
+            throw new \RuntimeException('There was an error trying to load ' . $full_path);
         }
+
+        // Get file contents and return
+        return array($file_path => file_get_contents($full_path));
     }
 
     /**
      * Returns structure of folder as a multidimensional array. Used for
      * creating navigation links
-     * @param  string $file_path Path to map
+     *
+     * @deprecated May be subject to removal, after navigation revamp
+     * @param  string $file_path
      * @return array
      */
     public function get_directory_map($file_path)
@@ -89,9 +77,6 @@ class FileLoader extends \Pimple {
                 }
             }
         }
-
-        // Cache it somewhere?
-        $this['folder_structure'] = $contents;
 
         return $contents;
     }

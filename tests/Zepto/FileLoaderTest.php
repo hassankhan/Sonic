@@ -9,7 +9,7 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @var FileLoader
      */
-    protected $object;
+    protected $loader;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -17,7 +17,7 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new FileLoader();
+        $this->loader = new FileLoader(ROOT_DIR . 'content/');
     }
 
     /**
@@ -26,16 +26,25 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $this->object = null;
+        $this->loader = null;
     }
 
     /**
      * @covers            Zepto\FileLoader::load()
-     * @expectedException Exception
+     * @expectedException RuntimeException
      */
-    public function testLoadWithException()
+    public function testLoadInvalidFile()
     {
-        $this->object->load('@£@', 'aa');
+        $this->loader->load('@£@');
+    }
+
+    /**
+     * @covers            Zepto\FileLoader::load()
+     * @expectedException UnexpectedValueException
+     */
+    public function testLoadDirectory()
+    {
+        $this->loader->load('sub/');
     }
 
     /**
@@ -44,7 +53,7 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadSingleFile($files)
     {
-        $result = $this->object->load(ROOT_DIR . 'content/404.md', array('md'));
+        $result = $this->loader->load('404.md');
         $this->assertEquals($files, $result);
     }
 
@@ -52,10 +61,14 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
      * @covers       Zepto\FileLoader::load()
      * @dataProvider providerTestLoadMultipleFiles
      */
-    public function testLoadMultipleFiles($files)
+    public function testLoadMultipleFiles($expected)
     {
-        $result = $this->object->load(ROOT_DIR . 'content/sub', array('md'));
-        $this->assertEquals($files, $result);
+        $actual = array_merge(
+            $this->loader->load('sub/page.md'),
+            $this->loader->load('sub/index.md')
+        );
+
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -72,7 +85,7 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertEquals($expected, $this->object->get_directory_map(ROOT_DIR . 'content'));
+        $this->assertEquals($expected, $this->loader->get_directory_map(ROOT_DIR . 'content'));
     }
 
     public function providerTestLoadSingleFile()
