@@ -61,7 +61,7 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
      * @covers            Zepto\FileLoader::load()
      * @expectedException UnexpectedValueException
      */
-    public function testLoadDirectory()
+    public function testLoadWithDirectory()
     {
         $this->loader->load('sub/');
     }
