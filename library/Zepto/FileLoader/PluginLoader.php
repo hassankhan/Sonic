@@ -1,92 +1,109 @@
 <?php
 
+namespace Zepto\FileLoader;
+
 /**
  * PluginLoader
  *
- * @author Hassan Khan
- * @link http://https://github.com/hassankhan/Zepto
- * @license http://opensource.org/licenses/MIT
- * @version 0.2
+ * @package    Zepto
+ * @subpackage FileLoader
+ * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       http://https://github.com/hassankhan/Zepto
+ * @license    http://opensource.org/licenses/MIT
+ * @since      0.2
  */
-
-namespace Zepto\FileLoader;
-
 class PluginLoader extends \Zepto\FileLoader {
 
     /**
-     * Loads in a single file or all files in a directory if $file_path is a folder
+     * Loads in a single plugin or all plugins in a directory, depending on
+     * whether a file or a directory is provided.
      *
-     * @return array Loaded plugins
+     * @param  string $file_path
+     * @return array
      */
-    public function load($file_path, $file_extension)
+    public function load($file_path)
     {
+        // Create full path
+        $full_path = $this->base_path . $file_path;
+
         // Create array to store loaded plugins
         $loaded_plugins = array();
 
-        if (!is_file($file_path) && !is_dir($file_path)) {
-            throw new \Exception('There was an error trying to load ' . $file_path);
+        // Throw exception if $file_path is neither a file nor a directory
+        if (!is_file($full_path) && !is_dir($full_path)) {
+            throw new \UnexpectedValueException('There was an error trying to load ' . $full_path);
         }
-        // Load files
-        else {
 
-            // For a single file
-            if (is_file($file_path)) {
-                // Include plugin file
-                include_once($file_path);
-
-                // Strip extraneous path details
-                $file = str_replace(ROOT_DIR, '', $file_path);
-
-                if (preg_match_all('/^plugins\/([A-Z]+\w+)Plugin.php$/', $file, $matches) === false) {
-                    throw new Exception('You didn\'t name the fucking plugin correctly. Should be MyPluginNamePlugin.php');
-                }
-
-                $plugin_name = $matches[1][0] . 'Plugin';
-
-                $loaded_plugins[$plugin_name] = $this->_load($plugin_name);
-            }
-
-            // For a directory
-            if (is_dir($file_path)) {
-
-                if ($handle = opendir(ROOT_DIR . 'plugins')) {
-                    while (false !== ($entry = readdir($handle))) {
-
-                        if (preg_match_all('/^([A-Z]+\w+)Plugin.php$/', $entry, $matches)) {
-
-                            include_once(ROOT_DIR . 'plugins/' . $entry);
-
-                            $plugin_name = $matches[1][0] . 'Plugin';
-
-                            $loaded_plugins[$plugin_name] = $this->_load($plugin_name);
-                        }
-                    }
-                    closedir($handle);
-                }
-            }
-
-            // Cache loaded files for easy access
-            $this['file_cache'] = $loaded_plugins;
-
-            return $loaded_plugins;
+        // Throw exception if plugin isn't named correctly
+        if (preg_match_all('/^([A-Z]+\w+)Plugin.php$/', $file_path, $matches) === 0) {
+            throw new \InvalidArgumentException("You didn't name the fucking plugin correctly. Should be MyPluginNamePlugin.php");
         }
+
+        // Include plugin
+        // @todo How to error handle here? Check for false and throw exception?
+        include_once($full_path);
+
+        // Get the plugin name
+        $plugin_name = $matches[1][0] . 'Plugin';
+
+        // Check class exists with that name
+        if (class_exists($plugin_name) === FALSE) {
+            throw new \RuntimeException('No such class exists');
+        }
+
+        // Get list of interfaces implemented by plugin
+        $interfaces = class_implements($plugin_name);
+
+        // Check if ``Zepto\PluginInterface`` is implemented, if not,
+        // then throw an exception
+        if (
+            $interfaces === FALSE
+            || isset($interfaces['Zepto\PluginInterface']) === FALSE
+        ) {
+            throw new \UnexpectedValueException('Plugin does not implement Zepto\PluginInterface');
+        }
+
+        return array($plugin_name => new $plugin_name);
+
     }
 
     /**
-     * Protected method used to validate that a plugin implements
-     * ``Zepto\PluginInterface``
+     * Loads a directory of plugins
      *
-     * @param  string $plugin_name
-     * @return Zepto\PluginInterface
+     * @param  string $dir_path
+     * @return \Zepto\PluginInterface[]
+     * @throws \UnexpectedValueException If a valid directory is not provided
      */
-    protected function _load($plugin_name)
+    public function load_dir($dir_path)
     {
-        if (class_exists($plugin_name)) {
-            $interfaces = class_implements($plugin_name);
-            if(isset($interfaces['Zepto\PluginInterface'])) {
-                return new $plugin_name;
+        // Get full path
+        $full_path = $this->base_path . $dir_path;
+
+        // Create array to hold loaded plugins
+        $loaded_plugins = array();
+
+        // Check for valid directory
+        if (!is_dir($full_path)) {
+            throw new \UnexpectedValueException('There was an error trying to load ' . $full_path);
+        }
+
+        // Remove rubbish filenames
+        $plugins = array_diff(
+            scandir($full_path),
+            array('.', '..', '.DS_Store', 'Thumbs.db')
+        );
+
+        // Call $this->load() for all plugins
+        foreach ($plugins as $plugin) {
+            try {
+                $loaded_plugins = array_merge($loaded_plugins, $this->load($plugin));
+            }
+            catch (\Exception $e) {
+
             }
         }
+
+        return $loaded_plugins;
     }
 
 }

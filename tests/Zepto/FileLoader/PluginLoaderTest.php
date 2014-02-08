@@ -9,7 +9,7 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @var PluginLoader
      */
-    protected $object;
+    protected $loader;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -17,27 +17,25 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object   = new PluginLoader();
+        $this->loader   = new PluginLoader(ROOT_DIR . 'plugins');
 
-        include_once(ROOT_DIR . 'plugins/ExamplePlugin.php');
-        include_once(ROOT_DIR . 'plugins/OtherExamplePlugin.php');
-        include_once(ROOT_DIR . 'plugins/WhoopsPlugin.php');
+        // include_once(ROOT_DIR . 'plugins/ExamplePlugin.php');
+        // include_once(ROOT_DIR . 'plugins/OtherExamplePlugin.php');
+        // include_once(ROOT_DIR . 'plugins/WhoopsPlugin.php');
 
-        $plugin_1_name = 'ExamplePlugin';
-        $plugin_2_name = 'OtherExamplePlugin';
-        $plugin_3_name = 'WhoopsPlugin';
+        // $plugin_1_name = 'ExamplePlugin';
+        // $plugin_2_name = 'OtherExamplePlugin';
+        // $plugin_3_name = 'WhoopsPlugin';
 
-        $plugin_1      = new $plugin_1_name;
-        $plugin_2      = new $plugin_2_name;
-        $plugin_3      = new $plugin_3_name;
+        // $plugin_1      = new $plugin_1_name;
+        // $plugin_2      = new $plugin_2_name;
+        // $plugin_3      = new $plugin_3_name;
 
-        $this->plugins = array(
-            $plugin_1_name => $plugin_1,
-            $plugin_2_name => $plugin_2,
-            $plugin_3_name => $plugin_3
-        );
-
-
+        // $this->plugins = array(
+        //     $plugin_1_name => $plugin_1,
+        //     $plugin_2_name => $plugin_2,
+        //     $plugin_3_name => $plugin_3
+        // );
     }
 
     /**
@@ -46,51 +44,84 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $this->object = null;
+        $this->loader = null;
     }
 
     /**
      * @covers Zepto\FileLoader\PluginLoader::load
-     * @todo   Implement testLoad().
      */
     public function testLoadSingleFile()
     {
-        $path   = ROOT_DIR . 'plugins/ExamplePlugin.php';
+        $plugin_name = 'ExamplePlugin';
 
-        $actual = $this->object->load($path, array('php'));
+        $actual = $this->loader->load($plugin_name . '.php');
 
-        $expected = array(
-            'ExamplePlugin' => $this->plugins['ExamplePlugin']
-        );
+        $this->assertArrayHasKey($plugin_name, $actual);
+        $this->assertInstanceOf('Zepto\PluginInterface', $actual[$plugin_name]);
+    }
 
-        $this->assertEquals($expected, $actual);
+    /**
+     * @covers Zepto\FileLoader\PluginLoader::load
+     * @expectedException InvalidArgumentException
+     */
+    public function testLoadInvalidPluginName()
+    {
+        $this->loader   = new PluginLoader(ROOT_DIR . 'tests/');
+        $actual = $this->loader->load('invalid_Plugin.php');
     }
 
     /**
      * @covers Zepto\FileLoader\PluginLoader::load()
+     * @expectedException RuntimeException
      */
-    public function testLoadMultipleFiles()
+    public function testLoadWithPluginThatDoesNotHaveSameClassName()
     {
-        $path   = ROOT_DIR . 'plugins';
-
-        $actual = $this->object->load($path, array('php'));
-
-        $expected = array(
-            'ExamplePlugin'      => $this->plugins['ExamplePlugin'],
-            'OtherExamplePlugin' => $this->plugins['OtherExamplePlugin'],
-            'WhoopsPlugin'       => $this->plugins['WhoopsPlugin']
-        );
-
-        $this->assertEquals($expected, $actual);
+        $this->loader   = new PluginLoader(ROOT_DIR . 'tests/');
+        $actual = $this->loader->load('WrongNamePlugin.php');
     }
 
     /**
      * @covers Zepto\FileLoader\PluginLoader::load()
-     * @expectedException Exception
+     * @expectedException UnexpectedValueException
      */
-    public function testLoadInvalidFileOrDirectory()
+    public function testLoadWithPluginThatDoesNotImplementInterface()
     {
-        $this->object->load('@£@', 'aa');
+        $this->loader   = new PluginLoader(ROOT_DIR . 'tests/');
+        $actual = $this->loader->load('NoImplementInterfacePlugin.php');
+    }
+
+    /**
+     * @covers Zepto\FileLoader\PluginLoader::load()
+     * @expectedException UnexpectedValueException
+     */
+    public function testLoadInvalidFilePath()
+    {
+        $this->loader->load('@£@');
+    }
+
+    /**
+     * @covers Zepto\FileLoader\PluginLoader::load_dir()
+     */
+    public function testLoadDirectory()
+    {
+        $actual = $this->loader->load_dir('');
+
+        $this->assertArrayHasKey('ExamplePlugin',      $actual);
+        $this->assertArrayHasKey('OtherExamplePlugin', $actual);
+        $this->assertArrayHasKey('WhoopsPlugin',       $actual);
+
+        $this->assertInstanceOf('Zepto\PluginInterface', $actual['ExamplePlugin']);
+        $this->assertInstanceOf('Zepto\PluginInterface', $actual['OtherExamplePlugin']);
+        $this->assertInstanceOf('Zepto\PluginInterface', $actual['WhoopsPlugin']);
+    }
+
+    /**
+     * @covers Zepto\FileLoader\PluginLoader::load_dir()
+     * @expectedException UnexpectedValueException
+     */
+    public function testLoadInvalidDirectory()
+    {
+        $actual = $this->loader->load_dir('!@£');
     }
 
 }
