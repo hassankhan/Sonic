@@ -66,7 +66,7 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadInvalidPluginName()
     {
-        $this->loader   = new PluginLoader(ROOT_DIR . 'tests/');
+        $this->loader   = new PluginLoader(ROOT_DIR . 'tests/mocks/');
         $actual = $this->loader->load('invalid_Plugin.php');
     }
 
@@ -76,7 +76,7 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithPluginThatDoesNotHaveSameClassName()
     {
-        $this->loader   = new PluginLoader(ROOT_DIR . 'tests/');
+        $this->loader   = new PluginLoader(ROOT_DIR . 'tests/mocks/');
         $actual = $this->loader->load('WrongNamePlugin.php');
     }
 
@@ -86,7 +86,7 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithPluginThatDoesNotImplementInterface()
     {
-        $this->loader   = new PluginLoader(ROOT_DIR . 'tests/');
+        $this->loader   = new PluginLoader(ROOT_DIR . 'tests/mocks/');
         $actual = $this->loader->load('NoImplementInterfacePlugin.php');
     }
 
