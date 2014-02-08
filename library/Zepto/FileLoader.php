@@ -1,32 +1,40 @@
 <?php
 
-/**
- * Zepto
- *
- * @author Hassan Khan
- * @link http://https://github.com/hassankhan/Zepto
- * @license http://opensource.org/licenses/MIT
- * @version 0.2
- */
-
 namespace Zepto;
 
+/**
+ * FileLoader
+ *
+ * @package    Zepto
+ * @subpackage FileLoader
+ * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       http://https://github.com/hassankhan/Zepto
+ * @license    MIT
+ * @since      0.2
+ */
 class FileLoader {
 
     /**
-     * The base path, used to trim from file paths when added to result array
+     * The base path, ending in a trailing forward-slash
      *
      * @var string
      */
     protected $base_path;
 
     /**
-     * Initialises file cache object and sets base path
+     * Initialises object and sets base path
      *
-     * @codeCoverageIgnore
+     * @param string $base_path
+     * @throws \UnexpectedValueException If path given is not a valid path
      */
     public function __construct($base_path)
     {
+        $base_path = rtrim($base_path, '/') . '/';
+
+        if (!is_dir($base_path)) {
+            throw new \UnexpectedValueException($base_path . ' is not a valid directory');
+        }
+
         $this->base_path = $base_path;
     }
 
@@ -55,6 +63,16 @@ class FileLoader {
 
         // Get file contents and return
         return array($file_path => file_get_contents($full_path));
+    }
+
+    /**
+     * Returns the base path
+     *
+     * @return string
+     */
+    public function base_path()
+    {
+        return $this->base_path;
     }
 
     /**

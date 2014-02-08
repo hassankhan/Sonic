@@ -30,6 +30,25 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Zepto\FileLoader::__construct()
+     * @covers Zepto\FileLoader::base_path()
+     */
+    public function testConstructWithPathThatHasNoTrailingForwardSlash()
+    {
+        $loader = new FileLoader(ROOT_DIR . 'content');
+        $this->assertEquals(ROOT_DIR . 'content/', $loader->base_path());
+    }
+
+    /**
+     * @covers Zepto\FileLoader::__construct()
+     * @expectedException UnexpectedValueException
+     */
+    public function testConstructWithInvalidPath()
+    {
+        $loader = new FileLoader('!@£');
+    }
+
+    /**
      * @covers            Zepto\FileLoader::load()
      * @expectedException RuntimeException
      */
