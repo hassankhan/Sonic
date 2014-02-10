@@ -25,11 +25,23 @@ use Symfony\Component\HttpFoundation\Response;
 class Zepto {
 
     /**
-     *
+     * Current application version
      */
     const VERSION = '0.6';
 
+    /**
+     * Container object to store all dependencies
+     *
+     * @var \Pimple
+     */
     public $container;
+
+    /**
+     * A singleton instance of this class, provided as a static property
+     *
+     * @var \Zepto\Zepto
+     */
+    protected static $instance;
 
     /**
      * Zepto constructor
@@ -151,6 +163,11 @@ class Zepto {
 
         // Add basic routes to router
         $this->setup_router();
+
+        // Set default instance to this one
+        if (is_null(static::instance())) {
+            static::$instance = $this;
+        }
     }
 
     /**
@@ -360,6 +377,20 @@ class Zepto {
         // Close ``<ul>`` tag
         $nav_html .= '</ul>' . PHP_EOL;
         return $nav_html;
+    }
+
+    /**
+     * Retrieves current instance, if one exists, otherwise returns null
+     *
+     * @return \Zepto\Zepto|null
+     */
+    public static function instance()
+    {
+        if (isset(static::$instance) === FALSE) {
+            return null;
+        }
+
+        return static::$instance;
     }
 
     /**
