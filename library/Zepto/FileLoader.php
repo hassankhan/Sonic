@@ -43,17 +43,17 @@ class FileLoader {
      *
      * @param  string $file_path
      * @return array
-     * @throws RuntimeException         If there is a problem with the file
-     * @throws UnexpectedValueException If path is a directory
+     * @throws \RuntimeException         If there is a problem with the file
+     * @throws \UnexpectedValueException If path is a directory
      */
     public function load($file_path)
     {
         // Create full path
-        $full_path = $this->base_path . $file_path;
+        $full_path = $this->base_path . trim($file_path, '/');
 
         // Throw exception if path is a directory
         if (is_dir($full_path)) {
-            throw new \UnexpectedValueException($full_path . 'is a directory not a file');
+            throw new \UnexpectedValueException($full_path . ' is a directory not a file');
         }
 
         // Throw exception if file doesn't exist
@@ -65,6 +65,26 @@ class FileLoader {
         return array($file_path => file_get_contents($full_path));
     }
 
+    public function get_folder_contents($dir_path = '')
+    {
+        // Get full path
+        $full_path = $this->base_path . $dir_path;
+
+        // Check for valid directory
+        if (is_dir($full_path) === FALSE) {
+            throw new \UnexpectedValueException('There was an error trying to load ' . $full_path);
+        }
+
+        $iterator = new \RecursiveDirectoryIterator($full_path);
+        foreach(new \RecursiveIteratorIterator($iterator) as $file) {
+            if (!in_array($file->getFilename(), array('.', '..', '.DS_Store', 'Thumbs.db'))) {
+                $path = str_replace($this->base_path, '', rtrim($file->getPath(), '/') . '/');
+                $file_names[$path . $file->getFilename()] = $path . $file->getFilename();
+            }
+        }
+        return $file_names;
+    }
+
     /**
      * Returns the base path
      *
@@ -73,30 +93,6 @@ class FileLoader {
     public function base_path()
     {
         return $this->base_path;
-    }
-
-    /**
-     * Returns structure of folder as a multidimensional array. Used for
-     * creating navigation links
-     *
-     * @deprecated May be subject to removal, after navigation revamp
-     * @param  string $file_path
-     * @return array
-     */
-    public function get_directory_map($file_path)
-    {
-        foreach (scandir($file_path) as $node) {
-            if ($node == '.' || $node == '..') continue;
-            if (is_dir($file_path . '/' . $node)) {
-                $contents[$node] = $this->get_directory_map($file_path . '/' . $node);
-            } else {
-                if (preg_match('#^\.(\w+)#', $node) === 0) {
-                    $contents[] = $node;
-                }
-            }
-        }
-
-        return $contents;
     }
 
 }

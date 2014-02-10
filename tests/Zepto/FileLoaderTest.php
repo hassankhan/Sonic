@@ -70,10 +70,10 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
      * @covers       Zepto\FileLoader::load
      * @dataProvider providerTestLoadSingleFile
      */
-    public function testLoadSingleFile($files)
+    public function testLoadSingleFile($expected)
     {
-        $result = $this->loader->load('404.md');
-        $this->assertEquals($files, $result);
+        $actual = $this->loader->load('sub/page.md');
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -90,32 +90,24 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    /**
-     * @covers Zepto\FileLoader::get_directory_map()
-     */
-    public function testGet_directory_map()
-    {
-        $expected = array(
-            0 => '404.md',
-            1 => 'index.md',
-            'sub' => array(
-                0 => 'index.md',
-                1 => 'page.md'
-            )
-        );
-
-        $this->assertEquals($expected, $this->loader->get_directory_map(ROOT_DIR . 'content'));
-    }
-
     public function providerTestLoadSingleFile()
     {
-        $files['404.md'] = '/*' . PHP_EOL
-            . 'Title: Error 404' . PHP_EOL
-            . 'Robots: noindex,nofollow' . PHP_EOL
+        // $files['sub/page.md'] = '/*' . PHP_EOL
+        //     . 'Title: Error 404' . PHP_EOL
+        //     . 'Robots: noindex,nofollow' . PHP_EOL
+        //     . '*/' . PHP_EOL . PHP_EOL
+        //     . 'Error 404' . PHP_EOL
+        //     . '=========' . PHP_EOL . PHP_EOL
+        //     . 'Woops. Looks like this page doesn\'t exist.';
+
+        $files['sub/page.md'] = '/*' . PHP_EOL
+            . 'Title: Sub Page' . PHP_EOL
             . '*/' . PHP_EOL . PHP_EOL
-            . 'Error 404' . PHP_EOL
-            . '=========' . PHP_EOL . PHP_EOL
-            . 'Woops. Looks like this page doesn\'t exist.';
+            . '## This is a Sub Page' . PHP_EOL . PHP_EOL
+            . 'This is page.md in the "sub" folder.' . PHP_EOL . PHP_EOL
+            . 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' . PHP_EOL . PHP_EOL
+            . 'Donec ultricies tristique nulla et mattis.' . PHP_EOL . PHP_EOL
+            . 'Phasellus id massa eget nisl congue blandit sit amet id ligula.' . PHP_EOL;
 
         return array(array( $files ));
     }
