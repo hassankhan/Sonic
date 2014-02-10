@@ -282,7 +282,8 @@ class Zepto {
             $router->get($route, function() use ($container, $file) {
 
                 // Load content now
-                $content = $container['content_loader']->load($file)[$file];
+                $content_array = $container['content_loader']->load($file);
+                $content       = $content_array[$file];
 
                 // Set Twig options
                 $twig_vars = array(
