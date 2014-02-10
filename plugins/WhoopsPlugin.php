@@ -106,14 +106,6 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
     {
     }
 
-    public function before_content_load(&$content_dir)
-    {
-    }
-
-    public function after_content_load(&$content)
-    {
-    }
-
     public function before_router_setup()
     {
     }

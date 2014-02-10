@@ -128,31 +128,23 @@ class Zepto {
         // Set this particular setting now
         $container['plugins_enabled'] = $settings['zepto']['plugins_enabled'];
 
-        // Run application hooks and set application settings
-        // $this->run_hooks('before_config_load', array(&$settings));
-        $container['settings'] = $settings;
-
         // So if plugins ARE indeed enabled, initialise the plugin loader
         // and load the fuckers
         if ($container['plugins_enabled'] === true) {
             $container['plugin_loader'] = $container->share(
-                function($c) {
+                function($c) use ($settings) {
                     return new FileLoader\PluginLoader(
-                        $c['ROOT_DIR'] . $c['settings']['zepto']['plugins_dir']
+                        $c['ROOT_DIR'] . $settings['zepto']['plugins_dir']
                     );
                 }
             );
 
             $this->load_plugins();
-
         }
 
         // Run application hooks and set application settings
-        // $this->run_hooks('before_config_load', array(&$settings));
-        // $container['settings'] = $settings;
-
-        // Load content from files
-        $this->load_content();
+        $this->run_hooks('before_config_load', array(&$settings));
+        $container['settings'] = $settings;
 
         // Create navigation object
         $this->create_nav_links();
@@ -226,30 +218,6 @@ class Zepto {
             }
         }
         $this->run_hooks('after_plugins_load');
-    }
-
-    /**
-     * Loads files from the ``content`` folder
-     *
-     * @return
-     */
-    protected function load_content()
-    {
-        // Get local reference to file loader
-        // $container   = $this->container;
-        // $content_loader = $container['content_loader'];
-        // $settings    = $container['settings']['zepto'];
-
-        // $content_dir = $settings['content_dir'];
-        // $this->run_hooks('before_content_load', array(&$content_dir));
-
-        // $content = $content_loader->load_dir();
-
-        // Could add a hook here maybe?
-        // $container['folder_structure'] = $content_loader->get_directory_map($content_dir);
-
-        // $this->run_hooks('after_content_load', array(&$content));
-        // $container['content'] = $content;
     }
 
     /**

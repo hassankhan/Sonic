@@ -21,16 +21,6 @@ class OtherExamplePlugin implements \Zepto\PluginInterface {
         // echo __CLASS__ . '::before_config_load';
     }
 
-    public function before_content_load(&$content_dir)
-    {
-        // echo __CLASS__ . '::before_file_load';
-    }
-
-    public function after_content_load(&$content)
-    {
-        // echo __CLASS__ . '::after_file_load';
-    }
-
     public function before_router_setup()
     {
     }

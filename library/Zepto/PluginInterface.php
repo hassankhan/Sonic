@@ -17,10 +17,6 @@ interface PluginInterface {
 
     public function before_config_load(&$settings);
 
-    public function before_content_load(&$content_dir);
-
-    public function after_content_load(&$content);
-
     public function before_router_setup();
 
     public function after_router_setup();
