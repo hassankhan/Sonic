@@ -43,9 +43,11 @@ namespace Zepto;
  *
  * // Specifying a callback function if no other route is matched
  * $router->not_found( 'page_404' );
+ * $router->not_found(array('SomeClass', 'page_404_method'));
  *
  * // Specifying a callback function if any errors occur
  * $router->error( 'page_500' );
+ * $router->not_found(array('SomeClass', 'page_500_method'));
  *
  * // Run the router
  * $router->run();
@@ -54,6 +56,7 @@ namespace Zepto;
  * @subpackage Router
  * @author     Brandon Wamboldt <brandon.wamboldt@gmail.com>
  * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       http://https://github.com/hassankhan/Zepto
  * @license    MIT
  * @since      0.2
  */

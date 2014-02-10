@@ -1,4 +1,4 @@
-# Zepto [![Latest Stable Version](https://poser.pugx.org/hassankhan/zepto/v/stable.png)](https://packagist.org/packages/hassankhan/zepto) [![Total Downloads](https://poser.pugx.org/hassankhan/zepto/downloads.png)](https://packagist.org/packages/hassankhan/zepto) [![Latest Unstable Version](https://poser.pugx.org/hassankhan/zepto/v/unstable.png)](https://packagist.org/packages/hassankhan/zepto) [![License](https://poser.pugx.org/hassankhan/zepto/license.png)](https://packagist.org/packages/hassankhan/zepto)
+# Zepto [![Latest Stable Version](https://poser.pugx.org/hassankhan/zepto/v/stable.png)](https://packagist.org/packages/hassankhan/zepto) [![Total Downloads](https://poser.pugx.org/hassankhan/zepto/downloads.png)](https://packagist.org/packages/hassankhan/zepto) [![Latest Unstable Version](https://poser.pugx.org/hassankhan/zepto/v/unstable.png)](https://packagist.org/packages/hassankhan/zepto) [![License](https://poser.pugx.org/hassankhan/zepto/license.png)](https://packagist.org/packages/hassankhan/zepto) [![Dependencies Status](http://depending.in/hassankhan/Zepto.png)](http://depending.in/hassankhan/Zepto)
 
 Master: [![Build Status](https://travis-ci.org/hassankhan/Zepto.png?branch=master)](https://travis-ci.org/hassankhan/Zepto) [![Coverage Status](https://coveralls.io/repos/hassankhan/Zepto/badge.png?branch=master)](https://coveralls.io/r/hassankhan/Zepto?branch=master)
 
@@ -16,8 +16,8 @@ Its interface is _supposed_ to be simple and is in process of documentation. Tha
 * Uses a powerful(ish) [Slim](http://slimframework.com/)/[Silex](http://silex.sensiolabs.org/)-style router
     * Standard and custom HTTP methods
     * Route parameters with wildcards and conditions
-* Dependency injection container using [Pimple]()
-* Template rendering using [Twig]()
+* Dependency injection container using [Pimple](http://pimple.sensiolabs.org/)
+* Template rendering using [Twig](http://twig.sensiolabs.org/)
 * HTTP caching
 * Error handling and debugging
 * Application hooks and extensible components for extending functionality
@@ -28,7 +28,7 @@ Its interface is _supposed_ to be simple and is in process of documentation. Tha
 
 ### System Requirements
 
-You need **PHP >= 5.3.0**.
+You need **PHP >= 5.3.0**, and [Composer](https://getcomposer.org/) is highly recommended.
 
 ### Install
 
@@ -85,7 +85,7 @@ Ensure the `.htaccess` and `index.php` files are in the same public-accessible d
 
 #### Others
 
-Zepto hasn't been tested on other configurations yet, but because of how similar it is to [Slim](), the same instructions should work.
+Zepto hasn't been tested on other configurations yet, but because of how similar it is to [Slim](http://slimframework.com/), the same instructions should work.
 
 ## Documentation
 
@@ -104,7 +104,12 @@ It's pretty important to separate new features or improvements into separate fea
 
 ### Style Guide
 
-4 space tabs, snake case method names please.
+* **No** extraneous whitespace. I hate it with a fucking vengeance
+* Tabs should be set to **four** spaces
+* Method names should be written in ``snake_case()``, rather than ``camelCase()``
+* All source files should start with ``<?php`` but should **not** have an closing tag
+* End files with a Unix-style newline
+
 ***Coming soon***
 
 ### Unit Testing
@@ -129,7 +134,7 @@ Zepto is created and maintained by [Hassan Khan](http://hassankhan.me).
 
 ## Credits
 
-Clearly a lot of help (especially) from [Slim](), as is apparent from the source code. This also would not have been possible without [Pico](), [Parsedown]() and many others. Also, the open-source PHP community.
+Clearly a lot of help (especially) from [Slim](http://slimframework.com/), as is apparent from the source code. This also would not have been possible without [Pico](http://pico.dev7studios.com/), [Symfony](http://symfony.com/), or more specifically, the [Symfony HttpFoundation](http://symfony.com/doc/current/components/http_foundation/introduction.html) component, [PHP-Markdown](http://michelf.ca/projects/php-markdown/) and many others. The open-source PHP community in general does a fantastic job of polishing turds.
 
 ## License
 
