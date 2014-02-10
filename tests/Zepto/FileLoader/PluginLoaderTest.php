@@ -18,24 +18,6 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->loader   = new PluginLoader(ROOT_DIR . 'plugins');
-
-        // include_once(ROOT_DIR . 'plugins/ExamplePlugin.php');
-        // include_once(ROOT_DIR . 'plugins/OtherExamplePlugin.php');
-        // include_once(ROOT_DIR . 'plugins/WhoopsPlugin.php');
-
-        // $plugin_1_name = 'ExamplePlugin';
-        // $plugin_2_name = 'OtherExamplePlugin';
-        // $plugin_3_name = 'WhoopsPlugin';
-
-        // $plugin_1      = new $plugin_1_name;
-        // $plugin_2      = new $plugin_2_name;
-        // $plugin_3      = new $plugin_3_name;
-
-        // $this->plugins = array(
-        //     $plugin_1_name => $plugin_1,
-        //     $plugin_2_name => $plugin_2,
-        //     $plugin_3_name => $plugin_3
-        // );
     }
 
     /**
@@ -104,7 +86,7 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadDirectory()
     {
-        $actual = $this->loader->load_dir('');
+        $actual = $this->loader->load_dir();
 
         $this->assertArrayHasKey('ExamplePlugin',      $actual);
         $this->assertArrayHasKey('OtherExamplePlugin', $actual);

@@ -74,10 +74,10 @@ class PluginLoader extends \Zepto\FileLoader {
      * @return \Zepto\PluginInterface[]
      * @throws \UnexpectedValueException If a valid directory is not provided
      */
-    public function load_dir($dir_path)
+    public function load_dir($dir_path = '')
     {
         // Get full path
-        $full_path = $this->base_path . $dir_path;
+        $full_path = $this->base_path . trim($dir_path, '/') . '/';
 
         // Create array to hold loaded plugins
         $loaded_plugins = array();
