@@ -116,10 +116,6 @@ class Zepto {
             }
         );
 
-        // Set this particular setting now
-        $container['plugins_enabled'] = $settings['zepto']['plugins_enabled'];
-
-        // Run application hooks and set application settings
         // If settings array is empty, then get a default one
         if (empty($settings) === TRUE) {
             $settings = $this->default_config();
@@ -129,6 +125,10 @@ class Zepto {
             $this->validate_config($settings);
         }
 
+        // Set this particular setting now
+        $container['plugins_enabled'] = $settings['zepto']['plugins_enabled'];
+
+        // Run application hooks and set application settings
         // $this->run_hooks('before_config_load', array(&$settings));
         $container['settings'] = $settings;
 
@@ -278,20 +278,20 @@ class Zepto {
                 ? '/' . str_replace('index', '', $file_name)
                 : '/' . $file_name;
 
-            $router->get($route, function() use ($container, $file, $nav) {
+            $router->get($route, function() use ($container, $file) {
 
                 // Load content now
                 $content = $container['content_loader']->load($file)[$file];
 
                 // Set Twig options
-                $twig_options = array(
+                $twig_vars = array(
                     'config'     => $container['settings'],
                     'base_url'   => $container['settings']['site']['site_root'],
                     'site_title' => $container['settings']['site']['site_title']
                 );
 
                 // Merge Twig options and content into one array
-                $options = array_merge($twig_options, $content, $nav);
+                $options = array_merge($twig_vars, $content, $container['nav']);
 
                 // Get template name from file, if not set, then use default
                 $template_name = array_key_exists('template', $content['meta']) === true
