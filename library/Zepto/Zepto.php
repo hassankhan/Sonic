@@ -272,7 +272,8 @@ class Zepto {
         foreach ($file_list as $file) {
 
             // Get filename without extension
-            $file_name = explode('.', $file)[0];
+            $exploded_file_name = explode('.', $file);
+            $file_name          = $exploded_file_name[0];
 
             $route = preg_match('/index$/', $file_name) === 1
                 ? '/' . str_replace('index', '', $file_name)
