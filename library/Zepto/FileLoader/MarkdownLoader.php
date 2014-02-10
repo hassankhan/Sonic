@@ -7,6 +7,7 @@
  * @link http://https://github.com/hassankhan/Zepto
  * @license http://opensource.org/licenses/MIT
  * @version 0.2
+ * @deprecated Use \Zepto\FileLoader\PageLoader instead
  */
 
 namespace Zepto\FileLoader;
@@ -15,32 +16,41 @@ class MarkdownLoader extends \Zepto\FileLoader {
 
     /**
      * An object which parses Markdown to HTML
-     * @var Michelf\MarkdownInterface
+     *
+     * @var \Michelf\MarkdownInterface
      */
     protected $parser;
 
-    function __construct(\Michelf\MarkdownInterface $parser) {
+    /**
+     * Class constructor. Sets the base path, but also the Markdown parser
+     *
+     * @param string                     $base_path
+     * @param \Michelf\MarkdownInterface $parser
+     */
+    public function __construct($base_path, \Michelf\MarkdownInterface $parser)
+    {
+        parent::__construct($base_path);
         $this->parser = $parser;
     }
 
     /**
      * Basically does the same job as the superclass, except this time we run
      * it through a post_process() method to work some magic on it
-     * @param  string $file_path      File path
-     * @param  string $file_extension File extension
-     * @return array                  Loaded files
+     *
+     * @param  string $file_path
+     * @return array
      */
-    public function load($file_path, $file_extension)
+    public function load($file_path)
     {
-        $files = parent::load($file_path, $file_extension);
-        return $this->post_process();
+        return $this->post_process(parent::load($file_path));
     }
 
     /**
      * Returns the parser object
-     * @return Michelf\MarkdownInterface
+     *
+     * @return \Michelf\MarkdownInterface
      */
-    public function get_parser()
+    public function parser()
     {
         return $this->parser;
     }
@@ -48,35 +58,34 @@ class MarkdownLoader extends \Zepto\FileLoader {
     /**
      * Where the magic happens, ladies and gentlemen. An array with the keys set to the name of
      * the file and the values set to the processed Markdown text
-     * @codeCoverageIgnore
+     *
      * @return array
+     * @codeCoverageIgnore
      */
-    private function post_process()
+    protected function post_process($content)
     {
         // Create array to store processed files
         $processed_files = array();
 
         // Loop through files and process each one, adding them to the array
-        foreach ($this['file_cache'] as $file_name => $file) {
+        foreach ($content as $file_name => $file) {
             $processed_files[$file_name] = array(
                 'meta'    => $this->parse_meta($file),
                 'content' => $this->parse_content($file)
             );
         }
 
-        // Update local cache
-        $this['file_cache'] = $processed_files;
-
         return $processed_files;
     }
 
     /**
      * Parses Markdown file headers for metadata
-     * @codeCoverageIgnore
+     *
      * @param  string $file The loaded Markdown file as a string
      * @return array        An array containing file metadata
+     * @codeCoverageIgnore
      */
-    private function parse_meta($file)
+    protected function parse_meta($file)
     {
         // Grab meta section between '/* ... */' in the content file
         preg_match_all('#/\*(.*?)\*/#s', $file, $meta);
@@ -93,11 +102,12 @@ class MarkdownLoader extends \Zepto\FileLoader {
 
     /**
      * Parses Markdown file for content
-     * @codeCoverageIgnore
+     *
      * @param  string $file The loaded Markdown file as a string
      * @return string       The parsed string as HTML
+     * @codeCoverageIgnore
      */
-    private function parse_content($file)
+    protected function parse_content($file)
     {
         $content = preg_replace('#/\*.+?\*/#s', '', $file);
         return $this->parser->defaultTransform($content);

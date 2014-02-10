@@ -74,6 +74,9 @@ class Zepto {
         // Get local reference to container
         $container = $this->container;
 
+        // Set ROOT_DIR in here, rather than as a constant
+        $container['ROOT_DIR'] = realpath(getcwd()) . '/';
+
         $container['request'] = $container->share(
             function() {
                 return Request::createFromGlobals();
@@ -96,22 +99,19 @@ class Zepto {
             }
         );
 
-        $container['plugin_loader'] = $container->share(
-            function() {
-                return new FileLoader\PluginLoader();
-            }
-        );
-
         $container['content_loader'] = $container->share(
-            function() {
-                return new FileLoader\MarkdownLoader(new \Michelf\MarkdownExtra);
+            function($c) {
+                return new FileLoader\MarkdownLoader(
+                    $c['ROOT_DIR'] . $c['settings']['zepto']['content_dir'],
+                    new \Michelf\MarkdownExtra
+                );
             }
         );
 
         $container['twig'] = $container->share(
-            function() {
+            function($c) {
                 return new \Twig_Environment(
-                    new \Twig_Loader_Filesystem(ROOT_DIR . 'templates')
+                    new \Twig_Loader_Filesystem($c['ROOT_DIR'] . 'templates')
                 );
             }
         );
@@ -128,14 +128,28 @@ class Zepto {
         // Set this particular setting now
         $container['plugins_enabled'] = $settings['zepto']['plugins_enabled'];
 
-        // Load plugins if they're enabled
+        // Run application hooks and set application settings
+        // $this->run_hooks('before_config_load', array(&$settings));
+        $container['settings'] = $settings;
+
+        // So if plugins ARE indeed enabled, initialise the plugin loader
+        // and load the fuckers
         if ($container['plugins_enabled'] === true) {
-            $this->load_plugins($settings['zepto']['plugins_dir']);
+            $container['plugin_loader'] = $container->share(
+                function($c) {
+                    return new FileLoader\PluginLoader(
+                        $c['ROOT_DIR'] . $c['settings']['zepto']['plugins_dir']
+                    );
+                }
+            );
+
+            $this->load_plugins();
+
         }
 
         // Run application hooks and set application settings
-        $this->run_hooks('before_config_load', array(&$settings));
-        $container['settings'] = $settings;
+        // $this->run_hooks('before_config_load', array(&$settings));
+        // $container['settings'] = $settings;
 
         // Load content from files
         $this->load_content();
@@ -174,6 +188,8 @@ class Zepto {
     {
         $container = $this->container;
 
+        // echo $container['plugins_enabled'] === true ? 'true' : 'false';
+
         // If plugins are disabled, do not run
         if ($container['plugins_enabled'] === false) {
             return false;
@@ -196,17 +212,14 @@ class Zepto {
      *
      * @return
      */
-    protected function load_plugins($plugins_dir)
+    protected function load_plugins()
     {
         if ($this->container['plugins_enabled'] === true) {
             $plugin_loader = $this->container['plugin_loader'];
 
             // Load plugins from 'plugins' folder
             try {
-                $this->container['plugins'] = $plugin_loader->load(
-                    $plugins_dir,
-                    array('.php')
-                );
+                $this->container['plugins'] = $plugin_loader->load_dir();
             }
             catch (\Exception $e) {
                 $this->container['router']->error($e);
@@ -223,23 +236,20 @@ class Zepto {
     protected function load_content()
     {
         // Get local reference to file loader
-        $container   = $this->container;
-        $content_loader = $container['content_loader'];
-        $settings    = $container['settings']['zepto'];
+        // $container   = $this->container;
+        // $content_loader = $container['content_loader'];
+        // $settings    = $container['settings']['zepto'];
 
-        $content_dir = $settings['content_dir'];
-        $this->run_hooks('before_content_load', array(&$content_dir));
+        // $content_dir = $settings['content_dir'];
+        // $this->run_hooks('before_content_load', array(&$content_dir));
 
-        $content = $content_loader->load(
-            $content_dir,
-            $settings['content_ext']
-        );
+        // $content = $content_loader->load_dir();
 
         // Could add a hook here maybe?
-        $container['folder_structure'] = $content_loader->get_directory_map($content_dir);
+        // $container['folder_structure'] = $content_loader->get_directory_map($content_dir);
 
-        $this->run_hooks('after_content_load', array(&$content));
-        $container['content'] = $content;
+        // $this->run_hooks('after_content_load', array(&$content));
+        // $container['content'] = $content;
     }
 
     /**
@@ -247,7 +257,7 @@ class Zepto {
      * loaded files as returned by Zepto\FileLoader and turning that into
      * routes.
      *
-     * @return void
+     * @return
      */
     protected function setup_router()
     {
@@ -256,38 +266,32 @@ class Zepto {
         $router    = $container['router'];
         $nav       = $container['nav'];
 
-        // Get loaded files array keys
-        $files  = array_keys($container['content']);
-
-        // Remove 'content' and file extensions from path
-        $clean_files = str_replace(
-            $container['settings']['zepto']['content_ext'],
-            '',
-            $files
-        );
+        $file_list = $container['content_loader']->get_folder_contents();
 
         // Add each as a route
-        foreach ($clean_files as $file) {
+        foreach ($file_list as $file) {
 
-            $route = preg_match('/index$/', $file) === 1
-                ? '/' . str_replace('index', '', $file)
-                : '/' . $file;
+            // Get filename without extension
+            $file_name = explode('.', $file)[0];
 
-            $router->get($route, function() use ($container, $file, $nav) {
+            $route = preg_match('/index$/', $file_name) === 1
+                ? '/' . str_replace('index', '', $file_name)
+                : '/' . $file_name;
 
-                // Get local references to Twig and content
-                $twig    = $container['twig'];
-                $content = $container['content'][$file . '.md'];
+            $router->get($route, function() use ($container, $file) {
+
+                // Load content now
+                $content = $container['content_loader']->load($file)[$file];
 
                 // Set Twig options
-                $twig_options = array(
+                $twig_vars = array(
                     'config'     => $container['settings'],
                     'base_url'   => $container['settings']['site']['site_root'],
                     'site_title' => $container['settings']['site']['site_title']
                 );
 
                 // Merge Twig options and content into one array
-                $options = array_merge($twig_options, $content, $nav);
+                $options = array_merge($twig_vars, $content, $container['nav']);
 
                 // Get template name from file, if not set, then use default
                 $template_name = array_key_exists('template', $content['meta']) === true
@@ -295,7 +299,7 @@ class Zepto {
                     : $container['settings']['zepto']['default_template'];
 
                 // Render template with Twig
-                return $twig->render($template_name, $options);
+                return $container['twig']->render($template_name, $options);
             });
         }
     }
@@ -308,13 +312,14 @@ class Zepto {
     protected function create_nav_links()
     {
         $container    = $this->container;
-        $content      = $container['content'];
+        // $content      = $container['content'];
 
         // Calls protected function which returns formatted array
-        $nav_html    = $this->generate_nav_html();
+        // $nav_html    = $this->generate_nav_html();
 
         // Add to ``$container``
-        $this->container['nav'] = array('nav' => $nav_html);
+        // $this->container['nav'] = array('nav' => $nav_html);
+        $this->container['nav'] = array();
     }
 
     protected function generate_nav_html()

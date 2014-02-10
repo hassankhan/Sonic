@@ -1,99 +1,98 @@
 <?php
 
-/**
- * Zepto
- *
- * @author Hassan Khan
- * @link http://https://github.com/hassankhan/Zepto
- * @license http://opensource.org/licenses/MIT
- * @version 0.2
- */
-
 namespace Zepto;
 
-class FileLoader extends \Pimple {
+/**
+ * FileLoader
+ *
+ * @package    Zepto
+ * @subpackage FileLoader
+ * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       http://https://github.com/hassankhan/Zepto
+ * @license    MIT
+ * @since      0.2
+ */
+class FileLoader {
 
     /**
-     * Initialises file cache object
-     * @codeCoverageIgnore
+     * The base path, ending in a trailing forward-slash
+     *
+     * @var string
      */
-    public function __construct()
+    protected $base_path;
+
+    /**
+     * Initialises object and sets base path
+     *
+     * @param string $base_path
+     * @throws \UnexpectedValueException If path given is not a valid path
+     */
+    public function __construct($base_path)
     {
-        $this['file_cache'] = array();
+        $base_path = rtrim($base_path, '/') . '/';
+
+        if (!is_dir($base_path)) {
+            throw new \UnexpectedValueException($base_path . ' is not a valid directory');
+        }
+
+        $this->base_path = $base_path;
     }
 
     /**
-     * Loads in a single file, or all files in a directory and subdirectories under it
-     * @param  string $file_path     File path
-     * @param  array $file_extension File extensions
-     * @return array                 Loaded files
-     */
-    public function load($file_path, $file_extension)
-    {
-        // Create array to store loaded files
-        $loaded_files = array();
-
-        if (!is_file($file_path) && !is_dir($file_path)) {
-            throw new \Exception('There was an error trying to load ' . $file_path);
-        }
-        // Load files
-        else {
-
-            // For a single file
-            if (is_file($file_path)) {
-                // Get rid of extraneous path details
-                $clean_file_name                = str_replace(ROOT_DIR, '', $file_path);
-                $clean_file_name                = str_replace('content/', '', $clean_file_name);
-                $loaded_files[$clean_file_name] = file_get_contents($file_path);
-            }
-
-            // For a directory
-            if (is_dir($file_path)) {
-
-                $iterator = new \RecursiveDirectoryIterator($file_path);
-                foreach(new \RecursiveIteratorIterator($iterator) as $file) {
-
-                    // To stop PHP error
-                    $exploded_file = explode('.', $file);
-                    if (in_array(strtolower(array_pop($exploded_file)), str_replace('.', '', $file_extension))) {
-                        // Get rid of extraneous path details
-                        $clean_file_name                = str_replace(ROOT_DIR, '', $file);
-                        $clean_file_name                = str_replace('content/', '', $clean_file_name);
-                        $loaded_files[$clean_file_name] = file_get_contents($file);
-                    }
-                }
-            }
-
-            // Cache loaded files for easy access
-            $this['file_cache'] = $loaded_files;
-
-            return $loaded_files;
-        }
-    }
-
-    /**
-     * Returns structure of folder as a multidimensional array. Used for
-     * creating navigation links
-     * @param  string $file_path Path to map
+     * Loads in a single file
+     *
+     * @param  string $file_path
      * @return array
+     * @throws \RuntimeException         If there is a problem with the file
+     * @throws \UnexpectedValueException If path is a directory
      */
-    public function get_directory_map($file_path)
+    public function load($file_path)
     {
-        foreach (scandir($file_path) as $node) {
-            if ($node == '.' || $node == '..') continue;
-            if (is_dir($file_path . '/' . $node)) {
-                $contents[$node] = $this->get_directory_map($file_path . '/' . $node);
-            } else {
-                if (preg_match('#^\.(\w+)#', $node) === 0) {
-                    $contents[] = $node;
-                }
-            }
+        // Create full path
+        $full_path = $this->base_path . trim($file_path, '/');
+
+        // Throw exception if path is a directory
+        if (is_dir($full_path)) {
+            throw new \UnexpectedValueException($full_path . ' is a directory not a file');
         }
 
-        // Cache it somewhere?
-        $this['folder_structure'] = $contents;
+        // Throw exception if file doesn't exist
+        if (!is_file($full_path)) {
+            throw new \RuntimeException('There was an error trying to load ' . $full_path);
+        }
 
-        return $contents;
+        // Get file contents and return
+        return array($file_path => file_get_contents($full_path));
+    }
+
+    public function get_folder_contents($dir_path = '')
+    {
+        // Get full path
+        $full_path = $this->base_path . $dir_path;
+
+        // Check for valid directory
+        if (is_dir($full_path) === FALSE) {
+            throw new \UnexpectedValueException('There was an error trying to load ' . $full_path);
+        }
+
+        $iterator = new \RecursiveDirectoryIterator($full_path);
+        foreach(new \RecursiveIteratorIterator($iterator) as $file) {
+            if (!in_array($file->getFilename(), array('.', '..', '.DS_Store', 'Thumbs.db'))) {
+                $path = str_replace($this->base_path, '', rtrim($file->getPath(), '/') . '/');
+                $file_names[$path . $file->getFilename()] = $path . $file->getFilename();
+            }
+        }
+        return $file_names;
+    }
+
+    /**
+     * Returns the base path
+     *
+     * @return string
+     */
+    public function base_path()
+    {
+        return $this->base_path;
     }
 
 }
