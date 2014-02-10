@@ -184,18 +184,6 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Zepto::load_content()
-     * @todo Implement testLoadContent()
-     */
-    public function testLoadContent()
-    {
-        ob_start();
-        $zepto = new Zepto();
-        // $this->markTestIncomplete('Not yet implemented');
-        ob_end_clean();
-    }
-
-    /**
      * @covers Zepto\Zepto::create_nav_links()
      * @covers Zepto\Zepto::generate_nav_html()
      */
