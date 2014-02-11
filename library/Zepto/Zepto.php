@@ -363,6 +363,35 @@ class Zepto {
     }
 
     /**
+     * Returns a fully-qualified URL for a given filename in the 'content' directory
+     *
+     * @param  string $file_name
+     * @return string|null
+     */
+    public function url_for($file_name)
+    {
+        // Check if file exists
+        try {
+            $content = $this->container['content_loader']->load($file_name);
+        } catch (\Exception $e) {
+            $this->container['router']->error($e);
+        }
+
+        // If it doesn't then return null
+        if (empty($content)) {
+            return null;
+        }
+
+        // Create URL and return
+        $clean_file_name = str_replace(
+            $this->container['settings']['zepto']['content_ext'],
+            '',
+            $file_name
+        );
+        return $this->container['settings']['site']['site_root'] . $clean_file_name;
+    }
+
+    /**
      * Returns a standard configuration for Zepto
      *
      * @return array
