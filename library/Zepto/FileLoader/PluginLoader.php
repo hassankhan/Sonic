@@ -8,8 +8,8 @@ namespace Zepto\FileLoader;
  * @package    Zepto
  * @subpackage FileLoader
  * @author     Hassan Khan <contact@hassankhan.me>
- * @link       http://https://github.com/hassankhan/Zepto
- * @license    http://opensource.org/licenses/MIT
+ * @link       https://github.com/hassankhan/Zepto
+ * @license    MIT
  * @since      0.2
  */
 class PluginLoader extends \Zepto\FileLoader {

@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @package    Zepto
  * @subpackage Zepto
  * @author     Hassan Khan <contact@hassankhan.me>
- * @link       http://https://github.com/hassankhan/Zepto
+ * @link       https://github.com/hassankhan/Zepto
  * @license    MIT
  * @since      0.2
  */

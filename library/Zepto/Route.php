@@ -11,7 +11,7 @@ namespace Zepto;
  * @package    Zepto
  * @subpackage Route
  * @author     Hassan Khan <contact@hassankhan.me>
- * @link       http://https://github.com/hassankhan/Zepto
+ * @link       https://github.com/hassankhan/Zepto
  * @license    MIT
  * @since      0.6
  */

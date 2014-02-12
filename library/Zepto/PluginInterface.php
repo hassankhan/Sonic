@@ -1,16 +1,17 @@
 <?php
 
-/**
- * Zepto
- *
- * @author Hassan Khan
- * @link http://https://github.com/hassankhan/Zepto
- * @license http://opensource.org/licenses/MIT
- * @version 0.2
- */
-
 namespace Zepto;
 
+/**
+ * PluginInterface
+ *
+ * @package    Zepto
+ * @subpackage PluginInterface
+ * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       https://github.com/hassankhan/Zepto
+ * @license    MIT
+ * @since      0.2
+ */
 interface PluginInterface {
 
     public function after_plugins_load();

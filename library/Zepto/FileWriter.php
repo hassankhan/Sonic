@@ -1,16 +1,17 @@
 <?php
 
+namespace Zepto;
+
 /**
  * FileWriter
  *
- * @author Hassan Khan
- * @link http://https://github.com/hassankhan/Zepto
- * @license http://opensource.org/licenses/MIT
- * @version 0.5
+ * @package    Zepto
+ * @subpackage FileWriter
+ * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       https://github.com/hassankhan/Zepto
+ * @license    MIT
+ * @since      0.5
  */
-
-namespace Zepto;
-
 class FileWriter {
 
     /**
