@@ -1,14 +1,5 @@
 <?php
 
-/**
- * Zepto
- *
- * @author Hassan Khan
- * @link http://https://github.com/hassankhan/Zepto
- * @license http://opensource.org/licenses/MIT
- * @version 0.2
- */
-
 namespace Zepto;
 
 use Pimple;
@@ -17,7 +8,16 @@ use Michelf\MarkdownExtra;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-
+/**
+ * Zepto
+ *
+ * @package    Zepto
+ * @subpackage Zepto
+ * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       http://https://github.com/hassankhan/Zepto
+ * @license    MIT
+ * @since      0.2
+ */
 class Zepto {
 
     /**
