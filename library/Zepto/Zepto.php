@@ -127,7 +127,7 @@ class Zepto {
                 $twig = new \Twig_Environment(
                     new \Twig_Loader_Filesystem($app['ROOT_DIR'] . 'templates')
                 );
-                $twig->addExtension(new ZeptoTwigExtension);
+                $twig->addExtension(new Extension\Twig);
                 return $twig;
             }
         );

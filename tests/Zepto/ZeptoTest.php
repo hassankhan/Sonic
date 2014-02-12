@@ -161,7 +161,7 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Zepto::load_plugins()
+     * @covers       Zepto\Zepto::load_plugins()
      * @dataProvider providerConfig
      */
     public function testLoadPluginsWhenDisabled($config)
@@ -227,7 +227,7 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Zepto::run_hooks
+     * @covers       Zepto\Zepto::run_hooks
      * @dataProvider providerConfig
      */
     public function testRunHooksReturnsFalseWhenPluginsAreDisabled($config)
@@ -246,7 +246,6 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     public function testInstanceBeforeInitialization()
     {
         $this->assertNull(Zepto::instance());
-        // $this->markTestIncomplete('Not yet implemented');
     }
 
     /**
@@ -257,7 +256,6 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     {
         $zepto = new Zepto();
         $this->assertInstanceOf('Zepto\Zepto', Zepto::instance());
-        // $this->markTestIncomplete('Not yet implemented');
     }
 
     public function providerConfig()
