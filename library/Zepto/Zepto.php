@@ -11,10 +11,6 @@
 
 namespace Zepto;
 
-// Define constant for root directory
-defined('ROOT_DIR')
-    || define('ROOT_DIR', realpath(getcwd()) . '/');
-
 use Pimple;
 use Whoops;
 use Michelf\MarkdownExtra;
@@ -224,17 +220,9 @@ class Zepto {
     protected function load_plugins()
     {
         if ($this->container['plugins_enabled'] === true) {
-            $plugin_loader = $this->container['plugin_loader'];
-
             // Load plugins from 'plugins' folder
-            try {
-                $this->container['plugins'] = $plugin_loader->load_dir();
-            }
-            catch (\Exception $e) {
-                $this->container['router']->error($e);
-            }
+            $this->container['plugins'] = $this->container['plugin_loader']->load_dir();
         }
-        $this->run_hooks('after_plugins_load');
     }
 
     /**
