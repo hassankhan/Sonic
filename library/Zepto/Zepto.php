@@ -167,9 +167,6 @@ class Zepto {
         $this->run_hooks('before_config_load', array(&$settings));
         $app['settings'] = $settings;
 
-        // Create navigation object
-        $this->create_nav_links();
-
         // Add basic routes to router
         $this->setup_router();
 
