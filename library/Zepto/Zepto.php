@@ -107,15 +107,15 @@ class Zepto {
         );
 
         $app['router'] = $app->share(
-            function($c) {
-                return new Router($c['request'], $c['response']);
+            function ($app) {
+                return new Router($app['request'], $app['response']);
             }
         );
 
         $app['content_loader'] = $app->share(
-            function($c) {
+            function ($app) {
                 return new FileLoader\MarkdownLoader(
-                    $c['ROOT_DIR'] . $c['settings']['zepto']['content_dir'],
+                    $app['ROOT_DIR'] . $app['settings']['zepto']['content_dir'],
                     new \Michelf\MarkdownExtra
                 );
             }
@@ -128,9 +128,9 @@ class Zepto {
         );
 
         $app['twig'] = $app->share(
-            function($c) {
+            function($app) {
                 $twig = new \Twig_Environment(
-                    new \Twig_Loader_Filesystem($c['ROOT_DIR'] . 'templates')
+                    new \Twig_Loader_Filesystem($app['ROOT_DIR'] . 'templates')
                 );
                 $twig->addExtension(new ZeptoTwigExtension);
                 return $twig;
