@@ -139,11 +139,11 @@ class Zepto {
 
         // If settings array is empty, then get a default one
         if (empty($settings) === TRUE) {
-            $settings = $this->default_config();
+            $settings = $this->app['helper']->default_config();
         }
         else {
             // @todo Wrap in try-catch
-            $this->validate_config($settings);
+            $this->app['helper']->validate_config($settings);
         }
 
         // Set this particular setting now
@@ -276,6 +276,8 @@ class Zepto {
             $router->get($route, function() use ($app, $file) {
 
                 // Load content now
+                // @todo This is temporary until some sort of Page-based abstraction
+                // is implemented. Its horrible, but fuck you
                 $content_array = $app['content_loader']->load($file);
                 $content       = $content_array[$file];
 
@@ -301,94 +303,6 @@ class Zepto {
     }
 
     /**
-     * Helper function to create navigation links
-     *
-     * @return
-     */
-    protected function create_nav_links()
-    {
-        $app    = $this->app;
-        // $content      = $app['content'];
-
-        // Calls protected function which returns formatted array
-        // $nav_html    = $this->generate_nav_html();
-
-        // Add to ``$app``
-        // $this->app['nav'] = array('nav' => $nav_html);
-        $this->app['nav'] = array();
-    }
-
-    protected function generate_nav_html()
-    {
-        $app       = $this->app;
-        $settings        = $app['settings'];
-        $content_loader  = $app['content_loader'];
-
-        // Opening ``<ul>`` tag and adding class name
-        $nav_html     = sprintf('<ul class="%s">' . PHP_EOL, $settings['site']['nav']['class']);
-
-        // Could add a hook here maybe?
-        $structure    = $content_loader->get_directory_map($settings['zepto']['content_dir']);
-
-        // Remove 'index' along with any file extensions from URL
-        $filth = array_merge(array('index'), $settings['zepto']['content_ext']);
-
-        foreach ($structure as $key => $value) {
-
-            // Check if ``$value`` is an array
-            if (is_array($value)) {
-
-                // Generate HTML for dropdown menu
-                $dropdown_html = '<li class="%s">' . PHP_EOL
-                   . '<a href="%s" class="dropdown-toggle" data-toggle="dropdown"> %s <b class="caret"></b></a>' . PHP_EOL
-                   . '<ul class="%s">' . PHP_EOL;
-                $nav_html .= sprintf($dropdown_html,
-                    $settings['site']['nav']['dropdown_li_class'],
-                    reset($value), // Reset to get first value from array
-                    ucfirst($key), // Capitalise first letter of folder name
-                    $settings['site']['nav']['dropdown_ul_class']
-                );
-
-                foreach ($value as $file_name) {
-
-                    // Add folder name to file name
-                    $full_file_name = $key . '/' . $file_name;
-
-                    // Get title of content file
-                    $title = $app['content'][$full_file_name]['meta']['title'];
-
-                    // Create URL
-                    $url = $settings['site']['site_root'] . str_replace($filth, '', $key . '/' . $file_name);
-
-                    // Run ``ucfirst()`` on ``$key`` to make it look nice
-                    $nav_html  .= sprintf('<li><a href="%s"> %s </a></li>' . PHP_EOL, $url, $title);
-                }
-
-                // Close dropdown menu HTML tags
-                $nav_html .= '</ul></li>' . PHP_EOL;
-            }
-            // If not then add to ``$nav_items``
-            else {
-                if (preg_match('#^[4|5]0\d\.md$#i', $value) === 0) {
-
-                    // Get title of content file
-                    $title = $app['content'][$value]['meta']['title'];
-
-                    // Create URL
-                    $url = $settings['site']['site_root'] . str_replace($filth, '', $value);
-                    $url = rtrim($url, '/') . '/';
-
-                    $nav_html .= sprintf('<li><a href="%s"> %s </a></li>' . PHP_EOL, $url, $title);
-                }
-            }
-        }
-
-        // Close ``<ul>`` tag
-        $nav_html .= '</ul>' . PHP_EOL;
-        return $nav_html;
-    }
-
-    /**
      * Retrieves current instance, if one exists, otherwise returns null
      *
      * @return \Zepto\Zepto|null
@@ -400,99 +314,6 @@ class Zepto {
         }
 
         return static::$instance;
-    }
-
-    /**
-     * Returns a standard configuration for Zepto
-     *
-     * @return array
-     */
-    public static function default_config()
-    {
-        return array(
-            'zepto' => array(
-                'environment'       => 'dev',
-                'content_dir'       => 'content',
-                'plugins_dir'       => 'plugins',
-                'templates_dir'     => 'templates',
-                'default_template'  => 'base.twig',
-                'content_ext'       => array('.md', '.markdown'),
-                'plugins_enabled'   => true
-            ),
-            'site' => array(
-                'site_root'         => 'http://localhost:8888/zepto/',
-                'site_title'        => 'Zepto',
-                'date_format'       => 'jS M Y',
-                'excerpt_length'    => '50',
-                'nav'               => array(
-                    'class'             => 'nav',
-                    'dropdown_li_class' => 'dropdown',
-                    'dropdown_ul_class' => 'dropdown-menu'
-                )
-            ),
-            'twig' => array(
-                'charset'           => 'utf-8',
-                'cache'             => 'cache',
-                'strict_variables'  => false,
-                'autoescape'        => false,
-                'auto_reload'       => true
-            )
-        );
-    }
-
-    /**
-     * Validates a configuration array
-     *
-     * @param  array   $config
-     * @return boolean
-     */
-    public static function validate_config($config)
-    {
-        $message = '';
-
-        while ($message === '') {
-            if (!is_dir($config['zepto']['content_dir'])) {
-                $message = 'Content directory does not exist';
-                break;
-            }
-
-            if (!is_dir($config['zepto']['plugins_dir'])) {
-                $message = 'Plugins directory does not exist';
-                break;
-            }
-
-            if (!is_dir($config['zepto']['templates_dir'])) {
-                $message = 'Templates directory does not exist';
-                break;
-            }
-
-            if (
-                !is_file("{$config['zepto']['templates_dir']}/{$config['zepto']['default_template']}")
-            ) {
-                $message = 'No default template exists';
-            break;
-            }
-
-            if ($config['zepto']['environment'] === 'dev') {
-                preg_match('#^(https?://)?(localhost)(\.[a-z\.]{2,6})?(\:[0-9]{1,5})?([/\w \.-]*)*/+$#', $config['site']['site_root']) === 0
-                    ? $message = "Something's up with your site root, man"
-                    : $message = '';
-            }
-            else {
-                preg_match('#^(https?://)?([\da-z\.-]+)\.([a-z\.]{2,6})([/\w \.-]*)*/+$#', $config['site']['site_root']) === 0
-                    ? $message = 'Site root is invalid. Should be like http://www.example.com/'
-                    : $message = '';
-            }
-            break;
-        }
-
-        if ($message === '') {
-            return TRUE;
-        }
-        else {
-            throw new \InvalidArgumentException($message);
-        }
-
     }
 
 }
