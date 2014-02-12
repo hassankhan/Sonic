@@ -255,7 +255,6 @@ class Zepto {
         // Get local references
         $app       = $this->app;
         $router    = $app['router'];
-        $nav       = $app['nav'];
 
         $file_list = $app['content_loader']->get_folder_contents();
 
@@ -284,6 +283,8 @@ class Zepto {
                     'base_url'   => $app['settings']['site']['site_root'],
                     'site_title' => $app['settings']['site']['site_title']
                 );
+
+                $app['nav'] = isset($app['nav']) === TRUE ? $app['nav'] : array();
 
                 // Merge Twig options and content into one array
                 $options = array_merge($twig_vars, $content, $app['nav']);
