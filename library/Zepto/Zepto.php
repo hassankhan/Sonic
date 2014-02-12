@@ -1,19 +1,6 @@
 <?php
 
-/**
- * Zepto
- *
- * @author Hassan Khan
- * @link http://https://github.com/hassankhan/Zepto
- * @license http://opensource.org/licenses/MIT
- * @version 0.2
- */
-
 namespace Zepto;
-
-// Define constant for root directory
-defined('ROOT_DIR')
-    || define('ROOT_DIR', realpath(getcwd()) . '/');
 
 use Pimple;
 use Whoops;
@@ -21,11 +8,19 @@ use Michelf\MarkdownExtra;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-
+/**
+ * Zepto
+ *
+ * @package    Zepto
+ * @subpackage Zepto
+ * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       https://github.com/hassankhan/Zepto
+ * @license    MIT
+ * @since      0.2
+ */
 class Zepto {
 
     /**
-     *
      * Current application version
      */
     const VERSION = '0.6';
@@ -230,15 +225,8 @@ class Zepto {
     protected function load_plugins()
     {
         if ($this->app['plugins_enabled'] === true) {
-            $plugin_loader = $this->app['plugin_loader'];
-
             // Load plugins from 'plugins' folder
-            try {
-                $this->app['plugins'] = $plugin_loader->load_dir();
-            }
-            catch (\Exception $e) {
-                $this->app['router']->error($e);
-            }
+            $this->app['plugins'] = $this->app['plugin_loader']->load_dir();
         }
         $this->run_hooks('after_plugins_load');
     }

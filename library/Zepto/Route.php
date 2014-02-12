@@ -1,5 +1,7 @@
 <?php
 
+namespace Zepto;
+
 /**
  * Route
  *
@@ -9,20 +11,10 @@
  * @package    Zepto
  * @subpackage Route
  * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       https://github.com/hassankhan/Zepto
  * @license    MIT
+ * @since      0.6
  */
-
-/**
- * Zepto Route Class
- *
- * This is the Zepto URL Route, which contains the logic to respond to a request.
- * The router determines if the matched URL is for this route and executes its callback.
- *
- * @since 0.6
- */
-
-namespace Zepto;
-
 class Route
 {
 

@@ -1,16 +1,17 @@
 <?php
 
+namespace Zepto\FileWriter;
+
 /**
  * MarkdownWriter
  *
- * @author Hassan Khan
- * @link http://https://github.com/hassankhan/Zepto
- * @license http://opensource.org/licenses/MIT
- * @version 0.5
+ * @package    Zepto
+ * @subpackage MarkdownWriter
+ * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       https://github.com/hassankhan/Zepto
+ * @license    MIT
+ * @since      0.5
  */
-
-namespace Zepto\FileWriter;
-
 class MarkdownWriter extends \Zepto\FileWriter {
 
     public function __construct()
