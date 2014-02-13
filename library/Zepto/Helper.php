@@ -164,15 +164,16 @@ class Helper
         // Check if file exists
         try {
             $content = $this->app['content_loader']->load($file_name);
+
+            // Get file title and URL and return
+            $link = $content[$file_name]['meta']['title'];
+            $url  = $this->url_for($file_name);
+            return sprintf('<a href="%s"> ' . $link . ' </a>', $url);
         }
         catch (\Exception $e) {
             $this->app['router']->error($e);
         }
 
-        // Get file title and URL and return
-        $link = $content[$file_name]['meta']['title'];
-        $url  = $this->url_for($file_name);
-        return sprintf('<a href="%s"> ' . $link . ' </a>', $url);
     }
 
 }
