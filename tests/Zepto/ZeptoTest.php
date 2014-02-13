@@ -250,7 +250,6 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::instance()
-     * @runInSeparateProcess
      */
     public function testInstanceAfterInitialization()
     {

@@ -44,6 +44,7 @@ class Twig extends \Twig_Extension
      * @see    \Zepto\Helper::url_for()
      * @param  string $file_name
      * @return string|null
+     * @codeCoverageIgnore
      */
     public function url_for($file_name)
     {
@@ -57,6 +58,7 @@ class Twig extends \Twig_Extension
      * @see    \Zepto\Helper::link_for()
      * @param  string $file_name
      * @return string|null
+     * @codeCoverageIgnore
      */
     public function link_for($file_name)
     {
