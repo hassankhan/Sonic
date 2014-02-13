@@ -156,14 +156,17 @@ class Zepto {
             );
 
             $this->load_plugins();
+            $this->run_hooks('after_plugins_load');
         }
 
         // Run application hooks and set application settings
         $this->run_hooks('before_config_load', array(&$settings));
         $app['settings'] = $settings;
 
-        // Add basic routes to router
+        // Add basic routes to router and run application hooks
+        $this->run_hooks('before_router_setup');
         $this->setup_router();
+        $this->run_hooks('after_router_setup');
 
         // Set default instance to this one
         if (is_null(static::instance())) {
@@ -228,7 +231,6 @@ class Zepto {
             // Load plugins from 'plugins' folder
             $this->app['plugins'] = $this->app['plugin_loader']->load_dir();
         }
-        $this->run_hooks('after_plugins_load');
     }
 
     /**
