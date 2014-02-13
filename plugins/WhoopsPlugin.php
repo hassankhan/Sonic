@@ -14,10 +14,8 @@ use Whoops\Run;
  */
 class WhoopsPlugin implements \Zepto\PluginInterface {
 
-    public function after_plugins_load()
+    public function after_plugins_load(\Pimple $app)
     {
-        $app = func_get_arg(0);
-
         // Add Whoops handlers
         $app['whoopsPrettyPageHandler'] = $app->share(
             function() {
@@ -109,19 +107,19 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
         }
     }
 
-    public function before_router_setup()
+    public function before_router_setup(\Pimple $app)
     {
     }
 
-    public function after_router_setup()
+    public function after_router_setup(\Pimple $app)
     {
     }
 
-    public function before_response_send()
+    public function before_response_send(\Pimple $app)
     {
     }
 
-    public function after_response_send()
+    public function after_response_send(\Pimple $app)
     {
     }
 

@@ -209,7 +209,7 @@ class Zepto {
         }
 
         // Send app reference to hooks
-        $args = array_merge($args, array($this->app));
+        $args = array_merge(array($this->app), $args);
 
         // Run hooks associated with that event
         foreach ($app['plugins'] as $plugin_id => $plugin) {
