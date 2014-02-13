@@ -1,44 +1,43 @@
 <?php
 
-/**
- * Zepto
- *
- * @author Hassan Khan
- * @link http://https://github.com/hassankhan/Zepto
- * @license http://opensource.org/licenses/MIT
- * @version 0.4
- */
-
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Handler\JsonResponseHandler;
 use Whoops\Run;
 
+/**
+ * WhoopsPlugin
+ *
+ * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       https://github.com/hassankhan/Zepto
+ * @license    MIT
+ * @since      0.4
+ */
 class WhoopsPlugin implements \Zepto\PluginInterface {
 
     public function after_plugins_load()
     {
-        $container = func_get_arg(0);
+        $app = func_get_arg(0);
 
         // Add Whoops handlers
-        $container['whoopsPrettyPageHandler'] = $container->share(
+        $app['whoopsPrettyPageHandler'] = $app->share(
             function() {
                 return new PrettyPageHandler();
             }
         );
-        $container['whoopsJsonResponseHandler'] = $container->share(
+        $app['whoopsJsonResponseHandler'] = $app->share(
             function() {
                 $handler = new JsonResponseHandler();
                 $handler->onlyForAjaxRequests(true);
                 return $handler;
             }
         );
-        $container["whoopsZeptoInfoHandler"] = $container->protect(
-            function() use ($container) {
+        $app["whoopsZeptoInfoHandler"] = $app->protect(
+            function() use ($app) {
 
                 // Check to see if there is a current route, otherwise
                 // ignore because router isn't set up yet
                 try{
-                    $current_route = $container['router']->current_route();
+                    $current_route = $app['router']->current_route();
                 }
                 catch (\Exception $e) {
                     return;
@@ -46,8 +45,8 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
 
                 $route_details = array();
 
-                $container['whoopsPrettyPageHandler']->setPageTitle('Shit hit the fan!');
-                $container['whoopsPrettyPageHandler']->setEditor('sublime');
+                $app['whoopsPrettyPageHandler']->setPageTitle('Shit hit the fan!');
+                $app['whoopsPrettyPageHandler']->setEditor('sublime');
 
                 if ($current_route !== null) {
                     $route_details = array(
@@ -56,47 +55,47 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
                     );
                 }
 
-                $container["whoopsPrettyPageHandler"]->addDataTable(
+                $app["whoopsPrettyPageHandler"]->addDataTable(
                     'Zepto Application',
                     array_merge(array(
-                        'Charset' => $container['request']->headers->get('Accept-Charset'),
-                        'Locale'  => $container['request']->getPreferredLanguage()
+                        'Charset' => $app['request']->headers->get('Accept-Charset'),
+                        'Locale'  => $app['request']->getPreferredLanguage()
                     ), $route_details)
                 );
 
-                $container["whoopsPrettyPageHandler"]->addDataTable(
+                $app["whoopsPrettyPageHandler"]->addDataTable(
                     'Request Information',
                     array(
-                        'URI'          => $container['request']->getUri(),
-                        'Request URI'  => $container['request']->getRequestUri(),
-                        'Path'         => $container['request']->getPathInfo(),
-                        'Query String' => $container['request']->getQueryString(),
-                        'HTTP Method'  => $container['request']->getMethod(),
-                        'Script Name'  => $container['request']->getScriptName(),
-                        'Base URL'     => $container['request']->getBaseUrl(),
-                        'Scheme'       => $container['request']->getScheme(),
-                        'Port'         => $container['request']->getPort(),
-                        'Host'         => $container['request']->getHost()
+                        'URI'          => $app['request']->getUri(),
+                        'Request URI'  => $app['request']->getRequestUri(),
+                        'Path'         => $app['request']->getPathInfo(),
+                        'Query String' => $app['request']->getQueryString(),
+                        'HTTP Method'  => $app['request']->getMethod(),
+                        'Script Name'  => $app['request']->getScriptName(),
+                        'Base URL'     => $app['request']->getBaseUrl(),
+                        'Scheme'       => $app['request']->getScheme(),
+                        'Port'         => $app['request']->getPort(),
+                        'Host'         => $app['request']->getHost()
                     )
                 );
             }
         );
 
         // Add actual Whoops\Run object
-        $container['whoops'] = $container->share(
-            function($container) {
+        $app['whoops'] = $app->share(
+            function($app) {
                 $run = new Run();
-                $run->pushHandler($container['whoopsPrettyPageHandler']);
-                $run->pushHandler($container['whoopsJsonResponseHandler']);
-                $run->pushHandler($container['whoopsZeptoInfoHandler']);
+                $run->pushHandler($app['whoopsPrettyPageHandler']);
+                $run->pushHandler($app['whoopsJsonResponseHandler']);
+                $run->pushHandler($app['whoopsZeptoInfoHandler']);
                 return $run;
             }
         );
 
         // Try to register Whoops, and set the callback function
         try {
-            $container['whoops']->register();
-            $container['router']->error(array($container['whoops'], Run::EXCEPTION_HANDLER));
+            $app['whoops']->register();
+            $app['router']->error(array($app['whoops'], Run::EXCEPTION_HANDLER));
         } catch (\Exception $e) {
             return;
         }
@@ -123,5 +122,3 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
     }
 
 }
-
-?>

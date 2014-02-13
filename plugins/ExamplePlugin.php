@@ -1,14 +1,13 @@
 <?php
 
 /**
- * Zepto
+ * ExamplePlugin
  *
- * @author Hassan Khan
- * @link http://https://github.com/hassankhan/Zepto
- * @license http://opensource.org/licenses/MIT
- * @version 0.4
+ * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       https://github.com/hassankhan/Zepto
+ * @license    MIT
+ * @since      0.4
  */
-
 class ExamplePlugin implements \Zepto\PluginInterface {
 
     public function after_plugins_load()
@@ -38,5 +37,3 @@ class ExamplePlugin implements \Zepto\PluginInterface {
     }
 
 }
-
-?>

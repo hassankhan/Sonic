@@ -13,6 +13,7 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        // Set superglobals to define application state
         $_SERVER['DOCUMENT_ROOT']   = '/var/www';
         $_SERVER['SCRIPT_FILENAME'] = '/var/www/zepto/index.php';
         $_SERVER['SERVER_NAME']     = 'zepto';
@@ -26,10 +27,6 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTPS']           = '';
         $_SERVER['REMOTE_ADDR']     = '127.0.0.1';
         unset($_SERVER['CONTENT_TYPE'], $_SERVER['CONTENT_LENGTH']);
-
-        // Change this to a dataprovider
-        include ROOT_DIR . 'config.php';
-        $this->config = $config;
     }
 
     /**
@@ -46,8 +43,6 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::__construct()
-     * @covers Zepto\Zepto::default_config()
-     * @covers Zepto\Zepto::validate_config()
      */
     public function testConstructWithSettings()
     {
@@ -82,70 +77,66 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
             )
         );
         $zepto = new Zepto($config);
-        $this->assertEquals($config, $zepto->container['settings']);
+        $this->assertEquals($config, $zepto->app['settings']);
         ob_end_clean();
     }
 
     /**
      * @covers Zepto\Zepto::__construct()
-     * @covers Zepto\Zepto::default_config()
      */
     public function testRouterAdded()
     {
         ob_start();
         $zepto = new Zepto();
-        $this->assertArrayHasKey('router', $zepto->container);
+        $this->assertArrayHasKey('router', $zepto->app);
         $this->assertInstanceOf(
             'Zepto\Router',
-            $zepto->container['router']
+            $zepto->app['router']
         );
         ob_end_clean();
     }
 
     /**
      * @covers Zepto\Zepto::__construct()
-     * @covers Zepto\Zepto::default_config()
      */
     public function testPluginLoaderAdded()
     {
         ob_start();
         $zepto = new Zepto();
-        $this->assertArrayHasKey('plugin_loader', $zepto->container);
+        $this->assertArrayHasKey('plugin_loader', $zepto->app);
         $this->assertInstanceOf(
             'Zepto\FileLoader\PluginLoader',
-            $zepto->container['plugin_loader']
+            $zepto->app['plugin_loader']
         );
         ob_end_clean();
     }
 
     /**
      * @covers Zepto\Zepto::__construct()
-     * @covers Zepto\Zepto::default_config()
      */
     public function testContentLoaderAdded()
     {
         ob_start();
         $zepto = new Zepto();
-        $this->assertArrayHasKey('content_loader', $zepto->container);
+        $this->assertArrayHasKey('content_loader', $zepto->app);
         $this->assertInstanceOf(
             'Zepto\FileLoader\MarkdownLoader',
-            $zepto->container['content_loader']
+            $zepto->app['content_loader']
         );
         ob_end_clean();
     }
 
     /**
      * @covers Zepto\Zepto::__construct()
-     * @covers Zepto\Zepto::default_config()
      */
     public function testTwigAdded()
     {
         ob_start();
         $zepto = new Zepto();
-        $this->assertArrayHasKey('twig', $zepto->container);
+        $this->assertArrayHasKey('twig', $zepto->app);
         $this->assertInstanceOf(
             '\Twig_Environment',
-            $zepto->container['twig']
+            $zepto->app['twig']
         );
         ob_end_clean();
     }
@@ -162,51 +153,24 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
         ob_start();
         // Add assertion to check if plugins_enabled is true or not
         $zepto = new Zepto();
-        $this->assertArrayHasKey('plugins', $zepto->container);
-        $plugins = $zepto->container['plugins'];
-        $this->assertArrayHasKey('ExamplePlugin', $zepto->container['plugins']);
-        $this->assertArrayHasKey('OtherExamplePlugin', $zepto->container['plugins']);
+        $this->assertArrayHasKey('plugins', $zepto->app);
+        $plugins = $zepto->app['plugins'];
+        $this->assertArrayHasKey('ExamplePlugin', $zepto->app['plugins']);
+        $this->assertArrayHasKey('OtherExamplePlugin', $zepto->app['plugins']);
         ob_end_clean();
     }
 
     /**
-     * @covers Zepto\Zepto::load_plugins()
+     * @covers       Zepto\Zepto::load_plugins()
+     * @dataProvider providerConfig
      */
-    public function testLoadPluginsWhenDisabled()
+    public function testLoadPluginsWhenDisabled($config)
     {
         ob_start();
         // Add assertion to check if plugins_enabled is true or not
-        $config = Zepto::default_config();
         $config['zepto']['plugins_enabled'] = false;
         $zepto = new Zepto($config);
-        $this->assertArrayNotHasKey('plugins', $zepto->container);
-        ob_end_clean();
-    }
-
-    /**
-     * @covers Zepto\Zepto::create_nav_links()
-     * @covers Zepto\Zepto::generate_nav_html()
-     */
-    public function testCreateNavLinks()
-    {
-        ob_start();
-        $zepto = new Zepto();
-
-        $expected = '<ul class="nav">' . PHP_EOL
-            . '<li><a href="http://localhost:8888/zepto/"> Welcome </a></li>' . PHP_EOL
-            . '<li class="dropdown">' . PHP_EOL
-            . '<a href="index.md" class="dropdown-toggle" data-toggle="dropdown"> Sub <b class="caret"></b></a>' . PHP_EOL
-            . '<ul class="dropdown-menu">' . PHP_EOL
-            . '<li><a href="http://localhost:8888/zepto/sub/"> Sub Page Index </a></li>' . PHP_EOL
-            . '<li><a href="http://localhost:8888/zepto/sub/page"> Sub Page </a></li>' . PHP_EOL
-            . '</ul></li>' . PHP_EOL
-            . '</ul>' . PHP_EOL;
-
-
-        // $this->assertEquals(array('nav' => $expected), $zepto->container['nav']);
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->assertArrayNotHasKey('plugins', $zepto->app);
         ob_end_clean();
     }
 
@@ -217,7 +181,7 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     {
         ob_start();
         $zepto = new Zepto();
-        $routes = $zepto->container['router']->routes();
+        $routes = $zepto->app['router']->routes();
 
         // Check that routes were added as HTTP GET requests
         $this->assertArrayHasKey('GET', $routes);
@@ -263,12 +227,12 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Zepto::run_hooks
+     * @covers       Zepto\Zepto::run_hooks
+     * @dataProvider providerConfig
      */
-    public function testRunHooksReturnsFalseWhenPluginsAreDisabled()
+    public function testRunHooksReturnsFalseWhenPluginsAreDisabled($config)
     {
         ob_start();
-        $config = Zepto::default_config();
         $config['zepto']['plugins_enabled'] = false;
         $zepto = new Zepto($config);
         $this->assertFalse($zepto->run_hooks('before_response_send'));
@@ -276,73 +240,59 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Zepto::validate_config()
+     * @covers Zepto\Zepto::instance()
+     * @runInSeparateProcess
      */
-    public function testValidateConfig()
+    public function testInstanceBeforeInitialization()
     {
-        ob_start();
-        $config = Zepto::default_config();
-        $this->assertTrue(Zepto::validate_config($config));
+        $this->assertNull(Zepto::instance());
     }
 
     /**
-     * @covers            Zepto\Zepto::validate_config()
-     * @expectedException InvalidArgumentException
+     * @covers Zepto\Zepto::instance()
+     * @runInSeparateProcess
      */
-    public function testConfigWithInvalidContentDir()
+    public function testInstanceAfterInitialization()
     {
-        ob_start();
-        $config = Zepto::default_config();
-        $config['zepto']['content_dir'] = 'no_such_dir';
-        Zepto::validate_config($config);
+        $zepto = new Zepto();
+        $this->assertInstanceOf('Zepto\Zepto', Zepto::instance());
     }
 
-    /**
-     * @covers            Zepto\Zepto::validate_config()
-     * @expectedException InvalidArgumentException
-     */
-    public function testConfigWithInvalidPluginsDir()
+    public function providerConfig()
     {
-        ob_start();
-        $config = Zepto::default_config();
-        $config['zepto']['plugins_dir'] = 'no_such_dir';
-        Zepto::validate_config($config);
-    }
-
-    /**
-     * @covers            Zepto\Zepto::validate_config()
-     * @expectedException InvalidArgumentException
-     */
-    public function testConfigWithInvalidTemplatesDir()
-    {
-        ob_start();
-        $config = Zepto::default_config();
-        $config['zepto']['templates_dir'] = 'no_such_dir';
-        Zepto::validate_config($config);
-    }
-
-    /**
-     * @covers            Zepto\Zepto::validate_config()
-     * @expectedException InvalidArgumentException
-     */
-    public function testConfigWithInvalidDefaultTemplate()
-    {
-        ob_start();
-        $config = Zepto::default_config();
-        $config['zepto']['default_template'] = 'no_such_file';
-        Zepto::validate_config($config);
-    }
-
-    /**
-     * @covers            Zepto\Zepto::validate_config()
-     * @expectedException InvalidArgumentException
-     */
-    public function testConfigWithInvalidSiteRoot()
-    {
-        ob_start();
-        $config = Zepto::default_config();
-        $config['site']['site_root'] = 'fuck://this@should?fail';
-        Zepto::validate_config($config);
+        return array(
+            array(
+                array(
+                    'zepto' => array(
+                        'environment'       => 'dev',
+                        'content_dir'       => 'content',
+                        'plugins_dir'       => 'plugins',
+                        'templates_dir'     => 'templates',
+                        'default_template'  => 'base.twig',
+                        'content_ext'       => array('.md', '.markdown'),
+                        'plugins_enabled'   => true
+                    ),
+                    'site' => array(
+                        'site_root'         => 'http://localhost:8888/zepto/',
+                        'site_title'        => 'Zepto',
+                        'date_format'       => 'jS M Y',
+                        'excerpt_length'    => '50',
+                        'nav'               => array(
+                            'class'             => 'nav',
+                            'dropdown_li_class' => 'dropdown',
+                            'dropdown_ul_class' => 'dropdown-menu'
+                        )
+                    ),
+                    'twig' => array(
+                        'charset'           => 'utf-8',
+                        'cache'             => 'cache',
+                        'strict_variables'  => false,
+                        'autoescape'        => false,
+                        'auto_reload'       => true
+                    )
+                )
+            )
+        );
     }
 
 }
