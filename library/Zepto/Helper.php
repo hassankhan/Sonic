@@ -106,12 +106,7 @@ class Helper
             break;
             }
 
-            if ($config['zepto']['environment'] === 'dev') {
-                preg_match('#^(https?://)?(localhost)(\.[a-z\.]{2,6})?(\:[0-9]{1,5})?([/\w \.-]*)*/+$#', $config['site']['site_root']) === 0
-                    ? $message = "Something's up with your site root, man"
-                    : $message = '';
-            }
-            else {
+            if ($config['zepto']['environment'] !== 'dev') {
                 preg_match('#^(https?://)?([\da-z\.-]+)\.([a-z\.]{2,6})([/\w \.-]*)*/+$#', $config['site']['site_root']) === 0
                     ? $message = 'Site root is invalid. Should be like http://www.example.com/'
                     : $message = '';
