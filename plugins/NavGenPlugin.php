@@ -110,5 +110,3 @@ class NavGenPlugin implements \Zepto\PluginInterface {
     }
 
 }
-
-?>

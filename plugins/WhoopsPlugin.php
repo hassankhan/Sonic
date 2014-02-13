@@ -123,5 +123,3 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
     }
 
 }
-
-?>

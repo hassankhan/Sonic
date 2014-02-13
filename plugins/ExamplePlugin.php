@@ -38,5 +38,3 @@ class ExamplePlugin implements \Zepto\PluginInterface {
     }
 
 }
-
-?>
