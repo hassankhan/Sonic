@@ -91,6 +91,14 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
                 return $run;
             }
         );
+    }
+
+    public function before_config_load(\Pimple $app, &$settings)
+    {
+        // If we're not on dev, then don't load up
+        if ($settings['zepto']['environment'] !== 'dev') {
+            return;
+        }
 
         // Try to register Whoops, and set the callback function
         try {
@@ -99,10 +107,6 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
         } catch (\Exception $e) {
             return;
         }
-    }
-
-    public function before_config_load(&$settings)
-    {
     }
 
     public function before_router_setup()
