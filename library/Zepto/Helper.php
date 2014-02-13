@@ -172,7 +172,7 @@ class Helper
         // Get file title and URL and return
         $link = $content[$file_name]['meta']['title'];
         $url  = $this->url_for($file_name);
-        return sprintf('<a href="%s">' . $link . "</a>", $url);
+        return sprintf('<a href="%s"> ' . $link . ' </a>', $url);
     }
 
 }

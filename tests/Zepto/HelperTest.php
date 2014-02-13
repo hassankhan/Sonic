@@ -150,7 +150,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
         $zepto    = new Zepto;
         $helper   = new Helper($zepto->app);
         $actual   = $helper->link_for('index.md');
-        $expected = '<a href="http://localhost:8888/zepto/">Welcome</a>';
+        $expected = '<a href="http://localhost:8888/zepto/"> Welcome </a>';
 
         $this->assertEquals($expected, $actual);
     }
