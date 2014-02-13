@@ -1,18 +1,17 @@
 <?php
 
-/**
- * Zepto
- *
- * @author Hassan Khan
- * @link http://https://github.com/hassankhan/Zepto
- * @license http://opensource.org/licenses/MIT
- * @version 0.4
- */
-
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Handler\JsonResponseHandler;
 use Whoops\Run;
 
+/**
+ * WhoopsPlugin
+ *
+ * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       https://github.com/hassankhan/Zepto
+ * @license    MIT
+ * @since      0.4
+ */
 class WhoopsPlugin implements \Zepto\PluginInterface {
 
     public function after_plugins_load()

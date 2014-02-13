@@ -3,14 +3,13 @@
 /**
  * NavGen plugin
  *
- * Creates a lovely formatted version of the
+ * Creates a lovely formatted nav object
  *
- * @author Hassan Khan
- * @link http://https://github.com/hassankhan/Zepto
- * @license http://opensource.org/licenses/MIT
- * @version 0.6
+ * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       https://github.com/hassankhan/Zepto
+ * @license    MIT
+ * @since      0.6
  */
-
 class NavGenPlugin implements \Zepto\PluginInterface {
 
     public function after_plugins_load()
