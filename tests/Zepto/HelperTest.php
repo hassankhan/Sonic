@@ -143,6 +143,18 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Zepto\Helper::url_for
+     */
+    public function testUrlForFailure()
+    {
+        $zepto    = new Zepto;
+        $helper   = new Helper($zepto->app);
+        $actual   = $helper->url_for('non-index.md');
+
+        $this->assertNull($actual);
+    }
+
+    /**
      * @covers Zepto\Helper::link_for
      */
     public function testLinkFor()
@@ -154,4 +166,17 @@ class HelperTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $actual);
     }
+
+    /**
+     * @covers Zepto\Helper::link_for
+     */
+    public function testLinkForFailure()
+    {
+        $zepto    = new Zepto;
+        $helper   = new Helper($zepto->app);
+        $actual   = $helper->link_for('non-index.md');
+
+        $this->assertNull($actual);
+    }
+
 }

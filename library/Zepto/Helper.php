@@ -127,32 +127,34 @@ class Helper
      * Returns a fully-qualified URL for a given filename in the 'content' directory
      *
      * @param  string $file_name
-     * @return string
+     * @return string|null
      */
     public function url_for($file_name)
     {
         // Check if file exists
         try {
             $content = $this->app['content_loader']->load($file_name);
+
+            // Create URL and return
+            $clean_file_name = str_replace(
+                array_merge(array('index'), $this->app['settings']['zepto']['content_ext']),
+                '',
+                $file_name
+            );
+            return trim($this->app['settings']['site']['site_root'] . $clean_file_name, '/') . '/';
         }
         catch (\Exception $e) {
             $this->app['router']->error($e);
         }
+        return null;
 
-        // Create URL and return
-        $clean_file_name = str_replace(
-            array_merge(array('index'), $this->app['settings']['zepto']['content_ext']),
-            '',
-            $file_name
-        );
-        return trim($this->app['settings']['site']['site_root'] . $clean_file_name, '/') . '/';
     }
 
     /**
      * Returns a HTML <a> for a given filename in the 'content' directory
      *
      * @param  string $file_name
-     * @return string
+     * @return string|null
      */
     public function link_for($file_name)
     {
@@ -168,7 +170,7 @@ class Helper
         catch (\Exception $e) {
             $this->app['router']->error($e);
         }
-
+        return null;
     }
 
 }
