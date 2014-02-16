@@ -90,16 +90,39 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @covers Zepto\FileLoader::get_folder_contents()
+     */
+    public function testGetFolderContents()
+    {
+        $actual = $this->loader->get_folder_contents();
+        $expected = array(
+            '404.md'         => '404.md',
+              'index.md'     => 'index.md',
+              'sub/index.md' => 'sub/index.md',
+              'sub/page.md'  => 'sub/page.md'
+        );
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers            Zepto\FileLoader::get_folder_contents()
+     * @expectedException UnexpectedValueException
+     */
+    public function testGetFolderContentsWithInvalidDir()
+    {
+        $actual = $this->loader->get_folder_contents('non-existent');
+        $expected = array(
+            '404.md'         => '404.md',
+              'index.md'     => 'index.md',
+              'sub/index.md' => 'sub/index.md',
+              'sub/page.md'  => 'sub/page.md'
+        );
+        $this->assertEquals($expected, $actual);
+    }
+
     public function providerTestLoadSingleFile()
     {
-        // $files['sub/page.md'] = '/*' . PHP_EOL
-        //     . 'Title: Error 404' . PHP_EOL
-        //     . 'Robots: noindex,nofollow' . PHP_EOL
-        //     . '*/' . PHP_EOL . PHP_EOL
-        //     . 'Error 404' . PHP_EOL
-        //     . '=========' . PHP_EOL . PHP_EOL
-        //     . 'Woops. Looks like this page doesn\'t exist.';
-
         $files['sub/page.md'] = '/*' . PHP_EOL
             . 'Title: Sub Page' . PHP_EOL
             . '*/' . PHP_EOL . PHP_EOL

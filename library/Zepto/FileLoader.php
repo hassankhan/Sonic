@@ -65,6 +65,13 @@ class FileLoader {
         return array($file_path => file_get_contents($full_path));
     }
 
+    /**
+     * Gets all contents of a folder and returns as a one-dimensional array
+     *
+     * @param  string $dir_path
+     * @return array
+     * @throws UnexpectedValueException If $dir_path is not a directory
+     */
     public function get_folder_contents($dir_path = '')
     {
         // Get full path
@@ -82,6 +89,7 @@ class FileLoader {
                 $file_names[$path . $file->getFilename()] = $path . $file->getFilename();
             }
         }
+
         return $file_names;
     }
 
