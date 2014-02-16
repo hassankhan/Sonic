@@ -58,7 +58,7 @@ if(!$zep->parse()) {
 }
 
 // Get input
-$input = $zep->getInputs();
+$input = $zep->get_inputs();
 
 // If ``zep init`` is run
 if ($zep->get("option") === "init") {
