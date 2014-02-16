@@ -1,17 +1,6 @@
 <?php
 
-/**
- * Console
- *
- * Parses command line inputs, and provides an easy, OOP approach to complex-ish
- * CLI scripts.
- *
- * @package    Zepto
- * @subpackage Console
- * @author     Jonathan Kim <jkimbo@gmail.com>
- * @author     Hassan Khan <contact@hassankhan.me>
- * @license    MIT
- */
+namespace Zepto;
 
 /**
  * Zepto Console class
@@ -26,19 +15,28 @@
  *
  * $zep = new Console($argv);
  * </code>
+ *
+ * @package    Zepto
+ * @subpackage Console
+ * @author     Jonathan Kim <jkimbo@gmail.com>
+ * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       https://github.com/hassankhan/Zepto
+ * @license    MIT
+ * @since      0.2
  */
-
-namespace Zepto;
-
 class Console
 {
-    protected $options    = array();
-    protected $params     = array(); // array of parameters
-    protected $inputs     = array();
-    protected $pinputs    = array(); // processed inputs
-    protected $required   = array();
+    /**
+     * Holds all options registered to the console application
+     * @var array
+     */
+    protected $options          = array();
+    protected $params           = array(); // array of parameters
+    protected $inputs           = array();
+    protected $processed_inputs = array(); // processed inputs
+    protected $required         = array();
     protected $name; // name of script
-    protected $helpOption = "-h, --help Output usage information";
+    protected $help_option      = "-h, --help Output usage information";
 
     /**
      * Constructor
@@ -51,8 +49,7 @@ class Console
     public function __construct($inputs = null)
     {
         // remove name from script inputs
-        $this->name = $inputs[0];
-        unset($inputs[0]);
+        $this->name = array_shift($inputs);
         if (!empty($inputs)) {
             $this->inputs = array_values($inputs);
         }
@@ -162,18 +159,18 @@ class Console
             // if option is in inputs
             $key = $this->checkInputs($info["short"], $info["long"]);
             if ($key === false) {
-                $this->pinputs[$info["short"]] = false;
-                $this->pinputs[$info["long"]] = false;
+                $this->processed_inputs[$info["short"]] = false;
+                $this->processed_inputs[$info["long"]] = false;
             } else {
                 // check if next input should be in input
                 if (array_key_exists("input", $info) && $info["input"] == true) {
-                    $this->pinputs[$info["short"]] = $this->inputs[$key + 1];
-                    $this->pinputs[$info["long"]] = $this->inputs[$key + 1];
+                    $this->processed_inputs[$info["short"]] = $this->inputs[$key + 1];
+                    $this->processed_inputs[$info["long"]] = $this->inputs[$key + 1];
                     unset($this->inputs[$key]); // remove flag from inputs array
                     unset($this->inputs[$key + 1]);
                 } else {
-                    $this->pinputs[$info["short"]] = true;
-                    $this->pinputs[$info["long"]] = true;
+                    $this->processed_inputs[$info["short"]] = true;
+                    $this->processed_inputs[$info["long"]] = true;
                     unset($this->inputs[$key]);
                 }
             }
@@ -185,7 +182,7 @@ class Console
         foreach ($this->inputs as $key => $input) {
             // If parameter for input exists
             if (array_key_exists($count, $this->params)) {
-                $this->pinputs[$this->params[$count]["name"]] = $input;
+                $this->processed_inputs[$this->params[$count]["name"]] = $input;
                 unset($this->inputs[$key]); // remove input from inputs
             }
             $count++;
@@ -195,7 +192,7 @@ class Console
         if (!empty($this->inputs)) {
             $this->inputs = array_values($this->inputs);
         }
-        $this->pinputs = array_merge($this->inputs, $this->pinputs);
+        $this->processed_inputs = array_merge($this->inputs, $this->processed_inputs);
 
         // check required inputs
         try {
@@ -212,8 +209,8 @@ class Console
     /**
      * Check input for flag
      *
-     * @param string $short
-     * @param string $long
+     * @param  string $short
+     * @param  string $long
      * @return bool|mixed
      */
     private function checkInputs($short, $long)
@@ -235,14 +232,14 @@ class Console
      * Check required options
      * If a required option is not provided then throw an exception
      *
-     * @throws Exception if required param or option is not present
+     * @throws \Exception if required param or option is not present
      */
     private function checkRequired()
     {
         // Loop through all params
         foreach ($this->params as $param) {
             if (array_key_exists("required", $param) && $param["required"] == true) {
-                if (!array_key_exists($param["name"], $this->pinputs)) {
+                if (!array_key_exists($param["name"], $this->processed_inputs)) {
                     throw new \Exception("Parameter '{$param["name"]}' is required");
                 }
             }
@@ -252,8 +249,8 @@ class Console
         foreach ($this->options as $key => $option) {
             // if option is required
             if (array_key_exists("required", $option) && $option["required"] == true) {
-                // check that it is defined in pinputs
-                if ($this->pinputs[$option["short"]] == false) {
+                // check that it is defined in processed_inputs
+                if ($this->processed_inputs[$option["short"]] == false) {
                     throw new \Exception("Option '{$option["help"]}' is required");
                 }
             }
@@ -309,7 +306,7 @@ class Console
      */
     public function getInputs()
     {
-        return $this->pinputs;
+        return $this->processed_inputs;
     }
 
     /**
@@ -331,10 +328,10 @@ class Console
      */
     public function get($flag)
     {
-        if (!array_key_exists($flag, $this->pinputs)) {
+        if (!array_key_exists($flag, $this->processed_inputs)) {
             throw new \Exception("Input $flag cannot be found");
         } else {
-            return $this->pinputs[$flag];
+            return $this->processed_inputs[$flag];
         }
     }
 
@@ -346,8 +343,8 @@ class Console
      *
      * @param string $msg
      * @param null   $password
-     * @static
      * @return string
+     * @static
      * @codeCoverageIgnore
      */
     public static function prompt($msg, $password = null)
@@ -372,8 +369,8 @@ class Console
      * Add a confirmation
      *
      * @param  string $msg
-     * @static
      * @return bool
+     * @static
      * @codeCoverageIgnore
      */
     public static function confirm($msg)
@@ -448,7 +445,7 @@ class Console
                 $output .= PHP_EOL;
                 echo $output;
             }
-            echo "\t{$this->helpOption}" . PHP_EOL;
+            echo "\t{$this->help_option}" . PHP_EOL;
         } else {
             echo PHP_EOL;
         }
