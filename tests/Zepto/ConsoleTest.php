@@ -26,106 +26,8 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Console::option()
-     * @covers Zepto\Console::parseOption()
-     * @covers Zepto\Console::setOption()
-     */
-    public function testOption() {
-        $zep = new Console(array('zep'));
-        $zep->option('-p, --peppers', 'Add peppers');
-        $zep->option('-c, --cheese [type]', 'Add a cheese');
-
-        $options = $zep->getOptions();
-
-        $this->assertCount(2, $options);
-        $this->assertArrayHasKey('-p', $options);
-        $this->assertArrayHasKey('-c', $options);
-        $this->assertTrue($options['-c']['input']);
-    }
-
-    /**
-     * @covers Zepto\Console::option()
-     * @covers Zepto\Console::parseOption()
-     * @covers Zepto\Console::setOption()
-     */
-    public function testRequiredOption() {
-        $zep = new Console(array(
-          'zep',
-          '-p'
-        ));
-
-        $zep->option('-h, --ham', 'Add ham');
-        $zep->option('-b, --bread [type]', 'Type of bread', true);
-
-        $zep->parse();
-
-        // expect parse to throw an exception that input is not defined
-        $this->expectOutputString(
-            "Option '-b, --bread [type] Type of bread' is required"
-            . PHP_EOL . PHP_EOL . PHP_EOL
-            . "Usage: zep [options]" . PHP_EOL
-        );
-    }
-
-    /**
-     * @covers Zepto\Console::param()
-     * @covers Zepto\Console::setParam()
-     */
-    public function testParams() {
-        $zep = new Console(array(
-          'zep',
-          'test',
-          'uk'
-        ));
-        $zep->param('client', 'Name of client', true);
-        $zep->param('locale', 'Client locale');
-        $zep->parse();
-
-        // expect parse to throw an exception that input is not defined
-        $this->assertEquals("test", $zep->get('client'));
-        $this->assertEquals("uk", $zep->get('locale'));
-    }
-
-    /**
-     * @covers Zepto\Console::param()
-     * @covers Zepto\Console::setParam()
-     * @covers Zepto\Console::checkRequired()
-     */
-    public function testRequiredParam() {
-        $zep = new Console(array(
-          'zep',
-          'osx'
-        ));
-
-        $zep->param('client', 'Specify client', true);
-        $zep->parse();
-
-        // expect parse to throw an exception that input is not defined
-        $this->expectOutputString('');
-    }
-
-    /**
-     * @covers Zepto\Console::param()
-     * @covers Zepto\Console::setParam()
-     * @covers Zepto\Console::checkRequired()
-     */
-    public function testRequiredParamWhenNotGiven() {
-        $zep = new Console(array(
-          'zep'
-        ));
-        $zep->param('client', 'Specify client', true);
-        $zep->parse();
-
-        // expect parse to throw an exception that input is not defined
-        $this->expectOutputString(
-            "Parameter 'client' is required"
-            . PHP_EOL . PHP_EOL . PHP_EOL
-            . "Usage: zep <client> [options]" . PHP_EOL
-        );
-    }
-
-    /**
-     * @covers Zepto\Console::parse()
      * @covers Zepto\Console::checkInputs()
+     * @covers Zepto\Console::parse()
      * @covers Zepto\Console::checkRequired()
      */
     public function testParse() {
@@ -152,11 +54,94 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Zepto\Console::param()
+     * @covers Zepto\Console::setParam()
      * @covers Zepto\Console::parse()
-     * @covers Zepto\Console::checkInputs()
      * @covers Zepto\Console::checkRequired()
      */
-    public function testParsingNonOptions() {
+    public function testParseWithParam() {
+        $zep = new Console(array(
+          'zep',
+          'test',
+          'uk'
+        ));
+        $zep->param('client', 'Name of client', true);
+        $zep->param('locale', 'Client locale');
+        $zep->parse();
+
+        // expect parse to throw an exception that input is not defined
+        $this->assertEquals("test", $zep->get('client'));
+        $this->assertEquals("uk", $zep->get('locale'));
+    }
+
+    /**
+     * @covers Zepto\Console::param()
+     * @covers Zepto\Console::setParam()
+     * @covers Zepto\Console::parse()
+     * @covers Zepto\Console::checkRequired()
+     */
+    public function testParseWithRequiredParam() {
+        $zep = new Console(array(
+          'zep',
+          'osx'
+        ));
+
+        $zep->param('client', 'Specify client', true);
+        $zep->parse();
+
+        // expect parse to throw an exception that input is not defined
+        $this->expectOutputString('');
+    }
+
+    /**
+     * @covers Zepto\Console::param()
+     * @covers Zepto\Console::setParam()
+     * @covers Zepto\Console::parse()
+     * @covers Zepto\Console::checkRequired()
+     */
+    public function testParseWithRequiredParamWhenNotGiven() {
+        $zep = new Console(array(
+          'zep'
+        ));
+        $zep->param('client', 'Specify client', true);
+        $zep->parse();
+
+        // expect parse to throw an exception that input is not defined
+        $this->expectOutputString(
+            "Parameter 'client' is required"
+            . PHP_EOL . PHP_EOL . PHP_EOL
+            . "Usage: zep <client> [options]" . PHP_EOL
+        );
+    }
+
+    /**
+     * @covers Zepto\Console::option()
+     * @covers Zepto\Console::parseOption()
+     * @covers Zepto\Console::setOption()
+     * @covers Zepto\Console::parse()
+     * @covers Zepto\Console::checkRequired()
+     */
+    public function testParseWithOption() {
+        $zep = new Console(array('zep'));
+        $zep->option('-p, --peppers', 'Add peppers');
+        $zep->option('-c, --cheese [type]', 'Add a cheese');
+        $zep->parse();
+
+        $options = $zep->getOptions();
+
+        $this->assertCount(2, $options);
+        $this->assertArrayHasKey('-p', $options);
+        $this->assertArrayHasKey('-c', $options);
+        $this->assertTrue($options['-c']['input']);
+    }
+
+    /**
+     * @covers Zepto\Console::option()
+     * @covers Zepto\Console::checkInputs()
+     * @covers Zepto\Console::parse()
+     * @covers Zepto\Console::checkRequired()
+     */
+    public function testParseWithNonOptions() {
         $zep = new Console(array(
           'zep',
           '-p',
@@ -183,8 +168,62 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Zepto\Console::option()
+     * @covers Zepto\Console::parseOption()
+     * @covers Zepto\Console::setOption()
+     * @covers Zepto\Console::parse()
+     * @covers Zepto\Console::checkRequired()
+     */
+    public function testParseWithRequiredOption() {
+        $zep = new Console(array(
+          'zep',
+          '-p'
+        ));
+
+        $zep->option('-h, --ham', 'Add ham');
+        $zep->option('-b, --bread [type]', 'Type of bread', true);
+        // $zep->option('-f', 'Type of flannel', true);
+
+        $zep->parse();
+
+        // expect parse to throw an exception that input is not defined
+        $this->expectOutputString(
+            "Option '-b, --bread [type] Type of bread' is required"
+            . PHP_EOL . PHP_EOL . PHP_EOL
+            . "Usage: zep [options]" . PHP_EOL
+        );
+    }
+
+    /**
+     * @covers Zepto\Console::option()
+     * @covers Zepto\Console::parseOption()
+     * @covers Zepto\Console::setOption()
+     * @covers Zepto\Console::parse()
+     * @covers Zepto\Console::checkRequired()
+     */
+    public function testParseWithRequiredOptionNotGiven() {
+        $zep = new Console(array(
+          'zep',
+          '-p'
+        ));
+
+        $zep->option('-h, --ham', 'Add ham');
+        $zep->option('-b, --bread [type]', 'Type of bread', true);
+
+        $this->assertFalse($zep->parse());
+
+        // expect parse to throw an exception that input is not defined
+        $this->expectOutputString(
+            "Option '-b, --bread [type] Type of bread' is required"
+            . PHP_EOL . PHP_EOL . PHP_EOL
+            . "Usage: zep [options]" . PHP_EOL
+        );
+    }
+
+    /**
      * @covers Zepto\Console::parse()
      * @covers Zepto\Console::checkInputs()
+     * @covers Zepto\Console::outputHelp()
      */
     public function testParseWithHelpFlagSet() {
         $zep = new Console(array(
@@ -219,10 +258,42 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
             ),
             1 => array(
                 'name' => "option2",
-                'help' => "[option] Name of option 2",
+                'help' => "<option2> Name of option 2",
                 'required' => true
             ),
         );
+
+        $this->assertEquals($expected, $zep->getParams());
+    }
+
+    /**
+     * @covers Zepto\Console::getOptions()
+     */
+    public function testGetOptions()
+    {
+        $zep = new Console(array(
+            'zep',
+            '-t',
+            '-p',
+        ));
+
+        $zep->option('-t, --test', 'Test');
+        $zep->option('-p, --pest', 'Pest');
+
+        $expected = array(
+          '-t'  => array(
+            'short' => '-t',
+            'long'  => '--test',
+            'help'  => '-t, --test Test'
+          ),
+          '-p'  => array(
+            'short' => '-p',
+            'long' => '--pest',
+            'help' => '-p, --pest Pest'
+          )
+        );
+
+        $this->assertEquals($expected, $zep->getOptions());
     }
 
     /**
@@ -283,26 +354,59 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test help text
+     * @covers Zepto\Console::option()
+     * @covers Zepto\Console::parseOption()
+     * @covers Zepto\Console::setOption()
+     * @covers Zepto\Console::param()
+     * @covers Zepto\Console::setParam()
+     * @covers Zepto\Console::outputHelp()
      */
-    // public function testHelp() {
-    //     $zep = new Console(array(
-    //         'zep',
-    //         '-p',
-    //         '--help'
-    //     ));
+    public function testOutputHelp() {
+        $zep = new Console(array(
+            'zep',
+            '-p',
+            '--help'
+        ));
 
-    //     $zep->option('-p, --peppers', 'Add peppers');
-    //     $zep->option('-c, --cheese [type]', 'Add a cheese');
-    //     $zep->option('-m, --mayo', 'Add mayonaise');
-    //     $zep->option('-b, --bread [type]', 'Type of bread', true);
+        $zep->option('-p, --peppers', 'Add peppers');
+        $zep->option('-c, --cheese [type]', 'Add a cheese');
+        $zep->option('-m, --mayo', 'Add mayonaise');
+        $zep->option('-b, --bread [type]', 'Type of bread', true);
 
-    //     $zep->param('client', 'Name of client', true);
-    //     $zep->param('locale', 'Client locale');
+        $zep->param('client', 'Name of client', true);
+        $zep->param('locale', 'Client locale');
 
-    //     $zep->parse();
+        $zep->outputHelp();
 
-        // $this->expectOutputString(PHP_EOL . "Usage: zep <client> [locale] [options]\n\nParameters:\n\t<client> Name of client\n\t[locale] Client locale\n\nOptions:\n\t-p, --peppers Add peppers\n\t-c, --cheese [type] Add a cheese\n\t-m, --mayo Add mayonaise\n\t-b, --bread [type] Type of bread [required]\n\t-h, --help Output usage information\n");
-    // }
+        $this->expectOutputString(PHP_EOL . "Usage: zep <client> [locale] [options]\n\nParameters:\n\t<client> Name of client\n\t[locale] Client locale\n\nOptions:\n\t-p, --peppers Add peppers\n\t-c, --cheese [type] Add a cheese\n\t-m, --mayo Add mayonaise\n\t-b, --bread [type] Type of bread [required]\n\t-h, --help Output usage information\n");
+    }
+
+    /**
+     * @covers Zepto\Console::option()
+     * @covers Zepto\Console::parseOption()
+     * @covers Zepto\Console::setOption()
+     * @covers Zepto\Console::param()
+     * @covers Zepto\Console::setParam()
+     * @covers Zepto\Console::outputHelp()
+     */
+    public function testOutputHelpShortened() {
+        $zep = new Console(array(
+            'zep',
+            '-p',
+            '--help'
+        ));
+
+        $zep->option('-p, --peppers', 'Add peppers');
+        $zep->option('-c, --cheese [type]', 'Add a cheese');
+        $zep->option('-m, --mayo', 'Add mayonaise');
+        $zep->option('-b, --bread [type]', 'Type of bread', true);
+
+        $zep->param('client', 'Name of client', true);
+        $zep->param('locale', 'Client locale');
+
+        $zep->outputHelp(TRUE);
+
+        $this->expectOutputString("\nUsage: zep <client> [locale] [options]\n");
+    }
 
 }
