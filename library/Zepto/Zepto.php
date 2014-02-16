@@ -36,6 +36,7 @@ class Zepto {
      * A singleton instance of this class, provided as a static property
      *
      * @var \Zepto\Zepto
+     * @static
      */
     protected static $instance;
 
@@ -294,6 +295,7 @@ class Zepto {
      * Retrieves current instance, if one exists, otherwise returns null
      *
      * @return \Zepto\Zepto|null
+     * @static
      */
     public static function instance()
     {

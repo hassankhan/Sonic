@@ -39,6 +39,7 @@ class Helper
      * Returns a standard configuration for Zepto
      *
      * @return array
+     * @static
      */
     public static function default_config()
     {
@@ -78,6 +79,7 @@ class Helper
      *
      * @param  array   $config
      * @return boolean
+     * @static
      */
     public static function validate_config($config)
     {
