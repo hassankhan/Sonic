@@ -23,7 +23,7 @@ class Zepto {
     /**
      * Current application version
      */
-    const VERSION = '0.6';
+    const VERSION = '0.7';
 
     /**
      * Container object to store all dependencies
