@@ -8,8 +8,8 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
+     * @covers Zepto\Console::__construct()
      * @covers Zepto\Console::getName()
-     * @covers Zepto\Console::getInputs()
      */
     public function testGetName() {
         $zep = new Console(array(
@@ -18,10 +18,28 @@ class ConsoleTest extends \PHPUnit_Framework_TestCase
         ));
 
         $zep->parse();
-        $inputs = $zep->getInputs();
 
         $this->assertEquals('zep', $zep->getName());
-        $this->assertEquals('-p', $inputs[0]);
+    }
+
+    /**
+     * @covers Zepto\Console::__construct()
+     * @covers Zepto\Console::getInputs()
+     */
+    public function testGetInputs() {
+        $zep = new Console(array(
+          'zep',
+          '-p',
+          'hello'
+        ));
+
+        $expected = array(
+            '-p',
+            'hello'
+        );
+
+        $zep->parse();
+        $this->assertEquals($expected, $zep->getInputs());
     }
 
     /**
