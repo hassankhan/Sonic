@@ -1,6 +1,22 @@
 Changelog
 =========
 
+#### 2014.02.16 - feature/refactor-console
+- [Merge branch 'feature/refactor-console' into develop](http://github.com/hassankhan/Zepto/commit/290d8e792880adaee672918d203a278ad7526781)
+- [Also realised ``zep``'s plugin template was out-of-date.](http://github.com/hassankhan/Zepto/commit/713871ff5fe8a96a635a6fe6cc120693c3a8936b)
+- [Updated ``Zepto\Console`` and changed all method signatures to use snake case, fitting in more with my liking](http://github.com/hassankhan/Zepto/commit/fedf7309dbf83f8d5755b4a1f7e44f51d26e8b40)
+- [More test fixes for ``Zepto\Console``](http://github.com/hassankhan/Zepto/commit/1edc0281956190658f9fcb6a3c8ab88c93f68f2d)
+- [Some cleanup of ``Zepto\Console`` and related test class](http://github.com/hassankhan/Zepto/commit/9f3329624af17d6a8d967bfb3901cb3817213a88)
+- [Lost a lot of code coverage, but that's good because it'll force me to write better tests](http://github.com/hassankhan/Zepto/commit/eb0250bc9557a6c8e6da97dd016811e77b1af81e)
+
+#### 2014.02.16
+- [Forgot to update ``zep``](http://github.com/hassankhan/Zepto/commit/a0eb60f485bb219028c8087f4e11b5600297b963)
+- [Cleaned up ``Zepto\Zepto::run_hooks()``](http://github.com/hassankhan/Zepto/commit/d2ccec85caea8be083616605f51e7ed6da51314a)
+- [Nothing major, just docblock tag updates](http://github.com/hassankhan/Zepto/commit/9eca741e528f50388913620310e0667a85572f52)
+- [Added docs and tests for ``Zepto\FileLoader::get_folder_contents()``](http://github.com/hassankhan/Zepto/commit/5be421c8e0c71cf405cd9f01633511f6111034b0)
+- [``Zepto\Helper::url_for()`` and ``Zepto\Helper::link_for()`` now both return null if a file is not found. Also updated test class.](http://github.com/hassankhan/Zepto/commit/4adf126f11bfa28a91aec21e6b1a596fb1aad23e)
+- [Updated CHANGELOG.md and TODO.md](http://github.com/hassankhan/Zepto/commit/cfbb5b08573f4be73152a38c95cfc7c2677daf8a)
+
 #### 2014.02.15
 - [Added a Fork Me banner](http://github.com/hassankhan/Zepto/commit/2c2984a185a90f96ea5c6ff310639c8b824fe0f4)
 - [Updated index.md](http://github.com/hassankhan/Zepto/commit/3424aa1e835c179f29495a12bd893bb0b2bb05b4)
