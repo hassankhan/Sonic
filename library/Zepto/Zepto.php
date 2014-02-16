@@ -200,12 +200,8 @@ class Zepto {
      */
     public function run_hooks($hook_id, $args = array())
     {
-        $app = $this->app;
-
-        // echo $app['plugins_enabled'] === true ? 'true' : 'false';
-
         // If plugins are disabled, do not run
-        if ($app['plugins_enabled'] === false) {
+        if ($this->app['plugins_enabled'] === false) {
             return false;
         }
 
@@ -213,7 +209,7 @@ class Zepto {
         $args = array_merge(array($this->app), $args);
 
         // Run hooks associated with that event
-        foreach ($app['plugins'] as $plugin_id => $plugin) {
+        foreach ($this->app['plugins'] as $plugin_id => $plugin) {
             if (is_callable(array($plugin, $hook_id))) {
                 call_user_func_array(array($plugin, $hook_id), $args);
             }
@@ -278,6 +274,7 @@ class Zepto {
                 $app['nav'] = isset($app['nav']) === TRUE ? $app['nav'] : array();
 
                 // Merge Twig options and content into one array
+                // @todo Change $app['nav'], and make a better way to inject content into Twig
                 $options = array_merge($twig_vars, $content, $app['nav']);
 
                 // Get template name from file, if not set, then use default
