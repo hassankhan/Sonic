@@ -71,7 +71,7 @@ class Console
      */
     public function option($flags, $help_text, $required = FALSE)
     {
-        $options = $this->parseOption($flags);
+        $options = $this->parse_option($flags);
 
         $options["help"] = $flags . ' ' . $help_text;
 
@@ -79,7 +79,7 @@ class Console
             $options["required"] = TRUE;
         }
 
-        $this->setOption($options["short"], $options);
+        $this->set_option($options["short"], $options);
     }
 
 
@@ -107,7 +107,7 @@ class Console
             $options["required"] = FALSE;
         }
 
-        $this->setParam($options);
+        $this->set_param($options);
     }
 
     /**
@@ -116,7 +116,7 @@ class Console
      * @param string $string
      * @return array
      */
-    private function parseOption($string)
+    private function parse_option($string)
     {
         $output = array();
         $exploded = explode(",", $string);
@@ -146,20 +146,20 @@ class Console
     {
         // check if a help flag is set
         try {
-            $key = $this->checkInputs("-h", "--help");
+            $key = $this->check_inputs("-h", "--help");
             if ($key !== FALSE) {
                 throw new \Exception("Help flag is set");
             }
         }
         catch (\Exception $e) {
-            $this->outputHelp();
+            $this->output_help();
             return FALSE;
         }
 
         // loop through options and see if they are in the inputs
         foreach ($this->options as $option => $info) {
             // if option is in inputs
-            $key = $this->checkInputs($info["short"], $info["long"]);
+            $key = $this->check_inputs($info["short"], $info["long"]);
             if ($key === FALSE) {
                 $this->processed_inputs[$info["short"]] = FALSE;
                 $this->processed_inputs[$info["long"]] = FALSE;
@@ -200,10 +200,10 @@ class Console
 
         // check required inputs
         try {
-            $this->checkRequired();
+            $this->check_required();
         } catch (\Exception $e) {
             echo $e->getMessage() . PHP_EOL . PHP_EOL;
-            $this->outputHelp(TRUE);
+            $this->output_help(TRUE);
             return FALSE;
         }
 
@@ -217,7 +217,7 @@ class Console
      * @param  string $long
      * @return bool|mixed
      */
-    private function checkInputs($short, $long)
+    private function check_inputs($short, $long)
     {
         $key = array_search($short, $this->inputs);
         if ($key === FALSE) {
@@ -237,7 +237,7 @@ class Console
      *
      * @throws \Exception if required param or option is not present
      */
-    private function checkRequired()
+    private function check_required()
     {
         // Loop through all params
         foreach ($this->params as $param) {
@@ -267,7 +267,7 @@ class Console
      * @param string $name
      * @param        $options
      */
-    public function setOption($name, $options)
+    public function set_option($name, $options)
     {
         $this->options[$name] = $options;
     }
@@ -277,7 +277,7 @@ class Console
      *
      * @param $options
      */
-    public function setParam($options)
+    public function set_param($options)
     {
         $this->params[] = $options;
     }
@@ -287,7 +287,7 @@ class Console
      *
      * @return array
      */
-    public function getOptions()
+    public function get_options()
     {
         return $this->options;
     }
@@ -297,7 +297,7 @@ class Console
      *
      * @return array of params
      */
-    public function getParams()
+    public function get_params()
     {
         return $this->params;
     }
@@ -307,7 +307,7 @@ class Console
      *
      * @return array
      */
-    public function getInputs()
+    public function get_inputs()
     {
         return $this->processed_inputs;
     }
@@ -317,7 +317,7 @@ class Console
      *
      * @return mixed
      */
-    public function getName()
+    public function get_name()
     {
         return $this->name;
     }
@@ -414,9 +414,9 @@ class Console
      *
      * @param bool $short
      */
-    public function outputHelp($short = FALSE)
+    public function output_help($short = FALSE)
     {
-        echo PHP_EOL . "Usage: {$this->getName()} ";
+        echo PHP_EOL . "Usage: {$this->get_name()} ";
         if (!empty($this->params)) {
             foreach ($this->params as $param) {
                 if ($param["required"] === TRUE) {
