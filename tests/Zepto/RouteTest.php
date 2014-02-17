@@ -18,7 +18,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->route = new Route('/get/<:id|[0-9]>', function() {
-            echo 'Test callback';
+            return 'Test callback';
         });
     }
 
@@ -28,6 +28,15 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
+    }
+
+    /**
+     * @covers Zepto\Route::execute()
+     */
+    public function testExecute()
+    {
+        $expected = $this->route->execute();
+        $this->assertEquals($expected, 'Test callback');
     }
 
     /**

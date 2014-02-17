@@ -79,6 +79,17 @@ class Route
     }
 
     /**
+     * Executes a route's callback and returns the result. Simple as that.
+     *
+     * @param  array  $params
+     * @return string
+     */
+    public function execute($params = array())
+    {
+        return call_user_func_array($this->callback, $params);
+    }
+
+    /**
      * ACCESSORS
      */
 

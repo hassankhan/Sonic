@@ -230,7 +230,7 @@ class Router
      * Runs the router matching engine and then calls the matching route's
      * callback. otherwise execute the not found handler
      *
-     * @return
+     * @return bool
      * @throws \RuntimeException If no routes exist in the routing table
      */
     public function run()
@@ -250,6 +250,7 @@ class Router
         if ($route === null) {
             $this->current_http_status = \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND;
             $this->not_found();
+            return FALSE;
         }
         // If route is a valid Route object, then try and execute its callback
         else {
@@ -266,14 +267,16 @@ class Router
                 $this->current_http_status = \Symfony\Component\HttpFoundation\Response::HTTP_OK;
 
                 // Set response content
-                $this->response->setContent(call_user_func_array($route->callback(), $params));
+                $this->response->setContent($route->execute($params));
 
                 // Send response
                 $this->response->send();
+                return TRUE;
             }
             catch (\Exception $e) {
                 $this->current_http_status = \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR;
                 $this->error($e);
+                return FALSE;
             }
         }
     }

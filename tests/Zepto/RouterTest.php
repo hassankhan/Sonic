@@ -183,8 +183,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             return 'This is a get route';
         });
 
-        $this->router->run();
-
+        $this->assertTrue($this->router->run());
         $this->assertEquals('/get', $this->router->current_route()->url());
         $this->assertEquals('#^/get/$#', $this->router->current_route()->pattern());
         $this->assertEquals(200, $this->router->current_http_status());
@@ -209,8 +208,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->router->get('/get/<:id|[6]{3}>', function($id) {
             return 'This is ' . $id;
         });
-        $this->router->run();
 
+        $this->assertTrue($this->router->run());
         $this->assertEquals('/get/<:id|[6]{3}>', $this->router->current_route()->url());
         $this->assertEquals('#^/get/(?P<id>[6]{3})/$#', $this->router->current_route()->pattern());
         $this->assertEquals(200, $this->router->current_http_status());
@@ -243,8 +242,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             return 'This is a get route';
         });
 
-        $this->router->run();
-
+        $this->assertFalse($this->router->run());
         $this->assertEquals(404, $this->router->current_http_status());
     }
 
@@ -266,8 +264,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             throw new \Exception('Proving another point');
         });
 
-        $this->router->run();
-
+        $this->assertFalse($this->router->run());
         $this->assertEquals(500, $this->router->current_http_status());
     }
 
