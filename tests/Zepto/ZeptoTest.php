@@ -19,11 +19,10 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
         $_SERVER['SERVER_NAME']     = 'zepto';
         $_SERVER['SERVER_PORT']     = '80';
         $_SERVER['SCRIPT_NAME']     = '/zepto/';
-        $_SERVER['REQUEST_URL']     = '/zepto/';
-        $_SERVER['REQUEST_URI']     = '/zepto/';
-        $_SERVER['PATH_INFO']       = '/bar/xyz';
+        $_SERVER['REQUEST_URL']     = '';
+        $_SERVER['REQUEST_URI']     = '';
         $_SERVER['REQUEST_METHOD']  = 'GET';
-        $_SERVER['QUERY_STRING']    = 'one=1&two=2&three=3';
+        $_SERVER['QUERY_STRING']    = '';
         $_SERVER['HTTPS']           = '';
         $_SERVER['REMOTE_ADDR']     = '127.0.0.1';
         unset($_SERVER['CONTENT_TYPE'], $_SERVER['CONTENT_LENGTH']);
@@ -197,18 +196,25 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::run
-     * @todo   Implement testRun().
      */
     public function testRun()
     {
         ob_start();
         $zepto = new Zepto();
+        $this->assertTrue($zepto->run());
+        ob_end_clean();
+    }
 
-        // Check to see that the index page has loaded
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+    /**
+     * @covers Zepto\Zepto::run
+     */
+    public function testRunError()
+    {
+        $_SERVER['REQUEST_URL']     = '/non-existent';
+        $_SERVER['REQUEST_URI']     = '/non-existent';
+        ob_start();
+        $zepto = new Zepto();
+        $this->assertFalse($zepto->run());
         ob_end_clean();
     }
 

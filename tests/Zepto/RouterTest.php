@@ -217,11 +217,11 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Router::run
-     * @expectedException RuntimeException
      */
     public function testRunBeforeAddingRoutes()
     {
-        $this->router->run();
+        $this->assertFalse($this->router->run());
+        $this->assertEquals(500, $this->router->current_http_status());
     }
 
     /**

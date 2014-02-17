@@ -236,8 +236,15 @@ class Router
     public function run()
     {
         // If no routes have been added, then throw an exception
-        if (empty($this->routes)) {
-            throw new \RuntimeException('No routes exist in the routing table. Add some');
+        try {
+            if (empty($this->routes)) {
+                throw new \RuntimeException('No routes exist in the routing table. Add some');
+            }
+        }
+        catch (\Exception $e) {
+            $this->current_http_status = \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR;
+            $this->error($e);
+            return FALSE;
         }
 
         // Try and get a matching route for the current URL
@@ -391,7 +398,7 @@ class Router
      */
     protected function default_not_found_handler()
     {
-        return $this->generate_error_template('Page Not Found', "Couldn't find your, like, page, dude");
+        return $this->generate_error_template('Page Not Found', "Couldn't find your, like, page, dude" . $this->request->getPathInfo());
     }
 
     /**
