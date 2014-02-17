@@ -43,37 +43,6 @@ class Zepto {
     /**
      * Zepto constructor
      *
-     * <code>
-     * $config = array(
-     *     'zepto' => array(
-     *         'environment'       => 'dev',
-     *         'content_dir'       => 'content',
-     *         'plugins_dir'       => 'plugins',
-     *         'templates_dir'     => 'templates',
-     *         'default_template'  => 'base.twig',
-     *         'content_ext'       => array('.md', '.markdown'),
-     *         'plugins_enabled'   => true
-     *     ),
-     *     'site' => array(
-     *         'site_root'         => 'Site root URL goes here',
-     *         'site_title'        => 'Zepto',
-     *         'date_format'       => 'jS M Y',
-     *         'excerpt_length'    => '50',
-     *         'nav'               => array(
-     *             'class'             => 'nav',
-     *             'dropdown_li_class' => 'dropdown',
-     *             'dropdown_ul_class' => 'dropdown-menu'
-     *         )
-     *     ),
-     *     'twig' => array(
-     *         'charset'           => 'utf-8',
-     *         'cache'             => 'cache',
-     *         'strict_variables'  => false,
-     *         'autoescape'        => false,
-     *         'auto_reload'       => true
-     *     )
-     * );
-     * </code>
      * @param array $settings
      */
     public function __construct(array $settings = array())
@@ -111,7 +80,7 @@ class Zepto {
         $app['content_loader'] = $app->share(
             function ($app) {
                 return new FileLoader\MarkdownLoader(
-                    $app['ROOT_DIR'] . $app['settings']['zepto']['content_dir'],
+                    $app['ROOT_DIR'] . $app['settings']['zepto.content_dir'],
                     new \Michelf\MarkdownExtra
                 );
             }
@@ -126,7 +95,9 @@ class Zepto {
         $app['twig'] = $app->share(
             function($app) {
                 $twig = new \Twig_Environment(
-                    new \Twig_Loader_Filesystem($app['ROOT_DIR'] . 'templates')
+                    new \Twig_Loader_Filesystem($app['ROOT_DIR'] . 'templates',
+                        $app['settings']['twig']
+                    )
                 );
                 $twig->addExtension(new Extension\Twig);
                 return $twig;
@@ -143,7 +114,7 @@ class Zepto {
         }
 
         // Set this particular setting now
-        $app['plugins_enabled'] = $settings['zepto']['plugins_enabled'];
+        $app['plugins_enabled'] = $settings['zepto.plugins_enabled'];
 
         // So if plugins ARE indeed enabled, initialise the plugin loader
         // and load the fuckers
@@ -151,7 +122,7 @@ class Zepto {
             $app['plugin_loader'] = $app->share(
                 function($c) use ($settings) {
                     return new FileLoader\PluginLoader(
-                        $c['ROOT_DIR'] . $settings['zepto']['plugins_dir']
+                        $c['ROOT_DIR'] . $settings['zepto.plugins_dir']
                     );
                 }
             );
@@ -267,8 +238,8 @@ class Zepto {
                 // Set Twig options
                 $twig_vars = array(
                     'config'     => $app['settings'],
-                    'base_url'   => $app['settings']['site']['site_root'],
-                    'site_title' => $app['settings']['site']['site_title']
+                    'base_url'   => $app['settings']['site.site_root'],
+                    'site_title' => $app['settings']['site.site_title']
                 );
 
                 $app['nav'] = isset($app['nav']) === TRUE ? $app['nav'] : array();
@@ -280,7 +251,7 @@ class Zepto {
                 // Get template name from file, if not set, then use default
                 $template_name = array_key_exists('template', $content['meta']) === true
                     ? $content['meta']['template']
-                    : $app['settings']['zepto']['default_template'];
+                    : $app['settings']['zepto.default_template'];
 
                 // Render template with Twig
                 return $app['twig']->render($template_name, $options);

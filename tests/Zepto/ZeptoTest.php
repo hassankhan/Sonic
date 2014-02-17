@@ -48,27 +48,22 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     {
         ob_start();
         $config = array(
-            'zepto' => array(
-                'environment'       => 'prod',
-                'content_dir'       => 'content',
-                'plugins_dir'       => 'plugins',
-                'templates_dir'     => 'templates',
-                'default_template'  => 'base.twig',
-                'content_ext'       => array('.md', '.markdown'),
-                'plugins_enabled'   => true
-            ),
-            'site' => array(
-                'site_root'         => 'http://www.zepto.com/',
-                'site_title'        => 'Zepto',
-                'date_format'       => 'jS M Y',
-                'excerpt_length'    => '50',
-                'nav'               => array(
-                    'class'             => 'nav',
-                    'dropdown_li_class' => 'dropdown',
-                    'dropdown_ul_class' => 'dropdown-menu'
-                )
-            ),
-            'twig' => array(
+            'zepto.environment'           => 'dev',
+            'zepto.content_dir'           => 'content',
+            'zepto.plugins_dir'           => 'plugins',
+            'zepto.templates_dir'         => 'templates',
+            'zepto.default_template'      => 'base.twig',
+            'zepto.content_ext'           => array('.md', '.markdown'),
+            'zepto.plugins_enabled'       => true,
+            'site.site_root'              => 'http://localhost:8888/zepto/',
+            'site.site_title'             => 'Zepto',
+            'site.date_format'            => 'jS M Y',
+            'site.excerpt_length'         => '50',
+            'site.nav.class'              => 'nav',
+            'site.nav.dropdown_li_class'  => 'dropdown',
+            'site.nav.dropdown_ul_class'  => 'dropdown-menu',
+            'site.nav.dropdown_li_markup' => '<li class="%s"><a href="%s" class="dropdown-toggle" data-toggle="dropdown"> %s <b class="caret"></b></a><ul class="%s">',
+            'twig'                       => array(
                 'charset'           => 'utf-8',
                 'cache'             => 'cache',
                 'strict_variables'  => false,
@@ -98,11 +93,12 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::__construct()
+     * @dataProvider providerConfigWithPluginsEnabled
      */
-    public function testPluginLoaderAdded()
+    public function testPluginLoaderAdded($config)
     {
         ob_start();
-        $zepto = new Zepto();
+        $zepto = new Zepto($config);
         $this->assertArrayHasKey('plugin_loader', $zepto->app);
         $this->assertInstanceOf(
             'Zepto\FileLoader\PluginLoader',
@@ -147,12 +143,14 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::load_plugins()
+     * @dataProvider providerConfigWithPluginsEnabled
      */
-    public function testLoadPlugins()
+    public function testLoadPluginsWhenEnabled($config)
     {
         ob_start();
+        $config['zepto.plugins_enabled'] = TRUE;
         // Add assertion to check if plugins_enabled is true or not
-        $zepto = new Zepto();
+        $zepto = new Zepto($config);
         $this->assertArrayHasKey('plugins', $zepto->app);
         $plugins = $zepto->app['plugins'];
         $this->assertArrayHasKey('ExamplePlugin', $zepto->app['plugins']);
@@ -162,14 +160,13 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers       Zepto\Zepto::load_plugins()
-     * @dataProvider providerConfig
+     * @dataProvider providerConfigWithPluginsEnabled
      */
-    public function testLoadPluginsWhenDisabled($config)
+    public function testLoadPluginsWhenDisabled()
     {
         ob_start();
         // Add assertion to check if plugins_enabled is true or not
-        $config['zepto']['plugins_enabled'] = false;
-        $zepto = new Zepto($config);
+        $zepto = new Zepto();
         $this->assertArrayNotHasKey('plugins', $zepto->app);
         ob_end_clean();
     }
@@ -217,24 +214,24 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::run_hooks
+     * @dataProvider providerConfigWithPluginsEnabled
      */
-    public function testRunHooks()
+    public function testRunHooks($config)
     {
         ob_start();
-        $zepto = new Zepto();
+        $zepto = new Zepto($config);
         $this->assertTrue($zepto->run_hooks('before_response_send'));
         ob_end_clean();
     }
 
     /**
      * @covers       Zepto\Zepto::run_hooks
-     * @dataProvider providerConfig
+     * @dataProvider providerConfigWithPluginsEnabled
      */
-    public function testRunHooksReturnsFalseWhenPluginsAreDisabled($config)
+    public function testRunHooksReturnsFalseWhenPluginsAreDisabled()
     {
         ob_start();
-        $config['zepto']['plugins_enabled'] = false;
-        $zepto = new Zepto($config);
+        $zepto = new Zepto();
         $this->assertFalse($zepto->run_hooks('before_response_send'));
         ob_end_clean();
     }
@@ -257,32 +254,23 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Zepto\Zepto', Zepto::instance());
     }
 
-    public function providerConfig()
+    public function providerConfigWithPluginsEnabled()
     {
         return array(
             array(
                 array(
-                    'zepto' => array(
-                        'environment'       => 'dev',
-                        'content_dir'       => 'content',
-                        'plugins_dir'       => 'plugins',
-                        'templates_dir'     => 'templates',
-                        'default_template'  => 'base.twig',
-                        'content_ext'       => array('.md', '.markdown'),
-                        'plugins_enabled'   => true
-                    ),
-                    'site' => array(
-                        'site_root'         => 'http://localhost:8888/zepto/',
-                        'site_title'        => 'Zepto',
-                        'date_format'       => 'jS M Y',
-                        'excerpt_length'    => '50',
-                        'nav'               => array(
-                            'class'             => 'nav',
-                            'dropdown_li_class' => 'dropdown',
-                            'dropdown_ul_class' => 'dropdown-menu'
-                        )
-                    ),
-                    'twig' => array(
+                    'zepto.environment'           => 'dev',
+                    'zepto.content_dir'           => 'content',
+                    'zepto.plugins_dir'           => 'plugins',
+                    'zepto.templates_dir'         => 'templates',
+                    'zepto.default_template'      => 'base.twig',
+                    'zepto.content_ext'           => array('.md', '.markdown'),
+                    'zepto.plugins_enabled'       => true,
+                    'site.site_root'              => 'http://localhost:8888/zepto/',
+                    'site.site_title'             => 'Zepto',
+                    'site.date_format'            => 'jS M Y',
+                    'site.excerpt_length'         => '50',
+                    'twig'                       => array(
                         'charset'           => 'utf-8',
                         'cache'             => 'cache',
                         'strict_variables'  => false,

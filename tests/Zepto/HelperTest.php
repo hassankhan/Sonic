@@ -33,27 +33,18 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testDefaultConfig()
     {
         $expected = array(
-            'zepto' => array(
-                'environment'       => 'dev',
-                'content_dir'       => 'content',
-                'plugins_dir'       => 'plugins',
-                'templates_dir'     => 'templates',
-                'default_template'  => 'base.twig',
-                'content_ext'       => array('.md', '.markdown'),
-                'plugins_enabled'   => true
-            ),
-            'site' => array(
-                'site_root'         => 'http://localhost:8888/zepto/',
-                'site_title'        => 'Zepto',
-                'date_format'       => 'jS M Y',
-                'excerpt_length'    => '50',
-                'nav'               => array(
-                    'class'             => 'nav',
-                    'dropdown_li_class' => 'dropdown',
-                    'dropdown_ul_class' => 'dropdown-menu'
-                )
-            ),
-            'twig' => array(
+            'zepto.environment'           => 'dev',
+            'zepto.content_dir'           => 'content',
+            'zepto.plugins_dir'           => 'plugins',
+            'zepto.templates_dir'         => 'templates',
+            'zepto.default_template'      => 'base.twig',
+            'zepto.content_ext'           => array('.md', '.markdown'),
+            'zepto.plugins_enabled'       => false,
+            'site.site_root'              => 'http://localhost:8888/zepto/',
+            'site.site_title'             => 'Zepto',
+            'site.date_format'            => 'jS M Y',
+            'site.excerpt_length'         => '50',
+            'twig'                       => array(
                 'charset'           => 'utf-8',
                 'cache'             => 'cache',
                 'strict_variables'  => false,
@@ -80,7 +71,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testConfigWithInvalidContentDir()
     {
         $config = Helper::default_config();
-        $config['zepto']['content_dir'] = 'no_such_dir';
+        $config['zepto.content_dir'] = 'no_such_dir';
         Helper::validate_config($config);
     }
 
@@ -91,7 +82,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testConfigWithInvalidPluginsDir()
     {
         $config = Helper::default_config();
-        $config['zepto']['plugins_dir'] = 'no_such_dir';
+        $config['zepto.plugins_dir'] = 'no_such_dir';
         Helper::validate_config($config);
     }
 
@@ -102,7 +93,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testConfigWithInvalidTemplatesDir()
     {
         $config = Helper::default_config();
-        $config['zepto']['templates_dir'] = 'no_such_dir';
+        $config['zepto.templates_dir'] = 'no_such_dir';
         Helper::validate_config($config);
     }
 
@@ -113,7 +104,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testConfigWithInvalidDefaultTemplate()
     {
         $config = Helper::default_config();
-        $config['zepto']['default_template'] = 'no_such_file';
+        $config['zepto.default_template'] = 'no_such_file';
         Helper::validate_config($config);
     }
 
@@ -124,7 +115,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testConfigWithInvalidSiteRoot()
     {
         $config = Helper::default_config();
-        $config['zepto']['environment'] = 'production';
+        $config['zepto.environment'] = 'production';
         $config['site']['site_root'] = 'fuck://this@should?fail';
         Helper::validate_config($config);
     }
@@ -138,7 +129,6 @@ class HelperTest extends \PHPUnit_Framework_TestCase
         $helper   = new Helper($zepto->app);
         $actual   = $helper->url_for('index.md');
         $expected = 'http://localhost:8888/zepto/';
-
         $this->assertEquals($expected, $actual);
     }
 
@@ -147,11 +137,12 @@ class HelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testUrlForFailure()
     {
+        ob_start();
         $zepto    = new Zepto;
         $helper   = new Helper($zepto->app);
         $actual   = $helper->url_for('non-index.md');
-
         $this->assertNull($actual);
+        ob_end_clean();
     }
 
     /**
@@ -163,7 +154,6 @@ class HelperTest extends \PHPUnit_Framework_TestCase
         $helper   = new Helper($zepto->app);
         $actual   = $helper->link_for('index.md');
         $expected = '<a href="http://localhost:8888/zepto/"> Welcome </a>';
-
         $this->assertEquals($expected, $actual);
     }
 
@@ -172,11 +162,12 @@ class HelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testLinkForFailure()
     {
+        ob_start();
         $zepto    = new Zepto;
         $helper   = new Helper($zepto->app);
         $actual   = $helper->link_for('non-index.md');
-
         $this->assertNull($actual);
+        ob_end_clean();
     }
 
 }

@@ -3,13 +3,13 @@
 namespace Zepto;
 
 /**
- * Helper class to hold all helper-related functions
+ * Helper class to hold all helper-y functions
  *
  *
  * @package    Zepto
  * @subpackage Helper
  * @author     Hassan Khan <contact@hassankhan.me>
- * @link       http://https://github.com/hassankhan/Zepto
+ * @link       https://github.com/hassankhan/Zepto
  * @license    MIT
  * @since      0.6
  */
@@ -44,27 +44,18 @@ class Helper
     public static function default_config()
     {
         return array(
-            'zepto' => array(
-                'environment'       => 'dev',
-                'content_dir'       => 'content',
-                'plugins_dir'       => 'plugins',
-                'templates_dir'     => 'templates',
-                'default_template'  => 'base.twig',
-                'content_ext'       => array('.md', '.markdown'),
-                'plugins_enabled'   => true
-            ),
-            'site' => array(
-                'site_root'         => 'http://localhost:8888/zepto/',
-                'site_title'        => 'Zepto',
-                'date_format'       => 'jS M Y',
-                'excerpt_length'    => '50',
-                'nav'               => array(
-                    'class'             => 'nav',
-                    'dropdown_li_class' => 'dropdown',
-                    'dropdown_ul_class' => 'dropdown-menu'
-                )
-            ),
-            'twig' => array(
+            'zepto.environment'       => 'dev',
+            'zepto.content_dir'       => 'content',
+            'zepto.plugins_dir'       => 'plugins',
+            'zepto.templates_dir'     => 'templates',
+            'zepto.default_template'  => 'base.twig',
+            'zepto.content_ext'       => array('.md', '.markdown'),
+            'zepto.plugins_enabled'   => false,
+            'site.site_root'          => 'http://localhost:8888/zepto/',
+            'site.site_title'         => 'Zepto',
+            'site.date_format'        => 'jS M Y',
+            'site.excerpt_length'     => '50',
+            'twig'                    => array(
                 'charset'           => 'utf-8',
                 'cache'             => 'cache',
                 'strict_variables'  => false,
@@ -86,30 +77,30 @@ class Helper
         $message = '';
 
         while ($message === '') {
-            if (!is_dir($config['zepto']['content_dir'])) {
+            if (!is_dir($config['zepto.content_dir'])) {
                 $message = 'Content directory does not exist';
                 break;
             }
 
-            if (!is_dir($config['zepto']['plugins_dir'])) {
+            if (!is_dir($config['zepto.plugins_dir'])) {
                 $message = 'Plugins directory does not exist';
                 break;
             }
 
-            if (!is_dir($config['zepto']['templates_dir'])) {
+            if (!is_dir($config['zepto.templates_dir'])) {
                 $message = 'Templates directory does not exist';
                 break;
             }
 
             if (
-                !is_file("{$config['zepto']['templates_dir']}/{$config['zepto']['default_template']}")
+                !is_file("{$config['zepto.templates_dir']}/{$config['zepto.default_template']}")
             ) {
                 $message = 'No default template exists';
             break;
             }
 
-            if ($config['zepto']['environment'] !== 'dev') {
-                preg_match('#^(https?://)?([\da-z\.-]+)\.([a-z\.]{2,6})([/\w \.-]*)*/+$#', $config['site']['site_root']) === 0
+            if ($config['zepto.environment'] !== 'dev') {
+                preg_match('#^(https?://)?([\da-z\.-]+)\.([a-z\.]{2,6})([/\w \.-]*)*/+$#', $config['site.site_root']) === 0
                     ? $message = 'Site root is invalid. Should be like http://www.example.com/'
                     : $message = '';
             }
@@ -139,17 +130,16 @@ class Helper
 
             // Create URL and return
             $clean_file_name = str_replace(
-                array_merge(array('index'), $this->app['settings']['zepto']['content_ext']),
+                array_merge(array('index'), $this->app['settings']['zepto.content_ext']),
                 '',
                 $file_name
             );
-            return trim($this->app['settings']['site']['site_root'] . $clean_file_name, '/') . '/';
+            return trim($this->app['settings']['site.site_root'] . $clean_file_name, '/') . '/';
         }
         catch (\Exception $e) {
             $this->app['router']->error($e);
         }
         return null;
-
     }
 
     /**
