@@ -18,6 +18,15 @@ class NavGenPlugin implements \Zepto\PluginInterface {
 
     public function before_config_load(\Pimple $app, &$settings)
     {
+        $nav_settings = array(
+            'site.nav.class'              => 'nav',
+            'site.nav.dropdown_li_class'  => 'dropdown',
+            'site.nav.dropdown_ul_class'  => 'dropdown-menu',
+            'site.nav.dropdown_li_markup' => '<li class="%s"><a href="%s" class="dropdown-toggle" data-toggle="dropdown"> %s <b class="caret"></b></a><ul class="%s">'
+        );
+        $old_settings = $settings;
+        $settings = array_merge($nav_settings, $old_settings);
+
     }
 
     public function before_router_setup(\Pimple $app)
@@ -46,7 +55,7 @@ class NavGenPlugin implements \Zepto\PluginInterface {
         $content_loader  = $app['content_loader'];
 
         // Opening ``<ul>`` tag and adding class name
-        $nav_html = sprintf('<ul class="%s">' . PHP_EOL, $settings['site']['nav']['class']);
+        $nav_html = sprintf('<ul class="%s">' . PHP_EOL, $settings['site.nav.class']);
         $files    = $content_loader->get_folder_contents();
 
         foreach ($files as $file) {

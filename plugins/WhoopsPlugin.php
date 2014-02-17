@@ -94,7 +94,7 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
     public function before_config_load(\Pimple $app, &$settings)
     {
         // If we're not on dev, then don't load up
-        if ($settings['zepto']['environment'] !== 'dev') {
+        if ($settings['zepto.environment'] !== 'dev') {
             return;
         }
 
