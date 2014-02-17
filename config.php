@@ -18,7 +18,8 @@ $config = array(
         'nav'               => array(
             'class'             => 'nav',
             'dropdown_li_class' => 'dropdown',
-            'dropdown_ul_class' => 'dropdown-menu'
+            'dropdown_ul_class' => 'dropdown-menu',
+            'dropdown_li_markup' => '<li class="%s"><a href="%s" class="dropdown-toggle" data-toggle="dropdown"> %s <b class="caret"></b></a><ul class="%s">'
         )
     ),
     'twig' => array(
