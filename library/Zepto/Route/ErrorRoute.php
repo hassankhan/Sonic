@@ -5,6 +5,8 @@ namespace Zepto\Route;
 /**
  * ErrorRoute
  *
+ * This route is executed on any application error.
+ *
  * @package    Zepto
  * @subpackage Route
  * @author     Hassan Khan <contact@hassankhan.me>
@@ -12,7 +14,7 @@ namespace Zepto\Route;
  * @license    MIT
  * @since      0.7
  */
-class ErrorRoute
+class ErrorRoute extends \Zepto\Route
 {
 
     /**
@@ -22,38 +24,12 @@ class ErrorRoute
      * @param string $url
      * @codeCoverageIgnore
      */
-    public function __construct($url = '')
+    public function __construct($url = '', $title, $body)
     {
-        $callback = function () use ($this) {
-            return $this->generate_error_template('')
+        $callback = function() use ($title, $body) {
+            return sprintf('<html><head><title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,sans-serif;}h1{margin:0;font-size:48px;font-weight:normal;line-height:48px;}strong{display:inline-block;width:65px;}</style></head><body><h1>%s</h1><p>%s</p></body></html>', $title, $title, $body);
         };
+        parent::__construct($url, $callback);
     }
 
-    /**
-     * Executes a route's callback and returns the result. Simple as that.
-     *
-     * @param  array  $params
-     * @return string
-     */
-    public function execute($params = array())
-    {
-        return call_user_func_array($this->callback, $params);
-    }
-
-    /**
-     * ACCESSORS
-     */
-
-    /**
-     * Returns a standard template for error messages. Thanks, Slim
-     *
-     * @param  string $title
-     * @param  string $body
-     * @return string
-     * @codeCoverageIgnore
-     */
-    protected function generate_error_template($title, $body)
-    {
-        return sprintf('<html><head><title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,sans-serif;}h1{margin:0;font-size:48px;font-weight:normal;line-height:48px;}strong{display:inline-block;width:65px;}</style></head><body><h1>%s</h1><p>%s</p></body></html>', $title, $title, $body);
-    }
 }
