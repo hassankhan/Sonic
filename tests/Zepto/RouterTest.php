@@ -269,6 +269,26 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Zepto\Router::redirect()
+     */
+    public function testRedirect()
+    {
+        $actual = $this->router->redirect('http://www.google.com');
+        $this->assertEquals(302, $this->router->current_http_status());
+        $this->assertTrue($actual);
+    }
+
+    /**
+     * @covers Zepto\Router::redirect()
+     */
+    public function testRedirectWithoutUrl()
+    {
+        $actual = $this->router->redirect('');
+        $this->assertEquals(500, $this->router->current_http_status());
+        $this->assertFalse($actual);
+    }
+
+    /**
      * @covers Zepto\Router::routes
      */
     public function testRoutes()

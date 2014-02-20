@@ -281,8 +281,33 @@ class Router
         catch (\Exception $e) {
             $this->error($e);
             return FALSE;
+        }
+    }
+
+    /**
+     * Redirects to another URL
+     *
+     * @param  string $url
+     * @return bool
+     */
+    public function redirect($url)
+    {
+        // If no URL is given, throw exception
+        try {
+            if (empty($url)) {
+                throw new \InvalidArgumentException('No URL given');
             }
         }
+        catch (\Exception $e) {
+            $this->error($e);
+            return FALSE;
+        }
+
+        // Set redirect status codes and location
+        $this->current_http_status = \Symfony\Component\HttpFoundation\Response::HTTP_FOUND;
+        $this->response->setStatusCode($this->current_http_status);
+        $this->response->headers->set('Location', $url);
+        return TRUE;
     }
 
     /**
