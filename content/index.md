@@ -13,12 +13,12 @@ Zepto is a flat-file CMS, so there's very little backend and no database to deal
 If you created folder within the content folder (e.g. ``content/sub``) and put an ``index.md`` inside it, you can access that folder at the URL ``http://yoursite.com/sub``. If you want another page within the sub-folder, simply create a text file with the corresponding name (e.g. ``content/sub/page.md``) and will be able to access it from the URL ``http://yoursite.com/sub/page``.
 Below are some examples of content locations and their corresponding URLs:
 
-|Physical Location         |URL             |
-|--------------------------|----------------|
-|content/index.md          |/               |
-|content/sub/index.md      |/sub            |
-|content/sub/page.md       |sub/page        |
-|content/a/very/long/url.md|/a/very/long/url|
+|Physical Location                     |URL                         |
+|--------------------------------------|----------------------------|
+|&nbsp;content/index.md          &nbsp;|&nbsp;/               &nbsp;|
+|&nbsp;content/sub/index.md      &nbsp;|&nbsp;/sub            &nbsp;|
+|&nbsp;content/sub/page.md       &nbsp;|&nbsp;sub/page        &nbsp;|
+|&nbsp;content/a/very/long/url.md&nbsp;|&nbsp;/a/very/long/url&nbsp;|
 
 If a file cannot be found, a HTTP status 404 is sent and the 'Page Not Found' page is displayed.
 
