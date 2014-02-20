@@ -1,17 +1,18 @@
 <?php
 
-/**
- * Zepto
- *
- * @author Hassan Khan
- * @link http://https://github.com/hassankhan/Zepto
- * @license http://opensource.org/licenses/MIT
- * @version 0.2
- * @deprecated Use \Zepto\FileLoader\PageLoader instead
- */
-
 namespace Zepto\FileLoader;
 
+/**
+ * MarkdownLoader
+ *
+ * @package    Zepto
+ * @subpackage FileLoader
+ * @author     Hassan Khan <contact@hassankhan.me>
+ * @link       https://github.com/hassankhan/Zepto
+ * @license    MIT
+ * @since      0.2
+ * @deprecated Use \Zepto\FileLoader\PageLoader instead
+ */
 class MarkdownLoader extends \Zepto\FileLoader {
 
     /**
