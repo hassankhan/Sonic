@@ -147,19 +147,15 @@ class Zepto {
     }
 
     /**
-     * Executes router and returns result of callback function for specified route
+     * Executes router and returns true for a successful route,
      *
-     * @return
+     * @return bool|null
      */
     public function run()
     {
         $this->run_hooks('before_response_send');
-        try {
-            return $this->app['router']->run();
-        } catch (\Exception $e) {
-            $this->app['router']->error($e);
-        }
-        $this->run_hooks('after_response_send');
+        return $this->app['router']->run();
+        // $this->run_hooks('after_response_send');
     }
 
     /**
@@ -256,6 +252,9 @@ class Zepto {
                 // Render template with Twig
                 return $app['twig']->render($template_name, $options);
             });
+
+            // If a file's name is 404.md or 500.md, use that to set an ErrorRoute with them
+
         }
     }
 

@@ -59,7 +59,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Router::get
+     * @covers Zepto\Router::get()
      * @covers Zepto\Router::route()
      */
     public function testGet()
@@ -76,7 +76,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Router::post
+     * @covers Zepto\Router::post()
      * @covers Zepto\Router::route()
      */
     public function testPost()
@@ -93,7 +93,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Router::get
+     * @covers Zepto\Router::get()
      * @covers Zepto\Router::route()
      * @expectedException LogicException
      */
@@ -140,7 +140,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Router::match
+     * @covers Zepto\Router::match()
      */
     public function testMatch()
     {
@@ -152,7 +152,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Router::match
+     * @covers Zepto\Router::match()
      */
     public function testMatchFail()
     {
@@ -164,11 +164,11 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Router::run
-     * @covers Zepto\Router::match
-     * @covers Zepto\Router::parse_parameters
-     * @covers Zepto\Router::current_route
-     * @covers Zepto\Router::current_http_status
+     * @covers Zepto\Router::run()
+     * @covers Zepto\Router::match()
+     * @covers Zepto\Router::parse_parameters()
+     * @covers Zepto\Router::current_route()
+     * @covers Zepto\Router::current_http_status()
      */
     public function testRun()
     {
@@ -183,19 +183,18 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             return 'This is a get route';
         });
 
-        $this->router->run();
-
+        $this->assertTrue($this->router->run());
         $this->assertEquals('/get', $this->router->current_route()->url());
         $this->assertEquals('#^/get/$#', $this->router->current_route()->pattern());
         $this->assertEquals(200, $this->router->current_http_status());
     }
 
     /**
-     * @covers Zepto\Router::run
-     * @covers Zepto\Router::match
-     * @covers Zepto\Router::parse_parameters
-     * @covers Zepto\Router::current_route
-     * @covers Zepto\Router::current_http_status
+     * @covers Zepto\Router::run()
+     * @covers Zepto\Router::match()
+     * @covers Zepto\Router::parse_parameters()
+     * @covers Zepto\Router::current_route()
+     * @covers Zepto\Router::current_http_status()
      */
     public function testRunWithParameters()
     {
@@ -209,26 +208,26 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->router->get('/get/<:id|[6]{3}>', function($id) {
             return 'This is ' . $id;
         });
-        $this->router->run();
 
+        $this->assertTrue($this->router->run());
         $this->assertEquals('/get/<:id|[6]{3}>', $this->router->current_route()->url());
         $this->assertEquals('#^/get/(?P<id>[6]{3})/$#', $this->router->current_route()->pattern());
         $this->assertEquals(200, $this->router->current_http_status());
     }
 
     /**
-     * @covers Zepto\Router::run
-     * @expectedException RuntimeException
+     * @covers Zepto\Router::run()
      */
     public function testRunBeforeAddingRoutes()
     {
-        $this->router->run();
+        $this->assertFalse($this->router->run());
+        $this->assertEquals(500, $this->router->current_http_status());
     }
 
     /**
-     * @covers Zepto\Router::run
-     * @covers Zepto\Router::match
-     * @covers Zepto\Router::not_found
+     * @covers Zepto\Router::run()
+     * @covers Zepto\Router::match()
+     * @covers Zepto\Router::not_found()
      */
     public function testRunWithNotFoundError()
     {
@@ -243,15 +242,14 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             return 'This is a get route';
         });
 
-        $this->router->run();
-
+        $this->assertFalse($this->router->run());
         $this->assertEquals(404, $this->router->current_http_status());
     }
 
     /**
-     * @covers Zepto\Router::run
-     * @covers Zepto\Router::match
-     * @covers Zepto\Router::error
+     * @covers Zepto\Router::run()
+     * @covers Zepto\Router::match()
+     * @covers Zepto\Router::error()
      */
     public function testRunWithError()
     {
@@ -266,13 +264,32 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             throw new \Exception('Proving another point');
         });
 
-        $this->router->run();
-
+        $this->assertFalse($this->router->run());
         $this->assertEquals(500, $this->router->current_http_status());
     }
 
     /**
-     * @covers Zepto\Router::routes
+     * @covers Zepto\Router::redirect()
+     */
+    public function testRedirect()
+    {
+        $actual = $this->router->redirect('http://www.google.com');
+        $this->assertEquals(302, $this->router->current_http_status());
+        $this->assertTrue($actual);
+    }
+
+    /**
+     * @covers Zepto\Router::redirect()
+     */
+    public function testRedirectWithoutUrl()
+    {
+        $actual = $this->router->redirect('');
+        $this->assertEquals(500, $this->router->current_http_status());
+        $this->assertFalse($actual);
+    }
+
+    /**
+     * @covers Zepto\Router::routes()
      */
     public function testRoutes()
     {
@@ -296,7 +313,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Router::error
+     * @covers Zepto\Router::error()
      */
     public function testError()
     {
@@ -310,7 +327,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Router::not_found
+     * @covers Zepto\Router::not_found()
      */
     public function testNotFound()
     {
