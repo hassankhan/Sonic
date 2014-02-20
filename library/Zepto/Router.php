@@ -258,16 +258,13 @@ class Router
             return FALSE;
         }
 
-        // If route is a valid Route object, then try and execute its callback
-
         // Set current route
         $this->current_route = $route;
 
         // Get parameters from request
         $params = $this->parse_parameters($route);
 
-        // Try to execute callback for route, if it fails, catch the exception
-        // and generate a HTTP 500 error
+        // Try to execute callback for route, if it fails, catch the exception and generate a HTTP 500 error
         try {
             $this->current_http_status = \Symfony\Component\HttpFoundation\Response::HTTP_OK;
 
@@ -369,12 +366,11 @@ class Router
             $this->current_http_status = \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR;
 
             // Execute error handler and set result as response content
-            if (is_callable($this->error_handler)) {
-                $this->response->setContent(call_user_func($this->error_handler, $arg));
-            }
-            else {
-                $this->response->setContent(call_user_func(array($this, 'default_error_handler'), $arg));
-            }
+            $result = is_callable($this->error_handler) === TRUE
+                ? call_user_func($this->error_handler, $arg)
+                : $this->default_error_handler($arg)->execute();
+
+            $this->response->setContent($result);
 
             // Set response's status code
             $this->response->setStatusCode($this->current_http_status);
@@ -404,12 +400,12 @@ class Router
             $this->current_http_status = \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND;
 
             // Execute not found handler and set result as response content
-            if (is_callable($this->not_found_handler)) {
-                $this->response->setContent(call_user_func($this->not_found_handler));
-            }
-            else {
-                $this->response->setContent(call_user_func(array($this, 'default_not_found_handler')));
-            }
+            $result = is_callable($this->not_found_handler) === TRUE
+                ? call_user_func($this->not_found_handler)
+                : $this->default_not_found_handler()->execute();
+
+            $this->response->setContent($result);
+
             // Set response's status code
             $this->response->setStatusCode($this->current_http_status);
 
@@ -419,6 +415,10 @@ class Router
     }
 
     /**
+     * HELPERS
+     */
+
+    /**
      * Default callback for any 404 errors
      *
      * @return string
@@ -426,7 +426,7 @@ class Router
      */
     protected function default_not_found_handler()
     {
-        return $this->generate_error_template('Page Not Found', "Couldn't find your, like, page, dude" . $this->request->getPathInfo());
+        return new Route\ErrorRoute('/404', 'Page Not Found', "Couldn't find your, like, page, dude");
     }
 
     /**
@@ -439,12 +439,8 @@ class Router
      */
     protected function default_error_handler(\Exception $error)
     {
-        return $this->generate_error_template('Server Error', $error->getMessage());
+        return new Route\ErrorRoute('/500', 'Server Error', $error->getMessage());
     }
-
-    /**
-     * HELPER FUNCTIONS
-     */
 
     /**
      * Parses parameters from URI as per the given route's pattern
@@ -467,19 +463,6 @@ class Router
         }
 
         return $params;
-    }
-
-    /**
-     * Returns a standard template for error messages. Thanks, Slim
-     *
-     * @param  string $title
-     * @param  string $body
-     * @return string
-     * @codeCoverageIgnore
-     */
-    protected function generate_error_template($title, $body)
-    {
-        return sprintf('<html><head><title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,sans-serif;}h1{margin:0;font-size:48px;font-weight:normal;line-height:48px;}strong{display:inline-block;width:65px;}</style></head><body><h1>%s</h1><p>%s</p></body></html>', $title, $title, $body);
     }
 
 }
