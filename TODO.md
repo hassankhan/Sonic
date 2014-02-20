@@ -10,7 +10,13 @@ To-Do
 - Router/routing
 - Hooks
 - Extending Zepto
-- Fix headers for consistency
+
+## Filesystem
+- Use [Flysystem](http://flysystem.thephpleague.com/)
+
+## Settings
+- Make $settings array one-dimensional
+- Add exclude filters for plugins/content
 
 ## Application
 - [Add support for environments ``[production|dev]``](https://github.com/hassankhan/Zepto/issues/4)
@@ -18,14 +24,12 @@ To-Do
 - Check for PHP version and use newer functions where available
 - Consider making ``$app`` protected, and using specific methods to access it
 - If a 404.md or 500.md file exists, then use that for those errors
+- WhoopsPlugin should show Zepto version
+- Use output buffering
 
 ## Router
 - Add functionality to allow for other HTTP verbs
 - Also, should request and response be protected or public?
--
-
-## Templating Engine
-- Add Twig extensions
 
 ## [Tests](https://github.com/hassankhan/Zepto/issues?milestone=1&state=open)
 - Write MORE unit tests
