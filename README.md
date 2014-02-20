@@ -1,8 +1,9 @@
 # Zepto [![Latest Stable Version](https://poser.pugx.org/hassankhan/zepto/v/stable.png)](https://packagist.org/packages/hassankhan/zepto) [![Total Downloads](https://poser.pugx.org/hassankhan/zepto/downloads.png)](https://packagist.org/packages/hassankhan/zepto) [![Latest Unstable Version](https://poser.pugx.org/hassankhan/zepto/v/unstable.png)](https://packagist.org/packages/hassankhan/zepto) [![License](https://poser.pugx.org/hassankhan/zepto/license.png)](https://packagist.org/packages/hassankhan/zepto) [![Dependencies Status](http://depending.in/hassankhan/Zepto.png)](http://depending.in/hassankhan/Zepto)
 
-Master: [![Build Status](https://travis-ci.org/hassankhan/Zepto.png?branch=master)](https://travis-ci.org/hassankhan/Zepto) [![Coverage Status](https://coveralls.io/repos/hassankhan/Zepto/badge.png?branch=master)](https://coveralls.io/r/hassankhan/Zepto?branch=master)
-
-Develop: [![Build Status](https://travis-ci.org/hassankhan/Zepto.png?branch=develop)](https://travis-ci.org/hassankhan/Zepto) [![Coverage Status](https://coveralls.io/repos/hassankhan/Zepto/badge.png?branch=develop)](https://coveralls.io/r/hassankhan/Zepto?branch=develop)
+|Branch             | Details                    |
+|-------------------|----------------------------|
+|&nbsp;Master &nbsp;|[![Build Status](https://travis-ci.org/hassankhan/Zepto.png?branch=master)](https://travis-ci.org/hassankhan/Zepto) [![Coverage Status](https://coveralls.io/repos/hassankhan/Zepto/badge.png?branch=master)](https://coveralls.io/r/hassankhan/Zepto?branch=master)|
+|&nbsp;Develop&nbsp;|[![Build Status](https://travis-ci.org/hassankhan/Zepto.png?branch=develop)](https://travis-ci.org/hassankhan/Zepto) [![Coverage Status](https://coveralls.io/repos/hassankhan/Zepto/badge.png?branch=develop)](https://coveralls.io/r/hassankhan/Zepto?branch=develop)|
 
 Zepto is a stupidly simple, blazing fast, flat-file CMS based on [Pico](http://pico.dev7studios.com).
 
