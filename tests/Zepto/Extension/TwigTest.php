@@ -45,20 +45,4 @@ class TwigTest extends \PHPUnit_Framework_TestCase
         // $this->twig->write('', 'Test content');
     }
 
-    /**
-     * @covers Zepto\Extension\Twig::url_for
-     */
-    public function testUrlFor()
-    {
-        $this->markTestIncomplete('Not yet implemented');
-    }
-
-    /**
-     * @covers Zepto\Extension\Twig::link_for
-     */
-    public function testLinkFor()
-    {
-        $this->markTestIncomplete('Not yet implemented');
-    }
-
 }
