@@ -11,4 +11,7 @@ Thumbs.db
 
 # User config
 my.config.php
+
+# Folders
 tests/coverage
+cache

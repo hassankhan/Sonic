@@ -95,9 +95,8 @@ class Zepto {
         $app['twig'] = $app->share(
             function($app) {
                 $twig = new \Twig_Environment(
-                    new \Twig_Loader_Filesystem($app['ROOT_DIR'] . 'templates',
-                        $app['settings']['twig']
-                    )
+                    new \Twig_Loader_Filesystem($app['ROOT_DIR'] . 'templates'),
+                    $app['settings']['twig']
                 );
                 $twig->addExtension(new Extension\Twig);
                 return $twig;
