@@ -46,7 +46,6 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructWithSettings()
     {
-        ob_start();
         $config = array(
             'zepto.environment'           => 'dev',
             'zepto.content_dir'           => 'content',
@@ -73,7 +72,6 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
         );
         $zepto = new Zepto($config);
         $this->assertEquals($config, $zepto->app['settings']);
-        ob_end_clean();
     }
 
     /**
@@ -81,14 +79,12 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouterAdded()
     {
-        ob_start();
         $zepto = new Zepto();
         $this->assertArrayHasKey('router', $zepto->app);
         $this->assertInstanceOf(
             'Zepto\Router',
             $zepto->app['router']
         );
-        ob_end_clean();
     }
 
     /**
@@ -97,14 +93,12 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
      */
     public function testPluginLoaderAdded($config)
     {
-        ob_start();
         $zepto = new Zepto($config);
         $this->assertArrayHasKey('plugin_loader', $zepto->app);
         $this->assertInstanceOf(
             'Zepto\FileLoader\PluginLoader',
             $zepto->app['plugin_loader']
         );
-        ob_end_clean();
     }
 
     /**
@@ -112,14 +106,12 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
      */
     public function testContentLoaderAdded()
     {
-        ob_start();
         $zepto = new Zepto();
         $this->assertArrayHasKey('content_loader', $zepto->app);
         $this->assertInstanceOf(
             'Zepto\FileLoader\MarkdownLoader',
             $zepto->app['content_loader']
         );
-        ob_end_clean();
     }
 
     /**
@@ -127,14 +119,12 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
      */
     public function testTwigAdded()
     {
-        ob_start();
         $zepto = new Zepto();
         $this->assertArrayHasKey('twig', $zepto->app);
         $this->assertInstanceOf(
             '\Twig_Environment',
             $zepto->app['twig']
         );
-        ob_end_clean();
     }
 
     /**
@@ -147,7 +137,6 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadPluginsWhenEnabled($config)
     {
-        ob_start();
         $config['zepto.plugins_enabled'] = TRUE;
         // Add assertion to check if plugins_enabled is true or not
         $zepto = new Zepto($config);
@@ -155,7 +144,6 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
         $plugins = $zepto->app['plugins'];
         $this->assertArrayHasKey('ExamplePlugin', $zepto->app['plugins']);
         $this->assertArrayHasKey('OtherExamplePlugin', $zepto->app['plugins']);
-        ob_end_clean();
     }
 
     /**
@@ -164,11 +152,9 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadPluginsWhenDisabled()
     {
-        ob_start();
         // Add assertion to check if plugins_enabled is true or not
         $zepto = new Zepto();
         $this->assertArrayNotHasKey('plugins', $zepto->app);
-        ob_end_clean();
     }
 
     /**
@@ -176,7 +162,6 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouterSetup()
     {
-        ob_start();
         $zepto = new Zepto();
         $routes = $zepto->app['router']->routes();
 
@@ -192,7 +177,6 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
         foreach ($expected as $route_regex) {
             $this->assertArrayHasKey($route_regex, $routes['GET']);
         }
-        ob_end_clean();
     }
 
     /**
@@ -225,10 +209,8 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
      */
     public function testRunHooks($config)
     {
-        ob_start();
         $zepto = new Zepto($config);
         $this->assertTrue($zepto->run_hooks('before_response_send'));
-        ob_end_clean();
     }
 
     /**
@@ -237,10 +219,8 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
      */
     public function testRunHooksReturnsFalseWhenPluginsAreDisabled()
     {
-        ob_start();
         $zepto = new Zepto();
         $this->assertFalse($zepto->run_hooks('before_response_send'));
-        ob_end_clean();
     }
 
     /**
