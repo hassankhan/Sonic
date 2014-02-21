@@ -31,7 +31,7 @@ class MarkdownLoaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\FileLoader\MarkdownLoader::load
+     * @covers Zepto\FileLoader\MarkdownLoader::load()
      */
     public function testLoad()
     {

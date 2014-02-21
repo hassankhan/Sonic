@@ -17,7 +17,7 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->loader   = new PluginLoader(ROOT_DIR . 'plugins');
+        $this->loader = new PluginLoader(ROOT_DIR . 'plugins');
     }
 
     /**
@@ -26,30 +26,28 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $this->loader = null;
     }
 
     /**
-     * @covers Zepto\FileLoader\PluginLoader::load
+     * @covers Zepto\FileLoader\PluginLoader::load()
      */
     public function testLoadSingleFile()
     {
         $plugin_name = 'ExamplePlugin';
-
-        $actual = $this->loader->load($plugin_name . '.php');
+        $actual      = $this->loader->load($plugin_name . '.php');
 
         $this->assertArrayHasKey($plugin_name, $actual);
         $this->assertInstanceOf('Zepto\PluginInterface', $actual[$plugin_name]);
     }
 
     /**
-     * @covers Zepto\FileLoader\PluginLoader::load
+     * @covers Zepto\FileLoader\PluginLoader::load()
      * @expectedException InvalidArgumentException
      */
     public function testLoadInvalidPluginName()
     {
-        $this->loader   = new PluginLoader(ROOT_DIR . 'tests/mocks/');
-        $actual = $this->loader->load('invalid_Plugin.php');
+        $this->loader = new PluginLoader(ROOT_DIR . 'tests/mocks/');
+        $actual       = $this->loader->load('invalid_Plugin.php');
     }
 
     /**
@@ -59,7 +57,7 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
     public function testLoadWithPluginThatDoesNotHaveSameClassName()
     {
         $this->loader   = new PluginLoader(ROOT_DIR . 'tests/mocks/');
-        $actual = $this->loader->load('WrongNamePlugin.php');
+        $actual         = $this->loader->load('WrongNamePlugin.php');
     }
 
     /**
@@ -68,8 +66,8 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadWithPluginThatDoesNotImplementInterface()
     {
-        $this->loader   = new PluginLoader(ROOT_DIR . 'tests/mocks/');
-        $actual = $this->loader->load('NoImplementInterfacePlugin.php');
+        $this->loader = new PluginLoader(ROOT_DIR . 'tests/mocks/');
+        $actual       = $this->loader->load('NoImplementInterfacePlugin.php');
     }
 
     /**

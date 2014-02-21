@@ -9,7 +9,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Router
      */
-    protected $object;
+    protected $router;
 
     /**
      * Sets up the fixture, for example, opens a network connection.

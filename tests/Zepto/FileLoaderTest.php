@@ -26,7 +26,6 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $this->loader = null;
     }
 
     /**
@@ -67,7 +66,7 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers       Zepto\FileLoader::load
+     * @covers       Zepto\FileLoader::load()
      * @dataProvider providerTestLoadSingleFile
      */
     public function testLoadSingleFile($expected)
@@ -121,6 +120,11 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * Data provider: Single file
+     *
+     * @return array
+     */
     public function providerTestLoadSingleFile()
     {
         $files['sub/page.md'] = '/*' . PHP_EOL
@@ -136,7 +140,8 @@ class FileLoaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Data provider for tests
+     * Data provider: Multiple files
+     *
      * @return array
      */
     public function providerTestLoadMultipleFiles()

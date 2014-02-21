@@ -9,7 +9,7 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
     /**
      * @var FileWriter
      */
-    protected $object;
+    protected $writer;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -17,7 +17,7 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new FileWriter();
+        $this->writer = new FileWriter();
     }
 
     /**
@@ -32,34 +32,30 @@ class FileWriterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\FileWriter::write
+     * @covers Zepto\FileWriter::write()
      */
     public function testWrite()
     {
-        $writer = $this->object;
-        $writer->write(ROOT_DIR . 'tests/testfile.txt', 'Test content');
-
+        $this->writer->write(ROOT_DIR . 'tests/testfile.txt', 'Test content');
         $this->assertFileExists(ROOT_DIR . 'tests/testfile.txt');
     }
 
     /**
-     * @covers Zepto\FileWriter::write
+     * @covers Zepto\FileWriter::write()
      * @expectedException Exception
      */
     public function testWriteWithNoPath()
     {
-        $writer = $this->object;
-        $writer->write('', 'Test content');
+        $this->writer->write('', 'Test content');
     }
 
     /**
-     * @covers Zepto\FileWriter::write
+     * @covers Zepto\FileWriter::write()
      * @expectedException Exception
      */
     public function testWriteToNonexistentDirectory()
     {
-        $writer = $this->object;
-        $writer->write(ROOT_DIR . 'tests/fail/testfile.txt', 'Test content');
+        $this->writer->write(ROOT_DIR . 'tests/fail/testfile.txt', 'Test content');
     }
 
 }

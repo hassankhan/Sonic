@@ -35,31 +35,34 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecute()
     {
-        $expected = $this->route->execute();
-        $this->assertEquals($expected, 'Test callback');
+        $actual = $this->route->execute();
+        $this->assertEquals('Test callback', $actual);
     }
 
     /**
-     * @covers Zepto\Route::url
+     * @covers Zepto\Route::url()
      */
     public function testUrl()
     {
-        $this->assertEquals('/get/<:id|[0-9]>', $this->route->url());
+        $actual = $this->route->url();
+        $this->assertEquals('/get/<:id|[0-9]>', $actual);
     }
 
     /**
-     * @covers Zepto\Route::pattern
+     * @covers Zepto\Route::pattern()
      */
     public function testPattern()
     {
-        $this->assertEquals('#^/get/(?P<id>[0-9])/$#', $this->route->pattern());
+        $actual = $this->route->pattern();
+        $this->assertEquals('#^/get/(?P<id>[0-9])/$#', $actual);
     }
 
     /**
-     * @covers Zepto\Route::callback
+     * @covers Zepto\Route::callback()
      */
     public function testCallback()
     {
-        $this->assertInstanceOf('Closure', $this->route->callback());
+        $actual = $this->route->callback();
+        $this->assertInstanceOf('Closure', $actual);
     }
 }

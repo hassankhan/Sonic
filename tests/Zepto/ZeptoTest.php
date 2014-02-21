@@ -180,7 +180,7 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Zepto::run
+     * @covers Zepto\Zepto::run()
      */
     public function testRun()
     {
@@ -191,7 +191,7 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Zepto::run
+     * @covers Zepto\Zepto::run()
      */
     public function testRunError()
     {
@@ -204,7 +204,7 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Zepto::run_hooks
+     * @covers Zepto\Zepto::run_hooks()
      * @dataProvider providerConfigWithPluginsEnabled
      */
     public function testRunHooks($config)
@@ -214,7 +214,7 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers       Zepto\Zepto::run_hooks
+     * @covers       Zepto\Zepto::run_hooks()
      * @dataProvider providerConfigWithPluginsEnabled
      */
     public function testRunHooksReturnsFalseWhenPluginsAreDisabled()
@@ -222,6 +222,10 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
         $zepto = new Zepto();
         $this->assertFalse($zepto->run_hooks('before_response_send'));
     }
+
+    /**
+     * INSTANTIATION TESTS
+     */
 
     /**
      * @covers Zepto\Zepto::instance()

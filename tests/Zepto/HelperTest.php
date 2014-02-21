@@ -6,29 +6,9 @@ namespace Zepto;
  */
 class HelperTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Helper
-     */
-    protected $helper;
 
     /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    protected function setUp()
-    {
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
-
-    /**
-     * @covers Zepto\Helper::default_config
+     * @covers Zepto\Helper::default_config()
      */
     public function testDefaultConfig()
     {
@@ -121,7 +101,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Helper::url_for
+     * @covers Zepto\Helper::url_for()
      */
     public function testUrlFor()
     {
@@ -133,7 +113,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Helper::url_for
+     * @covers Zepto\Helper::url_for()
      */
     public function testUrlForFailure()
     {
@@ -146,7 +126,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Helper::link_for
+     * @covers Zepto\Helper::link_for()
      */
     public function testLinkFor()
     {
@@ -158,14 +138,14 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Helper::link_for
+     * @covers Zepto\Helper::link_for()
      */
     public function testLinkForFailure()
     {
         ob_start();
-        $zepto    = new Zepto;
-        $helper   = new Helper($zepto->app);
-        $actual   = $helper->link_for('non-index.md');
+        $zepto  = new Zepto;
+        $helper = new Helper($zepto->app);
+        $actual = $helper->link_for('non-index.md');
         $this->assertNull($actual);
         ob_end_clean();
     }

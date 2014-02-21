@@ -7,7 +7,7 @@ namespace Zepto\Extension;
 class TwigTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Zepto\Extension\Twig
+     * @var Twig
      */
     protected $twig;
 
@@ -42,7 +42,6 @@ class TwigTest extends \PHPUnit_Framework_TestCase
     public function testGetFunctions()
     {
         $this->assertContainsOnly('Twig_SimpleFunction', $this->twig->getFunctions());
-        // $this->twig->write('', 'Test content');
     }
 
 }
