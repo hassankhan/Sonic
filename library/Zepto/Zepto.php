@@ -266,10 +266,21 @@ class Zepto {
     public static function instance()
     {
         if (isset(static::$instance) === FALSE) {
+            Zepto::kill();
             return null;
         }
 
         return static::$instance;
+    }
+
+    /**
+     * Annoying method to help with tests. It probably would kill the app too
+     *
+     * @return
+     */
+    public static function kill()
+    {
+        static::$instance = NULL;
     }
 
 }

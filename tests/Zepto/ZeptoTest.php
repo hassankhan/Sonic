@@ -244,7 +244,6 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::instance()
-     * @runInSeparateProcess
      */
     public function testInstanceBeforeInitialization()
     {
@@ -258,6 +257,17 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     {
         $zepto = new Zepto();
         $this->assertInstanceOf('Zepto\Zepto', Zepto::instance());
+    }
+
+    /**
+     * @covers Zepto\Zepto::kill()
+     */
+    public function testKill()
+    {
+        $zepto = new Zepto();
+        $this->assertInstanceOf('Zepto\Zepto', Zepto::instance());
+        Zepto::kill();
+        $this->assertNull(Zepto::instance());
     }
 
     public function providerConfigWithPluginsEnabled()
