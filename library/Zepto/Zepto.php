@@ -3,7 +3,6 @@
 namespace Zepto;
 
 use Pimple;
-use Whoops;
 use Michelf\MarkdownExtra;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -126,8 +126,6 @@ class Helper
     {
         // Check if file exists
         try {
-            $content = $this->app['content_loader']->load($file_name);
-
             // Create URL and return
             $clean_file_name = str_replace(
                 array_merge(array('index'), $this->app['settings']['zepto.content_ext']),
