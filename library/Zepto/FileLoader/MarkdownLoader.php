@@ -13,8 +13,8 @@ namespace Zepto\FileLoader;
  * @since      0.2
  * @deprecated Use \Zepto\FileLoader\PageLoader instead
  */
-class MarkdownLoader extends \Zepto\FileLoader {
-
+class MarkdownLoader extends \Zepto\FileLoader
+{
     /**
      * An object which parses Markdown to HTML
      *
@@ -25,12 +25,16 @@ class MarkdownLoader extends \Zepto\FileLoader {
     /**
      * Class constructor. Sets the base path, but also the Markdown parser
      *
-     * @param string                     $base_path
-     * @param \Michelf\MarkdownInterface $parser
+     * @param string                       $base_path
+     * @param \League\Flysystem\Filesystem $filesystem
+     * @param \Michelf\MarkdownInterface   $parser
      */
-    public function __construct($base_path, \Michelf\MarkdownInterface $parser)
-    {
-        parent::__construct($base_path);
+    public function __construct(
+        $base_path,
+        \League\Flysystem\Filesystem $filesystem,
+        \Michelf\MarkdownInterface $parser
+    ) {
+        parent::__construct($filesystem, $base_path);
         $this->parser = $parser;
     }
 
