@@ -126,13 +126,16 @@ class Helper
     {
         // Check if file exists
         try {
-            // Create URL and return
-            $clean_file_name = str_replace(
-                array_merge(array('index'), $this->app['settings']['zepto.content_ext']),
-                '',
-                $file_name
-            );
-            return trim($this->app['settings']['site.site_root'] . $clean_file_name, '/') . '/';
+            $content = $this->app['content_loader']->load($file_name);
+            if(is_null($content) === FALSE) {
+                // Create URL and return
+                $clean_file_name = str_replace(
+                    array_merge(array('index'), $this->app['settings']['zepto.content_ext']),
+                    '',
+                    $file_name
+                );
+                return trim($this->app['settings']['site.site_root'] . $clean_file_name, '/') . '/';
+            }
         }
         catch (\Exception $e) {
             $this->app['router']->error($e);
