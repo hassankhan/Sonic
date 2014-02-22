@@ -55,53 +55,41 @@ class Zepto {
         // Set ROOT_DIR in here, rather than as a constant
         $app['ROOT_DIR'] = realpath(getcwd()) . '/';
 
-        $app['request'] = $app->share(
-            function() {
-                return Request::createFromGlobals();
-            }
-        );
+        $app['request'] = function() {
+            return Request::createFromGlobals();
+        };
 
-        $app['response'] = $app->share(
-            function() {
-                return new Response(
-                    'Content',
-                    Response::HTTP_OK,
-                    array('content-type' => 'text/html; charset=utf-8')
-                );
-            }
-        );
+        $app['response'] = function() {
+            return new Response(
+                'Content',
+                Response::HTTP_OK,
+                array('content-type' => 'text/html; charset=utf-8')
+            );
+        };
 
-        $app['router'] = $app->share(
-            function ($app) {
-                return new Router($app['request'], $app['response']);
-            }
-        );
+        $app['router'] = function ($app) {
+            return new Router($app['request'], $app['response']);
+        };
 
-        $app['content_loader'] = $app->share(
-            function ($app) {
-                return new FileLoader\MarkdownLoader(
-                    $app['ROOT_DIR'] . $app['settings']['zepto.content_dir'],
-                    new \Michelf\MarkdownExtra
-                );
-            }
-        );
+        $app['content_loader'] = function ($app) {
+            return new FileLoader\MarkdownLoader(
+                $app['ROOT_DIR'] . $app['settings']['zepto.content_dir'],
+                new \Michelf\MarkdownExtra
+            );
+        };
 
-        $app['helper'] = $app->share(
-            function ($app) {
-                return new Helper($app);
-            }
-        );
+        $app['helper'] = function ($app) {
+            return new Helper($app);
+        };
 
-        $app['twig'] = $app->share(
-            function($app) {
-                $twig = new \Twig_Environment(
-                    new \Twig_Loader_Filesystem($app['ROOT_DIR'] . 'templates'),
-                    $app['settings']['twig']
-                );
-                $twig->addExtension(new Extension\Twig);
-                return $twig;
-            }
-        );
+        $app['twig'] = function($app) {
+            $twig = new \Twig_Environment(
+                new \Twig_Loader_Filesystem($app['ROOT_DIR'] . 'templates'),
+                $app['settings']['twig']
+            );
+            $twig->addExtension(new Extension\Twig);
+            return $twig;
+        };
 
         // If settings array is empty, then get a default one
         if (empty($settings) === TRUE) {
@@ -118,13 +106,11 @@ class Zepto {
         // So if plugins ARE indeed enabled, initialise the plugin loader
         // and load the fuckers
         if ($app['plugins_enabled'] === true) {
-            $app['plugin_loader'] = $app->share(
-                function($c) use ($settings) {
-                    return new FileLoader\PluginLoader(
-                        $c['ROOT_DIR'] . $settings['zepto.plugins_dir']
-                    );
-                }
-            );
+            $app['plugin_loader'] = function ($c) use ($settings) {
+                return new FileLoader\PluginLoader(
+                    $c['ROOT_DIR'] . $settings['zepto.plugins_dir']
+                );
+            };
 
             $this->load_plugins();
             $this->run_hooks('after_plugins_load');

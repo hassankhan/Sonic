@@ -17,78 +17,69 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
     public function after_plugins_load(\Pimple $app)
     {
         // Add Whoops handlers
-        $app['whoopsPrettyPageHandler'] = $app->share(
-            function() {
-                return new PrettyPageHandler();
+        $app['whoopsPrettyPageHandler'] = function () {
+            return new PrettyPageHandler();
+        };
+        $app['whoopsJsonResponseHandler'] = function () {
+            $handler = new JsonResponseHandler();
+            $handler->onlyForAjaxRequests(true);
+            return $handler;
+        };
+        $app["whoopsZeptoInfoHandler"] = function () use ($app) {
+            // Check to see if there is a current route, otherwise
+            // ignore because router isn't set up yet
+            try{
+                $current_route = $app['router']->current_route();
             }
-        );
-        $app['whoopsJsonResponseHandler'] = $app->share(
-            function() {
-                $handler = new JsonResponseHandler();
-                $handler->onlyForAjaxRequests(true);
-                return $handler;
+            catch (\Exception $e) {
+                return;
             }
-        );
-        $app["whoopsZeptoInfoHandler"] = $app->protect(
-            function() use ($app) {
 
-                // Check to see if there is a current route, otherwise
-                // ignore because router isn't set up yet
-                try{
-                    $current_route = $app['router']->current_route();
-                }
-                catch (\Exception $e) {
-                    return;
-                }
+            $route_details = array();
 
-                $route_details = array();
+            $app['whoopsPrettyPageHandler']->setPageTitle('Shit hit the fan!');
+            $app['whoopsPrettyPageHandler']->setEditor('sublime');
 
-                $app['whoopsPrettyPageHandler']->setPageTitle('Shit hit the fan!');
-                $app['whoopsPrettyPageHandler']->setEditor('sublime');
-
-                if ($current_route !== null) {
-                    $route_details = array(
-                        'Route URL'     => $current_route->url(),
-                        'Route Pattern' => $current_route->pattern()
-                    );
-                }
-
-                $app["whoopsPrettyPageHandler"]->addDataTable(
-                    'Zepto Application',
-                    array_merge(array(
-                        'Charset' => $app['request']->headers->get('Accept-Charset'),
-                        'Locale'  => $app['request']->getPreferredLanguage()
-                    ), $route_details)
-                );
-
-                $app["whoopsPrettyPageHandler"]->addDataTable(
-                    'Request Information',
-                    array(
-                        'URI'          => $app['request']->getUri(),
-                        'Request URI'  => $app['request']->getRequestUri(),
-                        'Path'         => $app['request']->getPathInfo(),
-                        'Query String' => $app['request']->getQueryString(),
-                        'HTTP Method'  => $app['request']->getMethod(),
-                        'Script Name'  => $app['request']->getScriptName(),
-                        'Base URL'     => $app['request']->getBaseUrl(),
-                        'Scheme'       => $app['request']->getScheme(),
-                        'Port'         => $app['request']->getPort(),
-                        'Host'         => $app['request']->getHost()
-                    )
+            if ($current_route !== null) {
+                $route_details = array(
+                    'Route URL'     => $current_route->url(),
+                    'Route Pattern' => $current_route->pattern()
                 );
             }
-        );
+
+            $app["whoopsPrettyPageHandler"]->addDataTable(
+                'Zepto Application',
+                array_merge(array(
+                    'Charset' => $app['request']->headers->get('Accept-Charset'),
+                    'Locale'  => $app['request']->getPreferredLanguage()
+                ), $route_details)
+            );
+
+            $app["whoopsPrettyPageHandler"]->addDataTable(
+                'Request Information',
+                array(
+                    'URI'          => $app['request']->getUri(),
+                    'Request URI'  => $app['request']->getRequestUri(),
+                    'Path'         => $app['request']->getPathInfo(),
+                    'Query String' => $app['request']->getQueryString(),
+                    'HTTP Method'  => $app['request']->getMethod(),
+                    'Script Name'  => $app['request']->getScriptName(),
+                    'Base URL'     => $app['request']->getBaseUrl(),
+                    'Scheme'       => $app['request']->getScheme(),
+                    'Port'         => $app['request']->getPort(),
+                    'Host'         => $app['request']->getHost()
+                )
+            );
+        };
 
         // Add actual Whoops\Run object
-        $app['whoops'] = $app->share(
-            function($app) {
-                $run = new Run();
-                $run->pushHandler($app['whoopsPrettyPageHandler']);
-                $run->pushHandler($app['whoopsJsonResponseHandler']);
-                $run->pushHandler($app['whoopsZeptoInfoHandler']);
-                return $run;
-            }
-        );
+        $app['whoops'] = function($app) {
+            $run = new Run();
+            $run->pushHandler($app['whoopsPrettyPageHandler']);
+            $run->pushHandler($app['whoopsJsonResponseHandler']);
+            $run->pushHandler($app['whoopsZeptoInfoHandler']);
+            return $run;
+        };
     }
 
     public function before_config_load(\Pimple $app, &$settings)
