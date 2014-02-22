@@ -3,6 +3,8 @@
 namespace Zepto;
 
 use Pimple;
+use League\Flysystem\Filesystem;
+use League\Flysystem\Adapter\Local;
 use Michelf\MarkdownExtra;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,8 +19,8 @@ use Symfony\Component\HttpFoundation\Response;
  * @license    MIT
  * @since      0.2
  */
-class Zepto {
-
+class Zepto
+{
     /**
      * Current application version
      */
@@ -70,9 +72,24 @@ class Zepto {
             return new Router($app['request'], $app['response']);
         };
 
+        $app['content_adapter'] = function ($app) {
+            return new \League\Flysystem\Adapter\Local($app['ROOT_DIR']['zepto.content_dir']);
+        };
+
+        $app['plugin_adapter'] = function ($app) {
+            return new \League\Flysystem\Adapter\Local($app['ROOT_DIR']['zepto.plugins_dir']);
+        };
+
+        $app['filesystem'] = function ($app) {
+            return new \League\Flysystem\Filesystem(
+                new \League\Flysystem\Adapter\Local($app['ROOT_DIR'])
+            );
+        };
+
         $app['content_loader'] = function ($app) {
             return new FileLoader\MarkdownLoader(
-                $app['ROOT_DIR'] . $app['settings']['zepto.content_dir'],
+                $app['filesystem'],
+                // $app['ROOT_DIR'] . $app['settings']['zepto.content_dir'],
                 new \Michelf\MarkdownExtra
             );
         };
@@ -105,9 +122,10 @@ class Zepto {
         // So if plugins ARE indeed enabled, initialise the plugin loader
         // and load the fuckers
         if ($app['plugins_enabled'] === true) {
-            $app['plugin_loader'] = function ($c) use ($settings) {
+            $app['plugin_loader'] = function ($app) use ($settings) {
                 return new FileLoader\PluginLoader(
-                    $c['ROOT_DIR'] . $settings['zepto.plugins_dir']
+                    $app['filesystem']
+                    // $c['ROOT_DIR'] . $settings['zepto.plugins_dir']
                 );
             };
 
@@ -190,10 +208,8 @@ class Zepto {
      */
     protected function setup_router()
     {
-        // Get local references
+        // Only because you can't use $this->app in the callback
         $app       = $this->app;
-        $router    = $app['router'];
-
         $file_list = $app['content_loader']->get_folder_contents();
 
         // Add each as a route
@@ -207,7 +223,7 @@ class Zepto {
                 ? '/' . str_replace('index', '', $file_name)
                 : '/' . $file_name;
 
-            $router->get($route, function() use ($app, $file) {
+            $this->app['router']->get($route, function() use ($app, $file) {
 
                 // Load content now
                 // @todo This is temporary until some sort of Page-based abstraction
