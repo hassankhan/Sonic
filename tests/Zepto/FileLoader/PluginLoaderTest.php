@@ -33,7 +33,7 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadSingleFile()
     {
-        $plugin_name = 'ExamplePlugin';
+        $plugin_name = 'WhoopsPlugin';
         $actual      = $this->loader->load($plugin_name . '.php');
 
         $this->assertArrayHasKey($plugin_name, $actual);
@@ -86,13 +86,11 @@ class PluginLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $actual = $this->loader->load_dir();
 
-        $this->assertArrayHasKey('ExamplePlugin',      $actual);
-        $this->assertArrayHasKey('OtherExamplePlugin', $actual);
         $this->assertArrayHasKey('WhoopsPlugin',       $actual);
+        $this->assertArrayHasKey('NavGenPlugin',       $actual);
 
-        $this->assertInstanceOf('Zepto\PluginInterface', $actual['ExamplePlugin']);
-        $this->assertInstanceOf('Zepto\PluginInterface', $actual['OtherExamplePlugin']);
         $this->assertInstanceOf('Zepto\PluginInterface', $actual['WhoopsPlugin']);
+        $this->assertInstanceOf('Zepto\PluginInterface', $actual['NavGenPlugin']);
     }
 
     /**

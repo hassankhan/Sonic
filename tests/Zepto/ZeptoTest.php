@@ -142,8 +142,8 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
         $zepto = new Zepto($config);
         $this->assertArrayHasKey('plugins', $zepto->app);
         $plugins = $zepto->app['plugins'];
-        $this->assertArrayHasKey('ExamplePlugin', $zepto->app['plugins']);
-        $this->assertArrayHasKey('OtherExamplePlugin', $zepto->app['plugins']);
+        $this->assertArrayHasKey('WhoopsPlugin', $zepto->app['plugins']);
+        $this->assertArrayHasKey('NavGenPlugin', $zepto->app['plugins']);
     }
 
     /**
@@ -160,7 +160,7 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Zepto\Zepto::setup_router()
      */
-    public function testRouterSetup()
+    public function testSetupRouter()
     {
         $zepto = new Zepto();
         $routes = $zepto->app['router']->routes();
