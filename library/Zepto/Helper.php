@@ -126,12 +126,17 @@ class Helper
     {
         // Check if file exists
         try {
+
+            // Try to read file, if none exists then return null
+            $this->app['content_loader']->read($file_name);
+
             // Create URL and return
             $clean_file_name = str_replace(
-                array_merge(array('index'), $this->app['settings']['zepto.content_ext']),
+                array_merge(array('index'), $this->dot_extensions()),
                 '',
                 $file_name
             );
+
             return trim($this->app['settings']['site.site_root'] . $clean_file_name, '/') . '/';
         }
         catch (\Exception $e) {
@@ -143,24 +148,35 @@ class Helper
     /**
      * Returns a HTML <a> for a given filename in the 'content' directory
      *
-     * @param  string $file_name
+     * @param  string      $file_name
      * @return string|null
      */
     public function link_for($file_name)
     {
-        // Check if file exists
         try {
-            $content = $this->app['content_loader']->load($file_name);
+            // Check if file exists
+            $content = $this->app['content_loader']->getAdapter()->read($file_name);
 
             // Get file title and URL and return
-            $link = $content[$file_name]['meta']['title'];
-            $url  = $this->url_for($file_name);
-            return sprintf('<a href="%s"> ' . $link . ' </a>', $url);
+            $title   = $content['meta']['title'];
+            $url     = $this->url_for($file_name);
+            return sprintf('<a href="%s"> ' . $title . ' </a>', $url);
         }
         catch (\Exception $e) {
             $this->app['router']->error($e);
         }
         return null;
+    }
+
+    private function dot_extensions()
+    {
+        $extensions = $this->app['settings']['zepto.content_ext'];
+
+        foreach ($extensions as $extension) {
+            $dotted_extensions[] = '.' . $extension;
+        }
+
+        return $dotted_extensions;
     }
 
 }

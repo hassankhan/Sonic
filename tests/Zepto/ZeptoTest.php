@@ -96,8 +96,12 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
         $zepto = new Zepto($config);
         $this->assertArrayHasKey('plugin_loader', $zepto->app);
         $this->assertInstanceOf(
-            'Zepto\FileLoader\PluginLoader',
+            'League\Flysystem\Filesystem',
             $zepto->app['plugin_loader']
+        );
+        $this->assertInstanceOf(
+            'Zepto\Adapter\Plugin',
+            $zepto->app['plugin_loader']->getAdapter()
         );
     }
 
@@ -109,8 +113,12 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
         $zepto = new Zepto();
         $this->assertArrayHasKey('content_loader', $zepto->app);
         $this->assertInstanceOf(
-            'Zepto\FileLoader\MarkdownLoader',
+            'League\Flysystem\Filesystem',
             $zepto->app['content_loader']
+        );
+        $this->assertInstanceOf(
+            'Zepto\Adapter\Markdown',
+            $zepto->app['content_loader']->getAdapter()
         );
     }
 

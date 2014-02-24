@@ -102,6 +102,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Helper::url_for()
+     * @covers Zepto\Helper::dot_extensions()
      */
     public function testUrlFor()
     {
@@ -114,6 +115,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Helper::url_for()
+     * @covers Zepto\Helper::dot_extensions()
      */
     public function testUrlForFailure()
     {
