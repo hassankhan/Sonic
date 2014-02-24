@@ -49,7 +49,7 @@ class Helper
             'zepto.plugins_dir'       => 'plugins',
             'zepto.templates_dir'     => 'templates',
             'zepto.default_template'  => 'base.twig',
-            'zepto.content_ext'       => array('.md', '.markdown'),
+            'zepto.content_ext'       => array('md', 'markdown'),
             'zepto.plugins_enabled'   => false,
             'site.site_root'          => 'http://localhost:8888/zepto/',
             'site.site_title'         => 'Zepto',
