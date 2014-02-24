@@ -26,15 +26,31 @@ class Plugin extends \League\Flysystem\Adapter\Local
 
     /**
      * Reads a file
-     * @param  string     $path
-     * @return array|bool
+     * @param  string      $path
+     * @return object|bool
      */
     public function read($path)
     {
+        // Try and read file
         $file = parent::read($path);
-        if ($file !== FALSE) {
-            include_once($this->prefix($path));
+
+        if ($file === FALSE) {
+            return FALSE;
         }
+
+        // Include plugin file
+        include_once($this->prefix($path));
+
+        // Get plugin name without extension
+        $plugin_name = str_replace('.php', '', $path);
+
+        // Check class implements correct interface
+        $interfaces = class_implements($plugin_name);
+        if (isset($interfaces['Zepto\PluginInterface']) === FALSE) {
+            return FALSE;
+        }
+
+        return new $plugin_name;
     }
 
 }

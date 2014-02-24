@@ -188,6 +188,7 @@ class Zepto
     protected function load_plugins()
     {
         if ($this->app['plugins_enabled'] === true) {
+
             // Load plugins from 'plugins' folder
             $file_list    = $this->app['plugin_loader']->listContents();
             $plugin_files = array_filter($file_list, function ($file) {
@@ -197,8 +198,7 @@ class Zepto
             });
 
             foreach ($plugin_files as $plugin_file) {
-                $this->app['plugin_loader']->getAdapter()->read($plugin_file['basename']);
-                $plugins[$plugin_file['filename']] = new $plugin_file['filename'];
+                $plugins[$plugin_file['filename']] = $this->app['plugin_loader']->getAdapter()->read($plugin_file['basename']);
             }
 
             $this->app['plugins'] = $plugins;
