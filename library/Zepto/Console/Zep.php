@@ -93,10 +93,6 @@ class Zep extends \Zepto\Console
      */
     public function new_plugin($name)
     {
-        if ($this->is_zepto_dir === FALSE) {
-            throw new \Exception("No plugins directory found, run zep init");
-        }
-
         $template_plugin = <<<PLUGIN
 <?php
 
@@ -154,12 +150,8 @@ PLUGIN;
      * @return
      * @throws Exception If content directory is not found
      */
-    public function new_content($name)
+    public function new_content($name, $title, $desc, $date)
     {
-        if ($this->is_zepto_dir === FALSE) {
-            throw new \Exception("No content directory found, run zep init");
-        }
-
         $content_template = <<<MARKDOWN
 /*
 Title: %s
@@ -174,9 +166,8 @@ MARKDOWN;
         // Ask for name and add it to the content template
         $fixed_name = strtolower($name);
         $path       = 'content/' . $fixed_name . '.md';
-        $title      = ucfirst($this->prompt("Title:"));
-        $desc       = $this->prompt("Description: (Optional)");
-        $date       = (!$this->prompt("Date: (Leave empty for today's date)"))
+        $title      = ucfirst($title);
+        $date       = (empty($date)) === TRUE
             ? date("d m Y")
             : $date;
 

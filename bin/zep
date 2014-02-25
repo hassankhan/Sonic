@@ -37,6 +37,9 @@ elseif ($zep->get("option") === "new") {
     if ($key === "-p") {
 
         try {
+            if ($zep->check_current_directory() === FALSE) {
+                throw new \Exception("No plugins directory found, run zep init");
+            }
             $name = $zep->prompt("Plugin name:");
             $zep->new_plugin($name);
         }
@@ -49,10 +52,16 @@ elseif ($zep->get("option") === "new") {
 
         // Make sure current directory has 'content' and 'plugins' folders
         try {
-            $name = $zep->prompt("Filename:");
-            $zep->new_content($name);
+            if ($zep->check_current_directory() === FALSE) {
+                throw new \Exception("No content directory found, run zep init");
+            }
+            $name  = $zep->prompt("Filename:");
+            $title = $this->prompt("Title:");
+            $desc  = $this->prompt("Description: (Optional)");
+            $date  = $this->prompt("Date: (Leave empty for today's date)");
+            $zep->new_content($name, $title, $desc, $date);
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             $zep->out($e->getMessage());
         }
     }
