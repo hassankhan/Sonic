@@ -4,7 +4,6 @@ namespace Zepto;
 
 use Pimple;
 use League\Flysystem\Filesystem;
-use League\Flysystem\Adapter\Local;
 use Michelf\MarkdownExtra;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -228,7 +227,6 @@ class Zepto
         foreach ($files as $file) {
 
             // Get filename without extension
-            // $exploded_file_name = explode('.', $file);
             $file_name = $file['dirname'] . '/' . $file['filename'];
 
             $route = '/' . trim(str_replace('/index', '/', $file_name), '/');

@@ -36,7 +36,7 @@ class Plugin extends \League\Flysystem\Adapter\Local
     public function read($path)
     {
         // Try and read file
-        $file = parent::read($path);
+        parent::read($path);
 
         // Include plugin file
         include_once($this->prefix($path));
