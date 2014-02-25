@@ -1,6 +1,6 @@
 <?php
 
-class NoImplementInterfacePlugin {
+class NoInterfacePlugin {
 
     public function after_plugins_load(\Pimple $app)
     {

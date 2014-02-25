@@ -54,6 +54,6 @@ class PluginTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadPluginWithoutInterface()
     {
-        $this->adapter->read('NoImplementInterfacePlugin.php');
+        $this->adapter->read('NoInterfacePlugin.php');
     }
 }
