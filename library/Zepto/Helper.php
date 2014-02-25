@@ -32,6 +32,9 @@ class Helper
     {
         // Get app container
         $this->app = $app;
+
+        // Convert errors to exceptions
+        set_error_handler(array('\Zepto\Helper', 'handleErrors'));
     }
 
 
@@ -49,7 +52,7 @@ class Helper
             'zepto.plugins_dir'       => 'plugins',
             'zepto.templates_dir'     => 'templates',
             'zepto.default_template'  => 'base.twig',
-            'zepto.content_ext'       => array('.md', '.markdown'),
+            'zepto.content_ext'       => array('md', 'markdown'),
             'zepto.plugins_enabled'   => false,
             'site.site_root'          => 'http://localhost:8888/zepto/',
             'site.site_title'         => 'Zepto',
@@ -117,6 +120,24 @@ class Helper
     }
 
     /**
+     * Convert errors into ErrorException objects
+     *
+     * @param  int            $err_no
+     * @param  string         $err_str
+     * @param  string         $err_file
+     * @param  int            $err_line
+     * @return bool
+     * @throws \ErrorException
+     */
+    public static function handleErrors($err_no, $err_str = '', $err_file = '', $err_line = '')
+    {
+        if (!($err_no & error_reporting())) {
+            return;
+        }
+        throw new \ErrorException($err_str, $err_no, 0, $err_file, $err_line);
+    }
+
+    /**
      * Returns a fully-qualified URL for a given filename in the 'content' directory
      *
      * @param  string $file_name
@@ -126,16 +147,18 @@ class Helper
     {
         // Check if file exists
         try {
-            $content = $this->app['content_loader']->load($file_name);
-            if(is_null($content) === FALSE) {
-                // Create URL and return
-                $clean_file_name = str_replace(
-                    array_merge(array('index'), $this->app['settings']['zepto.content_ext']),
-                    '',
-                    $file_name
-                );
-                return trim($this->app['settings']['site.site_root'] . $clean_file_name, '/') . '/';
-            }
+
+            // Try to read file, if none exists then return null
+            $this->app['content_loader']->read($file_name);
+
+            // Create URL and return
+            $clean_file_name = str_replace(
+                array_merge(array('index'), $this->dot_extensions()),
+                '',
+                $file_name
+            );
+
+            return trim($this->app['settings']['site.site_root'] . $clean_file_name, '/') . '/';
         }
         catch (\Exception $e) {
             $this->app['router']->error($e);
@@ -146,24 +169,35 @@ class Helper
     /**
      * Returns a HTML <a> for a given filename in the 'content' directory
      *
-     * @param  string $file_name
+     * @param  string      $file_name
      * @return string|null
      */
     public function link_for($file_name)
     {
-        // Check if file exists
         try {
-            $content = $this->app['content_loader']->load($file_name);
+            // Check if file exists
+            $content = $this->app['content_loader']->getAdapter()->read($file_name);
 
             // Get file title and URL and return
-            $link = $content[$file_name]['meta']['title'];
-            $url  = $this->url_for($file_name);
-            return sprintf('<a href="%s"> ' . $link . ' </a>', $url);
+            $title   = $content['meta']['title'];
+            $url     = $this->url_for($file_name);
+            return sprintf('<a href="%s"> ' . $title . ' </a>', $url);
         }
         catch (\Exception $e) {
             $this->app['router']->error($e);
         }
         return null;
+    }
+
+    private function dot_extensions()
+    {
+        $extensions = $this->app['settings']['zepto.content_ext'];
+
+        foreach ($extensions as $extension) {
+            $dotted_extensions[] = '.' . $extension;
+        }
+
+        return $dotted_extensions;
     }
 
 }

@@ -36,8 +36,7 @@ class NavGenPlugin implements \Zepto\PluginInterface {
     public function after_router_setup(\Pimple $app)
     {
         // Use this one
-        $app = func_get_arg(0);
-        $html = $this->generate_html($app);
+        $html       = $this->generate_html($app);
         $app['nav'] = array('nav' => $html);
     }
 
@@ -56,14 +55,18 @@ class NavGenPlugin implements \Zepto\PluginInterface {
 
         // Opening ``<ul>`` tag and adding class name
         $nav_html = sprintf('<ul class="%s">' . PHP_EOL, $settings['site.nav.class']);
-        $files    = $content_loader->get_folder_contents();
+        $files    = $content_loader->listContents('', true);
 
-        foreach ($files as $file) {
-            $exploded_file_name = explode('/', $file);
+        $content_files = array_filter($files, function ($file) use ($settings) {
+            return isset($file['extension']) === TRUE
+                && in_array($file['extension'], $settings['zepto.content_ext']) === TRUE
+                ? TRUE
+                : FALSE;
+        });
 
-            // Top-level links
-            if (count($exploded_file_name) === 1) {
-                $nav_html .= '<li>' . $app['helper']->link_for($file) . '</li>' . PHP_EOL;
+        foreach ($content_files as $file) {
+            if ($file['dirname'] === '') {
+                $nav_html .= '<li>' . $app['helper']->link_for($file['path']) . '</li>' . PHP_EOL;
                 continue;
             }
         }

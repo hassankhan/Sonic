@@ -1,6 +1,6 @@
 <?php
 
-class NoImplementInterfacePlugin {
+class SimplePlugin implements \Zepto\PluginInterface {
 
     public function after_plugins_load(\Pimple $app)
     {

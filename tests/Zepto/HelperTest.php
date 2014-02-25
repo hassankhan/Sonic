@@ -18,7 +18,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
             'zepto.plugins_dir'           => 'plugins',
             'zepto.templates_dir'         => 'templates',
             'zepto.default_template'      => 'base.twig',
-            'zepto.content_ext'           => array('.md', '.markdown'),
+            'zepto.content_ext'           => array('md', 'markdown'),
             'zepto.plugins_enabled'       => false,
             'site.site_root'              => 'http://localhost:8888/zepto/',
             'site.site_title'             => 'Zepto',
@@ -102,6 +102,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Helper::url_for()
+     * @covers Zepto\Helper::dot_extensions()
      */
     public function testUrlFor()
     {
@@ -114,6 +115,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Helper::url_for()
+     * @covers Zepto\Helper::dot_extensions()
      */
     public function testUrlForFailure()
     {

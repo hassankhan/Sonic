@@ -3,6 +3,8 @@
 namespace Zepto;
 
 use Pimple;
+use League\Flysystem\Filesystem;
+use League\Flysystem\Adapter\Local;
 use Michelf\MarkdownExtra;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,8 +19,8 @@ use Symfony\Component\HttpFoundation\Response;
  * @license    MIT
  * @since      0.2
  */
-class Zepto {
-
+class Zepto
+{
     /**
      * Current application version
      */
@@ -54,11 +56,11 @@ class Zepto {
         // Set ROOT_DIR in here, rather than as a constant
         $app['ROOT_DIR'] = realpath(getcwd()) . '/';
 
-        $app['request'] = function() {
+        $app['request'] = function () {
             return Request::createFromGlobals();
         };
 
-        $app['response'] = function() {
+        $app['response'] = function () {
             return new Response(
                 'Content',
                 Response::HTTP_OK,
@@ -70,10 +72,20 @@ class Zepto {
             return new Router($app['request'], $app['response']);
         };
 
-        $app['content_loader'] = function ($app) {
-            return new FileLoader\MarkdownLoader(
+        $app['content_adapter'] = function ($app) {
+            return new Adapter\Markdown(
                 $app['ROOT_DIR'] . $app['settings']['zepto.content_dir'],
-                new \Michelf\MarkdownExtra
+                new \Michelf\MarkdownExtra()
+            );
+        };
+
+        $app['plugin_adapter'] = function ($app) {
+            return new Adapter\Plugin($app['ROOT_DIR'] . $app['settings']['zepto.plugins_dir']);
+        };
+
+        $app['content_loader'] = function ($app) {
+            return new \League\Flysystem\Filesystem(
+                $app['content_adapter']
             );
         };
 
@@ -81,7 +93,7 @@ class Zepto {
             return new Helper($app);
         };
 
-        $app['twig'] = function($app) {
+        $app['twig'] = function ($app) {
             $twig = new \Twig_Environment(
                 new \Twig_Loader_Filesystem($app['ROOT_DIR'] . 'templates'),
                 $app['settings']['twig']
@@ -101,13 +113,13 @@ class Zepto {
 
         // Set this particular setting now
         $app['plugins_enabled'] = $settings['zepto.plugins_enabled'];
-
+        $app['settings'] = $settings;
         // So if plugins ARE indeed enabled, initialise the plugin loader
         // and load the fuckers
         if ($app['plugins_enabled'] === true) {
-            $app['plugin_loader'] = function ($c) use ($settings) {
-                return new FileLoader\PluginLoader(
-                    $c['ROOT_DIR'] . $settings['zepto.plugins_dir']
+            $app['plugin_loader'] = function ($app) {
+                return new \League\Flysystem\Filesystem(
+                    $app['plugin_adapter']
                 );
             };
 
@@ -176,8 +188,20 @@ class Zepto {
     protected function load_plugins()
     {
         if ($this->app['plugins_enabled'] === true) {
+
             // Load plugins from 'plugins' folder
-            $this->app['plugins'] = $this->app['plugin_loader']->load_dir();
+            $file_list    = $this->app['plugin_loader']->listContents();
+            $plugin_files = array_filter($file_list, function ($file) {
+                return preg_match('#^([A-Z]+\w+)Plugin.php$#', $file['path']) === 1
+                    ? TRUE
+                    : FALSE;
+            });
+
+            foreach ($plugin_files as $plugin_file) {
+                $plugins[$plugin_file['filename']] = $this->app['plugin_loader']->getAdapter()->read($plugin_file['basename']);
+            }
+
+            $this->app['plugins'] = $plugins;
         }
     }
 
@@ -190,30 +214,31 @@ class Zepto {
      */
     protected function setup_router()
     {
-        // Get local references
+        // Only because you can't use $this->app in the callback
         $app       = $this->app;
-        $router    = $app['router'];
+        $file_list = $app['content_loader']->listContents('/', true);
 
-        $file_list = $app['content_loader']->get_folder_contents();
+        $files     = array_filter($file_list, function ($file) {
+            return isset($file['extension']) && $file['extension'] === 'md'
+                ? TRUE
+                : FALSE;
+        });
 
         // Add each as a route
-        foreach ($file_list as $file) {
+        foreach ($files as $file) {
 
             // Get filename without extension
-            $exploded_file_name = explode('.', $file);
-            $file_name          = $exploded_file_name[0];
+            // $exploded_file_name = explode('.', $file);
+            $file_name = $file['dirname'] . '/' . $file['filename'];
 
-            $route = preg_match('/index$/', $file_name) === 1
-                ? '/' . str_replace('index', '', $file_name)
-                : '/' . $file_name;
+            $route = '/' . trim(str_replace('/index', '/', $file_name), '/');
 
-            $router->get($route, function() use ($app, $file) {
+            $this->app['router']->get($route, function() use ($app, $file) {
 
                 // Load content now
                 // @todo This is temporary until some sort of Page-based abstraction
                 // is implemented. Its horrible, but fuck you
-                $content_array = $app['content_loader']->load($file);
-                $content       = $content_array[$file];
+                $loaded_file = $app['content_loader']->getAdapter()->read($file['basename']);
 
                 // Set Twig options
                 $twig_vars = array(
@@ -226,11 +251,11 @@ class Zepto {
 
                 // Merge Twig options and content into one array
                 // @todo Change $app['nav'], and make a better way to inject content into Twig
-                $options = array_merge($twig_vars, $content, $app['nav']);
+                $options = array_merge($twig_vars, $loaded_file, $app['nav']);
 
                 // Get template name from file, if not set, then use default
-                $template_name = array_key_exists('template', $content['meta']) === true
-                    ? $content['meta']['template']
+                $template_name = array_key_exists('template', $loaded_file['meta']) === true
+                    ? $loaded_file['meta']['template']
                     : $app['settings']['zepto.default_template'];
 
                 // Render template with Twig

@@ -1,29 +1,21 @@
 <?php
 
-namespace Zepto\FileLoader;
+namespace Zepto\Adapter;
 
 /**
- * MarkdownLoader
+ * Markdown
  *
  * @package    Zepto
- * @subpackage FileLoader
+ * @subpackage Adapter
  * @author     Hassan Khan <contact@hassankhan.me>
  * @link       https://github.com/hassankhan/Zepto
  * @license    MIT
- * @since      0.2
- * @deprecated Use \Zepto\FileLoader\PageLoader instead
+ * @since      0.7
  */
-class MarkdownLoader extends \Zepto\FileLoader {
-
+class Markdown extends \League\Flysystem\Adapter\Local
+{
     /**
-     * An object which parses Markdown to HTML
-     *
-     * @var \Michelf\MarkdownInterface
-     */
-    protected $parser;
-
-    /**
-     * Class constructor. Sets the base path, but also the Markdown parser
+     * Sets base path and parser object
      *
      * @param string                     $base_path
      * @param \Michelf\MarkdownInterface $parser
@@ -32,18 +24,6 @@ class MarkdownLoader extends \Zepto\FileLoader {
     {
         parent::__construct($base_path);
         $this->parser = $parser;
-    }
-
-    /**
-     * Basically does the same job as the superclass, except this time we run
-     * it through a post_process() method to work some magic on it
-     *
-     * @param  string $file_path
-     * @return array
-     */
-    public function load($file_path)
-    {
-        return $this->post_process(parent::load($file_path));
     }
 
     /**
@@ -57,26 +37,30 @@ class MarkdownLoader extends \Zepto\FileLoader {
     }
 
     /**
+     * Reads a file
+     *
+     * @param  string $path
+     * @return array
+     * @throws ErrorException If an invalid path is specified
+     */
+    public function read($path)
+    {
+        return $this->post_process(parent::read($path));
+    }
+
+    /**
      * Where the magic happens, ladies and gentlemen. An array with the keys set to the name of
      * the file and the values set to the processed Markdown text
      *
      * @return array
-     * @codeCoverageIgnore
      */
-    protected function post_process($content)
+    protected function post_process($file)
     {
-        // Create array to store processed files
-        $processed_files = array();
-
-        // Loop through files and process each one, adding them to the array
-        foreach ($content as $file_name => $file) {
-            $processed_files[$file_name] = array(
-                'meta'    => $this->parse_meta($file),
-                'content' => $this->parse_content($file)
-            );
-        }
-
-        return $processed_files;
+        return array(
+            'meta'     => $this->parse_meta($file['contents']),
+            'contents' => $this->parse_content($file['contents']),
+            'path'     => $file['path']
+        );
     }
 
     /**
