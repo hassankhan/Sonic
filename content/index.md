@@ -53,7 +53,7 @@ You'll have the following variables available to you in every template:
         {{ meta.date }}
         {{ meta.date_formatted }}
         {{ meta.robots }}
-    {{ content }} - The content of the current page (after it has been processed through Markdown)
+    {{ contents }} - The contents of the current page (after it has been processed through Markdown)
     {{ nav }} - Returns a HTML-formatted representation of the content folder, if you're using the ``NavGenPlugin``
 
 You will also have access to the following helper functions:
