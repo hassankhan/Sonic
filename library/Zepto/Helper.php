@@ -73,6 +73,7 @@ class Helper
      *
      * @param  array   $config
      * @return boolean
+     * @throws InvalidArgumentException If a setting is invalid
      * @static
      */
     public static function validate_config($config)

@@ -171,7 +171,6 @@ class Router
     /**
      * Adds a new URL routing rule to the routing table, after converting any of
      * our special tokens into proper regular expressions.
-     * @todo Make the method check to see if the http method exists or not
      *
      * @param  Route  $route
      * @param  string $http_method

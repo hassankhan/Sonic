@@ -63,7 +63,6 @@ $input = $zep->get_inputs();
 // If ``zep init`` is run
 if ($zep->get("option") === "init") {
     // Check to see if current directory has 'content', 'plugins' folders
-    // @todo Doesn't seem like the best way of doing this
     try {
         check_current_directory();
     } catch (Exception $e) {

@@ -105,10 +105,7 @@ class Zepto
         if (empty($settings) === TRUE) {
             $settings = $this->app['helper']->default_config();
         }
-        else {
-            // @todo Wrap in try-catch
-            $this->app['helper']->validate_config($settings);
-        }
+        $this->app['helper']->validate_config($settings);
 
         // Set this particular setting now
         $app['plugins_enabled'] = $settings['zepto.plugins_enabled'];
