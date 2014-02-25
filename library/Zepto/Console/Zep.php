@@ -34,8 +34,20 @@ class Zep extends \Zepto\Console
      */
     protected $filesystem;
 
+    /**
+     * If the current directory is a Zepto-compatible directory, then it is TRUE otherwise FALSE
+     *
+     * @var bool
+     */
     protected $is_zepto_dir;
 
+    /**
+     * Constructs the Zep console object
+     *
+     * @param string $inputs
+     * @param string $path
+     * @codeCoverageIgnore
+     */
     public function __construct($inputs, $path)
     {
         $this->filesystem   = new \League\Flysystem\Filesystem(new \League\Flysystem\Adapter\Local($path));
@@ -44,6 +56,11 @@ class Zep extends \Zepto\Console
         parent::__construct($inputs);
     }
 
+    /**
+     * Handles the ``init`` option
+     *
+     * @return [type] [description]
+     */
     public function init()
     {
         // Use Flysystem
@@ -67,6 +84,13 @@ class Zep extends \Zepto\Console
         }
     }
 
+    /**
+     * Handles the ``new -p`` option
+     *
+     * @param  string $name
+     * @return
+     * @throws Exception If plugins directory is not found
+     */
     public function new_plugin($name)
     {
         if ($this->is_zepto_dir === FALSE) {
@@ -123,6 +147,13 @@ PLUGIN;
         $this->out("File created as " . $path);
     }
 
+    /**
+     * Handles the ``new -c`` option
+     *
+     * @param  string $name
+     * @return
+     * @throws Exception If content directory is not found
+     */
     public function new_content($name)
     {
         if ($this->is_zepto_dir === FALSE) {
@@ -157,8 +188,9 @@ MARKDOWN;
     }
 
     /**
-     * [check_current_directory description]
-     * @return [type]       [description]
+     * Checks to see if current directory has a plugins and content folder
+     *
+     * @return bool
      */
     public function check_current_directory()
     {
