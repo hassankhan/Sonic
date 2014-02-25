@@ -17,7 +17,8 @@ class Plugin extends \League\Flysystem\Adapter\Local
     /**
      * Sets base path and parser object
      *
-     * @param string                   $base_path
+     * @param string $base_path
+     * @codeCoverageIgnore
      */
     public function __construct($base_path)
     {
@@ -26,17 +27,16 @@ class Plugin extends \League\Flysystem\Adapter\Local
 
     /**
      * Reads a file
-     * @param  string      $path
-     * @return object|bool
+     *
+     * @param  string $path
+     * @return Zepto\PluginInterface
+     * @throws ErrorException           If an invalid path is specified
+     * @throws UnexpectedValueException If plugin does not implement Zepto\PluginInterface
      */
     public function read($path)
     {
         // Try and read file
         $file = parent::read($path);
-
-        if ($file === FALSE) {
-            return FALSE;
-        }
 
         // Include plugin file
         include_once($this->prefix($path));
@@ -47,7 +47,7 @@ class Plugin extends \League\Flysystem\Adapter\Local
         // Check class implements correct interface
         $interfaces = class_implements($plugin_name);
         if (isset($interfaces['Zepto\PluginInterface']) === FALSE) {
-            return FALSE;
+            throw new \UnexpectedValueException('Plugin does not implement Zepto\PluginInterface');
         }
 
         return new $plugin_name;
