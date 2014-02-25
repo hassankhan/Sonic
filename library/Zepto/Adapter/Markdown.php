@@ -17,8 +17,8 @@ class Markdown extends \League\Flysystem\Adapter\Local
     /**
      * Sets base path and parser object
      *
-     * @param string                   $base_path
-     * @param MichelfMarkdownInterface $parser
+     * @param string                     $base_path
+     * @param \Michelf\MarkdownInterface $parser
      */
     public function __construct($base_path, \Michelf\MarkdownInterface $parser)
     {
@@ -27,14 +27,25 @@ class Markdown extends \League\Flysystem\Adapter\Local
     }
 
     /**
+     * Returns the parser object
+     *
+     * @return \Michelf\MarkdownInterface
+     */
+    public function parser()
+    {
+        return $this->parser;
+    }
+
+    /**
      * Reads a file
-     * @param  string     $path
-     * @return array|bool
+     *
+     * @param  string $path
+     * @return array
+     * @throws ErrorException If an invalid path is specified
      */
     public function read($path)
     {
-        $file = parent::read($path);
-        return $file !== FALSE ? $this->post_process($file) : FALSE;
+        return $this->post_process(parent::read($path));
     }
 
     /**
@@ -42,14 +53,12 @@ class Markdown extends \League\Flysystem\Adapter\Local
      * the file and the values set to the processed Markdown text
      *
      * @return array
-     * @codeCoverageIgnore
      */
     protected function post_process($file)
     {
-        $contents = $file['contents'];
         return array(
-            'meta'     => $this->parse_meta($contents),
-            'contents' => $this->parse_content($contents),
+            'meta'     => $this->parse_meta($file['contents']),
+            'contents' => $this->parse_content($file['contents']),
             'path'     => $file['path']
         );
     }
