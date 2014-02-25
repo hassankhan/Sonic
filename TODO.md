@@ -11,12 +11,13 @@ To-Do
 - Hooks
 - Extending Zepto
 
-## Filesystem
-- Use [Flysystem](http://flysystem.thephpleague.com/)
-
 ## Settings
 - Make $settings array one-dimensional
 - Add exclude filters for plugins/content
+
+## Plugin
+- Update NavGenPlugin to include subfolders
+- Think of a better way to inject variables into route callback
 
 ## Application
 - [Add support for environments ``[production|dev]``](https://github.com/hassankhan/Zepto/issues/4)
