@@ -32,6 +32,9 @@ class Helper
     {
         // Get app container
         $this->app = $app;
+
+        // Convert errors to exceptions
+        set_error_handler(array('\Zepto\Helper', 'handleErrors'));
     }
 
 
@@ -114,6 +117,24 @@ class Helper
             throw new \InvalidArgumentException($message);
         }
 
+    }
+
+    /**
+     * Convert errors into ErrorException objects
+     *
+     * @param  int            $err_no
+     * @param  string         $err_str
+     * @param  string         $err_file
+     * @param  int            $err_line
+     * @return bool
+     * @throws \ErrorException
+     */
+    public static function handleErrors($err_no, $err_str = '', $err_file = '', $err_line = '')
+    {
+        if (!($err_no & error_reporting())) {
+            return;
+        }
+        throw new \ErrorException($err_str, $err_no, 0, $err_file, $err_line);
     }
 
     /**
