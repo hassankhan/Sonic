@@ -1,6 +1,39 @@
 Changelog
 =========
 
+#### 2014.02.20
+- [More updates for README.md](http://github.com/hassankhan/Zepto/commit/32a7e2139c16d35356eba379dd10efe01774942f)
+- [[ci-skip] Updated README.md](http://github.com/hassankhan/Zepto/commit/4361d1f9c2a3a31e5c805848a30503200096f62b)
+- [Got rid of branch aliases in Composer, and set minimum stability to stable](http://github.com/hassankhan/Zepto/commit/ceb85b107dcb10f0fbdb30a5f93da117907ef672)
+- [Fixed docblock for ``Zepto\FileLoader\MarkdownLoader``](http://github.com/hassankhan/Zepto/commit/4d61dacb6bf4f9d66ca335709541d8019873314e)
+- [Updated TODO.md](http://github.com/hassankhan/Zepto/commit/45057ebdf04f6181afb4448304e35d5e65c9cece)
+- [Updated index.md](http://github.com/hassankhan/Zepto/commit/f87796dd26e641c0b25ab3641d1069371b36ee06)
+- [Updated composer.json, trying to make dev-develop show up as unstable](http://github.com/hassankhan/Zepto/commit/61aa831bf4093accd9132079f5cd0d3fec14262c)
+
+#### 2014.02.20 - feature/move-route-execution-from-router-to-route
+- [Merge branch 'feature/move-route-execution-from-router-to-route' into develop](http://github.com/hassankhan/Zepto/commit/20d9643e4592abd67857f7f0b791db9e44b5034a)
+- [General cleanup, spit and polish for ``Zepto\Router``](http://github.com/hassankhan/Zepto/commit/7407b6f2303727a3527d271677cdea64c66989f6)
+- [Fixed test class for ``Zepto\Router``](http://github.com/hassankhan/Zepto/commit/d499e642b7c994c9dadc7eff6d84609de9ff835b)
+- [Added a new method ``Zepto\Router::redirect()``, updated test class](http://github.com/hassankhan/Zepto/commit/c2e9c76dc83c3ace7fc88ac5e929b59e9d2ea225)
+
+#### 2014.02.19 - feature/move-route-execution-from-router-to-route
+- [Cleaned up ``Zepto\Router``](http://github.com/hassankhan/Zepto/commit/497058e60b15c51c40eca1f10a37b702e168b081)
+- [Cleaned up ``Zepto\Route\ErrorRoute``](http://github.com/hassankhan/Zepto/commit/054a2ca12aeca4c4826c1aebd918632750d80dd0)
+
+#### 2014.02.17 - feature/move-route-execution-from-router-to-route
+- [Exception handling almost completely contained within ``Zepto\Router``, removed extraneous code from ``Zepto\Zepto`` and updated test classes.](http://github.com/hassankhan/Zepto/commit/0e1cee513efcec1b656f6169d55fee70d65a0786)
+- [Added new object ``Zepto\Route\ErrorRoute``](http://github.com/hassankhan/Zepto/commit/7c9b982419325defa3a4ba80fe6311d118e1b988)
+- [That's the basic thing done. Now need to change error handlers too.](http://github.com/hassankhan/Zepto/commit/2aab5209dd390200d667881a1972b9536aab09d4)
+
+#### 2014.02.17 - feature/flatten-config-array
+- [Merge branch 'feature/flatten-config-array' into develop](http://github.com/hassankhan/Zepto/commit/a86b25521234a1eac9a97873e3a3508ff876db5b)
+- [Fix for plugins as well](http://github.com/hassankhan/Zepto/commit/a0f9699fd0c7ccd9bbc32805e7c7792bc3438ca9)
+- [Flattened the settings array pretty much everywhere I can think of, also updated the tests to reflect that](http://github.com/hassankhan/Zepto/commit/c612b903c748367b76a98797299d39e512ed7d03)
+- [Merge branch 'master' into develop](http://github.com/hassankhan/Zepto/commit/06b28feecf92d4e173b456dc7ae9a653dc1fae31)
+
+#### 2014.02.17 - v0.6
+- [Added setting for ``NavGenPlugin`` to config.php](http://github.com/hassankhan/Zepto/commit/1e8caa6fd184ee27d2d4ea8f10cb1f9a2034afc9)
+
 #### 2014.02.16 - feature/refactor-console
 - [Merge branch 'feature/refactor-console' into develop](http://github.com/hassankhan/Zepto/commit/290d8e792880adaee672918d203a278ad7526781)
 - [Also realised ``zep``'s plugin template was out-of-date.](http://github.com/hassankhan/Zepto/commit/713871ff5fe8a96a635a6fe6cc120693c3a8936b)
@@ -10,6 +43,8 @@ Changelog
 - [Lost a lot of code coverage, but that's good because it'll force me to write better tests](http://github.com/hassankhan/Zepto/commit/eb0250bc9557a6c8e6da97dd016811e77b1af81e)
 
 #### 2014.02.16
+- [Updated ``Zepto\Zepto`` version to 0.7.](http://github.com/hassankhan/Zepto/commit/272ab0969294df0604d9fbb8e72e219c441a63b1)
+- [Updated CHANGELOG.md, composer.json. Brace yourselves, Zepto 0.6 is coming.](http://github.com/hassankhan/Zepto/commit/af10bb48accad9d69c68a3b0ffc12cc5f92e894d)
 - [Forgot to update ``zep``](http://github.com/hassankhan/Zepto/commit/a0eb60f485bb219028c8087f4e11b5600297b963)
 - [Cleaned up ``Zepto\Zepto::run_hooks()``](http://github.com/hassankhan/Zepto/commit/d2ccec85caea8be083616605f51e7ed6da51314a)
 - [Nothing major, just docblock tag updates](http://github.com/hassankhan/Zepto/commit/9eca741e528f50388913620310e0667a85572f52)
