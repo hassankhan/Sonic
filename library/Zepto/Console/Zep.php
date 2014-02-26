@@ -35,13 +35,6 @@ class Zep extends \Zepto\Console
     protected $filesystem;
 
     /**
-     * If the current directory is a Zepto-compatible directory, then it is TRUE otherwise FALSE
-     *
-     * @var bool
-     */
-    protected $is_zepto_dir;
-
-    /**
      * Constructs the Zep console object
      *
      * @param string $inputs
@@ -59,29 +52,22 @@ class Zep extends \Zepto\Console
     /**
      * Handles the ``init`` option
      *
-     * @return [type] [description]
+     * @return
      */
     public function init()
     {
-        // Use Flysystem
-        if ($this->is_zepto_dir === TRUE) {
-            throw new Exception("You seem to have already run zep init. Stop wasting my time.");
-        }
+        $this->out("Creating folders in current directory...");
 
-        if ($this->confirm("Are you sure you want to continue with folder creation?") === TRUE) {
-            $this->out("Creating folders in current directory...");
+        $this->filesystem->createDir('plugins');
+        $this->filesystem->createDir('content');
+        $this->filesystem->createDir('templates');
 
-            $this->filesystem->createDir('plugins');
-            $this->filesystem->createDir('content');
-            $this->filesystem->createDir('templates');
+        // $lib_path = realpath(__DIR__ . "/..");
+        // file_put_contents($cwd . "/index.php",  file_get_contents($lib_path . "/index.php"));
+        // file_put_contents($cwd . "/.htaccess",  file_get_contents($lib_path . "/.htaccess"));
+        // file_put_contents($cwd . "/config.php", file_get_contents($lib_path . "/config.php"));
 
-            // $lib_path = realpath(__DIR__ . "/..");
-            // file_put_contents($cwd . "/index.php",  file_get_contents($lib_path . "/index.php"));
-            // file_put_contents($cwd . "/.htaccess",  file_get_contents($lib_path . "/.htaccess"));
-            // file_put_contents($cwd . "/config.php", file_get_contents($lib_path . "/config.php"));
-
-            $this->out("All done, enjoy" . PHP_EOL);
-        }
+        $this->out("All done, enjoy" . PHP_EOL);
     }
 
     /**
@@ -89,7 +75,6 @@ class Zep extends \Zepto\Console
      *
      * @param  string $name
      * @return
-     * @throws Exception If plugins directory is not found
      */
     public function new_plugin($name)
     {
@@ -148,9 +133,8 @@ PLUGIN;
      *
      * @param  string $name
      * @return
-     * @throws Exception If content directory is not found
      */
-    public function new_content($name, $title, $desc, $date)
+    public function new_content($name, $title = '', $desc = '', $date = '')
     {
         $content_template = <<<MARKDOWN
 /*

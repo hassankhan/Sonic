@@ -6,10 +6,6 @@ namespace Zepto\Console;
  */
 class ZepTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Zep
-     */
-    protected $object;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -17,7 +13,11 @@ class ZepTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new Zep;
+        $plugin_folder  = ROOT_DIR . 'tests/zep-test/plugins/';
+        $content_folder = ROOT_DIR . 'tests/zep-test/content/';
+
+        mkdir($plugin_folder);
+        mkdir($content_folder);
     }
 
     /**
@@ -26,53 +26,124 @@ class ZepTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
+        $plugin_folder    = ROOT_DIR . 'tests/zep-test/plugins/';
+        $content_folder   = ROOT_DIR . 'tests/zep-test/content/';
+        $templates_folder = ROOT_DIR . 'tests/zep-test/templates/';
+        $plugin           = $plugin_folder . 'TestPlugin.php';
+        $content          = $content_folder . 'test.md';
+
+        if (file_exists($plugin)) {
+            unlink($plugin);
+        }
+        if (file_exists($content)) {
+            unlink($content);
+        }
+        if (file_exists($templates_folder)) {
+            rmdir($templates_folder);
+        }
+
+        rmdir($plugin_folder);
+        rmdir($content_folder);
     }
 
     /**
-     * @covers Zepto\Console\Zep::init
-     * @todo   Implement testInit().
+     * @covers Zepto\Console\Zep::init()
      */
     public function testInit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
+        $plugin_folder    = ROOT_DIR . 'tests/zep-test/plugins/';
+        $content_folder   = ROOT_DIR . 'tests/zep-test/content/';
+        rmdir($plugin_folder);
+        rmdir($content_folder);
+
+        $zep = new Zep(
+            array(
+                'zep', 'init'
+            ),
+            ROOT_DIR . 'tests/zep-test/'
         );
+        $zep->init();
+
+        $this->expectOutputString(
+            PHP_EOL
+            . 'Creating folders in current directory...'
+            . PHP_EOL . PHP_EOL
+            . 'All done, enjoy' . PHP_EOL . PHP_EOL
+        );
+
+        $this->assertFileExists($plugin_folder);
+        $this->assertFileExists($content_folder);
     }
 
     /**
-     * @covers Zepto\Console\Zep::new_plugin
-     * @todo   Implement testNew_plugin().
+     * @covers Zepto\Console\Zep::new_plugin()
      */
-    public function testNew_plugin()
+    public function testNewPlugin()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
+        $zep = new Zep(
+            array(
+                'zep', 'new', '-p'
+            ),
+            ROOT_DIR . 'tests/zep-test/'
         );
+
+        $zep->new_plugin('Test');
+        $this->expectOutputString(PHP_EOL . 'File created as plugins/TestPlugin.php' . PHP_EOL);
+        $this->assertFileExists(ROOT_DIR . 'tests/zep-test/plugins/TestPlugin.php');
     }
 
     /**
-     * @covers Zepto\Console\Zep::new_content
-     * @todo   Implement testNew_content().
+     * @covers Zepto\Console\Zep::new_content()
      */
-    public function testNew_content()
+    public function testNewContent()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
+        $zep = new Zep(
+            array(
+              'zep',
+              'new',
+              '-c'
+            ),
+            ROOT_DIR . 'tests/zep-test/'
         );
+        $zep->new_content('Test');
+        $this->expectOutputString(PHP_EOL . 'File created as content/test.md' . PHP_EOL);
+        $this->assertFileExists(ROOT_DIR . 'tests/zep-test/content/Test.md');
     }
 
     /**
-     * @covers Zepto\Console\Zep::check_current_directory
-     * @todo   Implement testCheck_current_directory().
+     * @covers Zepto\Console\Zep::check_current_directory()
      */
-    public function testCheck_current_directory()
+    public function testCheckCurrentDirectory()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
+        $zep = new Zep(
+            array(
+              'zep',
+              'new',
+              '-c'
+            ),
+            ROOT_DIR . 'tests/zep-test/'
         );
+
+        $actual = $zep->check_current_directory();
+        $this->assertTrue($actual);
     }
+
+    /**
+     * @covers Zepto\Console\Zep::check_current_directory()
+     */
+    public function testCheckCurrentDirectoryFailure()
+    {
+        $zep = new Zep(
+            array(
+              'zep',
+              'new',
+              '-c'
+            ),
+            ROOT_DIR . 'tests/'
+        );
+
+        $actual = $zep->check_current_directory();
+        $this->assertFalse($actual);
+    }
+
 }

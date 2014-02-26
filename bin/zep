@@ -25,7 +25,17 @@ $input = $zep->get_inputs();
 
 // If ``zep init`` is run
 if ($zep->get("option") === "init") {
-    $zep->init();
+    try {
+        if ($zep->check_current_directory === TRUE) {
+            throw new \Exception("You seem to have already run zep init. Stop wasting my time.");
+        }
+        if ($this->confirm("Are you sure you want to continue with folder creation?") === TRUE) {
+            $zep->init();
+        }
+
+    } catch (\Exception $e) {
+
+    }
 }
 // If ``zep new`` is run
 elseif ($zep->get("option") === "new") {
