@@ -107,7 +107,7 @@ class ZepTest extends \PHPUnit_Framework_TestCase
         );
         $zep->new_content('Test');
         $this->expectOutputString(PHP_EOL . 'File created as content/test.md' . PHP_EOL);
-        $this->assertFileExists(ROOT_DIR . 'tests/zep-test/content/Test.md');
+        $this->assertFileExists(ROOT_DIR . 'tests/zep-test/content/test.md');
     }
 
     /**
