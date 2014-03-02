@@ -77,6 +77,32 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Zepto\Zepto::__construct()
      */
+    public function testRequestAdded()
+    {
+        $zepto = new Zepto();
+        $this->assertArrayHasKey('request', $zepto->app);
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Request',
+            $zepto->app['request']
+        );
+    }
+
+    /**
+     * @covers Zepto\Zepto::__construct()
+     */
+    public function testResponseAdded()
+    {
+        $zepto = new Zepto();
+        $this->assertArrayHasKey('response', $zepto->app);
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $zepto->app['response']
+        );
+    }
+
+    /**
+     * @covers Zepto\Zepto::__construct()
+     */
     public function testRouterAdded()
     {
         $zepto = new Zepto();
@@ -89,38 +115,49 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::__construct()
-     * @dataProvider providerConfigWithPluginsEnabled
      */
-    public function testPluginLoaderAdded($config)
+    public function testFilesystemAdded()
     {
-        $zepto = new Zepto($config);
-        $this->assertArrayHasKey('plugin_loader', $zepto->app);
+        $zepto = new Zepto();
+        $this->assertArrayHasKey('filesystem', $zepto->app);
         $this->assertInstanceOf(
             'League\Flysystem\Filesystem',
-            $zepto->app['plugin_loader']
+            $zepto->app['filesystem']
         );
-        $this->assertInstanceOf(
-            'Zepto\Adapter\Plugin',
-            $zepto->app['plugin_loader']->getAdapter()
-        );
+
+        // Add tests to check that plugins are also loaded
     }
 
     /**
      * @covers Zepto\Zepto::__construct()
      */
-    public function testContentLoaderAdded()
+    public function testHelperAdded()
     {
         $zepto = new Zepto();
-        $this->assertArrayHasKey('content_loader', $zepto->app);
+        $this->assertArrayHasKey('helper', $zepto->app);
         $this->assertInstanceOf(
-            'League\Flysystem\Filesystem',
-            $zepto->app['content_loader']
-        );
-        $this->assertInstanceOf(
-            'Zepto\Adapter\Markdown',
-            $zepto->app['content_loader']->getAdapter()
+            'Zepto\Helper',
+            $zepto->app['helper']
         );
     }
+
+    /**
+     * @covers Zepto\Zepto::__construct()
+     * @dataProvider providerConfigWithPluginsEnabled
+     */
+    // public function testPluginLoaderAdded($config)
+    // {
+    //     $zepto = new Zepto($config);
+    //     $this->assertArrayHasKey('plugin_loader', $zepto->app);
+    //     $this->assertInstanceOf(
+    //         'League\Flysystem\Filesystem',
+    //         $zepto->app['plugin_loader']
+    //     );
+    //     $this->assertInstanceOf(
+    //         'Zepto\Adapter\Plugin',
+    //         $zepto->app['plugin_loader']->getAdapter()
+    //     );
+    // }
 
     /**
      * @covers Zepto\Zepto::__construct()
@@ -133,6 +170,8 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
             '\Twig_Environment',
             $zepto->app['twig']
         );
+
+        // Add check to see if extension is loaded in?
     }
 
     /**

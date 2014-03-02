@@ -4,6 +4,7 @@ namespace Zepto;
 
 use Pimple;
 use League\Flysystem\Filesystem;
+use League\Flysystem\Adapter\Local;
 use Michelf\MarkdownExtra;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,21 +72,27 @@ class Zepto
             return new Router($app['request'], $app['response']);
         };
 
-        $app['content_adapter'] = function ($app) {
-            return new Adapter\Markdown(
-                $app['ROOT_DIR'] . $app['settings']['zepto.content_dir'],
-                new \Michelf\MarkdownExtra()
-            );
+        $app['content_plugin'] = function ($app) {
+            $plugin = new Flysystem\Plugin\Markdown();
+            $plugin->setParser(new \Michelf\MarkdownExtra);
+            return $plugin;
+        };
+
+        $app['plugin_plugin'] = function ($app) {
+            return new Flysystem\Plugin\Plugin();
         };
 
         $app['plugin_adapter'] = function ($app) {
             return new Adapter\Plugin($app['ROOT_DIR'] . $app['settings']['zepto.plugins_dir']);
         };
 
-        $app['content_loader'] = function ($app) {
-            return new \League\Flysystem\Filesystem(
-                $app['content_adapter']
+        $app['filesystem'] = function ($app) {
+            $filesystem = new \League\Flysystem\Filesystem(
+                new \League\Flysystem\Adapter\Local($app['ROOT_DIR'])
             );
+            $filesystem->addPlugin($app['content_plugin']);
+            $filesystem->addPlugin($app['plugin_plugin']);
+            return $filesystem;
         };
 
         $app['helper'] = function ($app) {
@@ -113,12 +120,6 @@ class Zepto
         // So if plugins ARE indeed enabled, initialise the plugin loader
         // and load the fuckers
         if ($app['plugins_enabled'] === true) {
-            $app['plugin_loader'] = function ($app) {
-                return new \League\Flysystem\Filesystem(
-                    $app['plugin_adapter']
-                );
-            };
-
             $this->load_plugins();
             $this->run_hooks('after_plugins_load');
         }
@@ -186,15 +187,16 @@ class Zepto
         if ($this->app['plugins_enabled'] === true) {
 
             // Load plugins from 'plugins' folder
-            $file_list    = $this->app['plugin_loader']->listContents();
+            $file_list    = $this->app['filesystem']->listContents($this->app['settings']['zepto.plugins_dir']);
+
             $plugin_files = array_filter($file_list, function ($file) {
-                return preg_match('#^([A-Z]+\w+)Plugin.php$#', $file['path']) === 1
+                return preg_match('#^([A-Z]+\w+)Plugin.php$#', $file['basename']) === 1
                     ? TRUE
                     : FALSE;
             });
 
             foreach ($plugin_files as $plugin_file) {
-                $plugins[$plugin_file['filename']] = $this->app['plugin_loader']->getAdapter()->read($plugin_file['basename']);
+                $plugins[$plugin_file['filename']] = $this->app['filesystem']->include($plugin_file['path']);
             }
 
             $this->app['plugins'] = $plugins;
@@ -212,7 +214,7 @@ class Zepto
     {
         // Only because you can't use $this->app in the callback
         $app       = $this->app;
-        $file_list = $app['content_loader']->listContents('/', true);
+        $file_list = $app['filesystem']->listContents($app['settings']['zepto.content_dir'], true);
 
         $files     = array_filter($file_list, function ($file) {
             return isset($file['extension']) && $file['extension'] === 'md'
@@ -224,7 +226,11 @@ class Zepto
         foreach ($files as $file) {
 
             // Get filename without extension
-            $file_name = $file['dirname'] . '/' . $file['filename'];
+            $file_name = str_replace(
+                $app['settings']['zepto.content_dir'],
+                '',
+                $file['dirname'] . '/' . $file['filename']
+            );
 
             $route = '/' . trim(str_replace('/index', '/', $file_name), '/');
 
@@ -233,7 +239,7 @@ class Zepto
                 // Load content now
                 // @todo This is temporary until some sort of Page-based abstraction
                 // is implemented. Its horrible, but fuck you
-                $loaded_file = $app['content_loader']->getAdapter()->read($file['basename']);
+                $loaded_file = $app['filesystem']->parse($file['path']);
 
                 // Set Twig options
                 $twig_vars = array(

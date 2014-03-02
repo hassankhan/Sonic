@@ -34,9 +34,60 @@ class Helper
         $this->app = $app;
 
         // Convert errors to exceptions
-        set_error_handler(array('\Zepto\Helper', 'handleErrors'));
+        set_error_handler(array('\Zepto\Helper', 'handle_errors'));
     }
 
+    /**
+     * Returns a fully-qualified URL for a given filename in the 'content' directory
+     *
+     * @param  string $file_name
+     * @return string|null
+     */
+    public function url_for($file_name)
+    {
+        // Check if file exists
+        try {
+
+            // Try to read file, if none exists then return null
+            $this->app['filesystem']->read($this->app['settings']['zepto.content_dir'] . '/' . $file_name);
+
+            // Create URL and return
+            $clean_file_name = str_replace(
+                array_merge(array('index'), $this->dot_extensions()),
+                '',
+                $file_name
+            );
+
+            return trim($this->app['settings']['site.site_root'] . $clean_file_name, '/') . '/';
+        }
+        catch (\Exception $e) {
+            $this->app['router']->error($e);
+        }
+        return null;
+    }
+
+    /**
+     * Returns a HTML <a> for a given filename in the 'content' directory
+     *
+     * @param  string      $file_name
+     * @return string|null
+     */
+    public function link_for($file_name)
+    {
+        try {
+            // Check if file exists
+            $content = $this->app['filesystem']->parse($this->app['settings']['zepto.content_dir'] . '/' . $file_name);
+
+            // Get file title and URL and return
+            $title   = $content['meta']['title'];
+            $url     = $this->url_for($file_name);
+            return sprintf('<a href="%s"> ' . $title . ' </a>', $url);
+        }
+        catch (\Exception $e) {
+            $this->app['router']->error($e);
+        }
+        return null;
+    }
 
     /**
      * Returns a standard configuration for Zepto
@@ -130,7 +181,7 @@ class Helper
      * @return bool
      * @throws \ErrorException
      */
-    public static function handleErrors($err_no, $err_str = '', $err_file = '', $err_line = '')
+    public static function handle_errors($err_no, $err_str = '', $err_file = '', $err_line = '')
     {
         if (!($err_no & error_reporting())) {
             return;
@@ -139,57 +190,10 @@ class Helper
     }
 
     /**
-     * Returns a fully-qualified URL for a given filename in the 'content' directory
+     * Adds a '.' to each extension given
      *
-     * @param  string $file_name
-     * @return string|null
+     * @return array
      */
-    public function url_for($file_name)
-    {
-        // Check if file exists
-        try {
-
-            // Try to read file, if none exists then return null
-            $this->app['content_loader']->read($file_name);
-
-            // Create URL and return
-            $clean_file_name = str_replace(
-                array_merge(array('index'), $this->dot_extensions()),
-                '',
-                $file_name
-            );
-
-            return trim($this->app['settings']['site.site_root'] . $clean_file_name, '/') . '/';
-        }
-        catch (\Exception $e) {
-            $this->app['router']->error($e);
-        }
-        return null;
-    }
-
-    /**
-     * Returns a HTML <a> for a given filename in the 'content' directory
-     *
-     * @param  string      $file_name
-     * @return string|null
-     */
-    public function link_for($file_name)
-    {
-        try {
-            // Check if file exists
-            $content = $this->app['content_loader']->getAdapter()->read($file_name);
-
-            // Get file title and URL and return
-            $title   = $content['meta']['title'];
-            $url     = $this->url_for($file_name);
-            return sprintf('<a href="%s"> ' . $title . ' </a>', $url);
-        }
-        catch (\Exception $e) {
-            $this->app['router']->error($e);
-        }
-        return null;
-    }
-
     private function dot_extensions()
     {
         $extensions = $this->app['settings']['zepto.content_ext'];
