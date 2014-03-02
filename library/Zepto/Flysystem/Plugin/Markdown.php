@@ -1,61 +1,75 @@
 <?php
 
-namespace Zepto\Adapter;
+namespace Zepto\Flysystem\Plugin;
+
+use Michelf\MarkdownExtra;
 
 /**
  * Markdown
  *
  * @package    Zepto
- * @subpackage Adapter
+ * @subpackage Flysystem
  * @author     Hassan Khan <contact@hassankhan.me>
  * @link       https://github.com/hassankhan/Zepto
  * @license    MIT
  * @since      0.7
  */
-class Markdown extends \League\Flysystem\Adapter\Local
+class Markdown implements \League\Flysystem\PluginInterface
 {
     /**
-     * Sets base path and parser object
+     * Filesystem object
      *
-     * @param string                     $base_path
-     * @param \Michelf\MarkdownInterface $parser
+     * @var \League\Flysystem\FilesystemInterface
      */
-    public function __construct($base_path, \Michelf\MarkdownInterface $parser)
+    protected $filesystem;
+
+    /**
+     * Markdown parser
+     * @var \Michelf\MarkdownInterface
+     */
+    protected $parser;
+
+    /**
+     * Sets the filesystem for this plugin
+     *
+     * @param LeagueFlysystemFilesystemInterface $filesystem
+     * @codeCoverageIgnore
+     */
+    public function setFilesystem(\League\Flysystem\FilesystemInterface $filesystem)
     {
-        parent::__construct($base_path);
+        $this->filesystem = $filesystem;
+    }
+
+    /**
+     * Sets the Markdown parser
+     *
+     * @param \Michelf\MarkdownInterface $parser
+     * @codeCoverageIgnore
+     */
+    public function setParser(\Michelf\MarkdownInterface $parser)
+    {
         $this->parser = $parser;
     }
 
     /**
-     * Returns the parser object
+     * Returns plugin's method name
      *
-     * @return \Michelf\MarkdownInterface
+     * @return string
      */
-    public function parser()
+    public function getMethod()
     {
-        return $this->parser;
+        return 'parse';
     }
 
     /**
-     * Reads a file
+     * Plugin handler
      *
      * @param  string $path
      * @return array
-     * @throws ErrorException If an invalid path is specified
      */
-    public function read($path)
+    public function handle($path = '')
     {
-        return $this->post_process(parent::read($path));
-    }
-
-    /**
-     * Where the magic happens, ladies and gentlemen. An array with the keys set to the name of
-     * the file and the values set to the processed Markdown text
-     *
-     * @return array
-     */
-    protected function post_process($file)
-    {
+        $file = $this->filesystem->getAdapter()->read($path);
         return array(
             'meta'     => $this->parse_meta($file['contents']),
             'contents' => $this->parse_content($file['contents']),
@@ -95,7 +109,7 @@ class Markdown extends \League\Flysystem\Adapter\Local
     protected function parse_content($file)
     {
         $content = preg_replace('#/\*.+?\*/#s', '', $file);
-        return $this->parser->defaultTransform($content);
+        return MarkdownExtra::defaultTransform($content);
     }
 
 }
