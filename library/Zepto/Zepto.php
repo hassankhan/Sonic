@@ -82,10 +82,6 @@ class Zepto
             return new Flysystem\Plugin\Plugin();
         };
 
-        $app['plugin_adapter'] = function ($app) {
-            return new Adapter\Plugin($app['ROOT_DIR'] . $app['settings']['zepto.plugins_dir']);
-        };
-
         $app['filesystem'] = function ($app) {
             $filesystem = new \League\Flysystem\Filesystem(
                 new \League\Flysystem\Adapter\Local($app['ROOT_DIR'])
