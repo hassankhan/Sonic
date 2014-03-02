@@ -45,7 +45,7 @@ class Zep extends \Zepto\Console
     {
         $this->filesystem   = new \League\Flysystem\Filesystem(new \League\Flysystem\Adapter\Local($path));
         $this->is_zepto_dir = $this->check_current_directory();
-        set_error_handler(array('\Zepto\Helper', 'handleErrors'));
+        set_error_handler(array('\Zepto\Helper', 'handle_errors'));
         parent::__construct($inputs);
     }
 

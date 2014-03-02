@@ -50,12 +50,12 @@ class NavGenPlugin implements \Zepto\PluginInterface {
 
     public function generate_html($app)
     {
-        $settings        = $app['settings'];
-        $content_loader  = $app['content_loader'];
+        $settings   = $app['settings'];
+        $filesystem = $app['filesystem'];
 
         // Opening ``<ul>`` tag and adding class name
-        $nav_html = sprintf('<ul class="%s">' . PHP_EOL, $settings['site.nav.class']);
-        $files    = $content_loader->listContents('', true);
+        $nav_html   = sprintf('<ul class="%s">' . PHP_EOL, $settings['site.nav.class']);
+        $files      = $filesystem->listContents($settings['zepto.content_dir'], true);
 
         $content_files = array_filter($files, function ($file) use ($settings) {
             return isset($file['extension']) === TRUE
