@@ -44,7 +44,7 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Zepto\Zepto::__construct()
      */
-    public function testConstructWithSettings()
+    public function testConstructWithCustomSettings()
     {
         $config = array(
             'zepto.environment'           => 'dev',
@@ -77,100 +77,103 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Zepto\Zepto::__construct()
      */
-    public function testRequestAdded()
+    public function testDependenciesAdded()
     {
         $zepto = new Zepto();
+
+        // Check for request
         $this->assertArrayHasKey('request', $zepto->app);
         $this->assertInstanceOf(
             'Symfony\Component\HttpFoundation\Request',
             $zepto->app['request']
         );
-    }
 
-    /**
-     * @covers Zepto\Zepto::__construct()
-     */
-    public function testResponseAdded()
-    {
-        $zepto = new Zepto();
+        // Check for response
         $this->assertArrayHasKey('response', $zepto->app);
         $this->assertInstanceOf(
             'Symfony\Component\HttpFoundation\Response',
             $zepto->app['response']
         );
-    }
 
-    /**
-     * @covers Zepto\Zepto::__construct()
-     */
-    public function testRouterAdded()
-    {
-        $zepto = new Zepto();
+        // Check for router
         $this->assertArrayHasKey('router', $zepto->app);
         $this->assertInstanceOf(
             'Zepto\Router',
             $zepto->app['router']
         );
-    }
 
-    /**
-     * @covers Zepto\Zepto::__construct()
-     */
-    public function testFilesystemAdded()
-    {
-        $zepto = new Zepto();
+        // Check for filesystem
         $this->assertArrayHasKey('filesystem', $zepto->app);
         $this->assertInstanceOf(
             'League\Flysystem\Filesystem',
             $zepto->app['filesystem']
         );
 
-        // Add tests to check that plugins are also loaded
-    }
-
-    /**
-     * @covers Zepto\Zepto::__construct()
-     */
-    public function testHelperAdded()
-    {
-        $zepto = new Zepto();
+        // Check for helper
         $this->assertArrayHasKey('helper', $zepto->app);
         $this->assertInstanceOf(
             'Zepto\Helper',
             $zepto->app['helper']
         );
-    }
 
-    /**
-     * @covers Zepto\Zepto::__construct()
-     * @dataProvider providerConfigWithPluginsEnabled
-     */
-    // public function testPluginLoaderAdded($config)
-    // {
-    //     $zepto = new Zepto($config);
-    //     $this->assertArrayHasKey('plugin_loader', $zepto->app);
-    //     $this->assertInstanceOf(
-    //         'League\Flysystem\Filesystem',
-    //         $zepto->app['plugin_loader']
-    //     );
-    //     $this->assertInstanceOf(
-    //         'Zepto\Adapter\Plugin',
-    //         $zepto->app['plugin_loader']->getAdapter()
-    //     );
-    // }
-
-    /**
-     * @covers Zepto\Zepto::__construct()
-     */
-    public function testTwigAdded()
-    {
-        $zepto = new Zepto();
+        // Check for Twig
         $this->assertArrayHasKey('twig', $zepto->app);
         $this->assertInstanceOf(
             '\Twig_Environment',
             $zepto->app['twig']
         );
+        // Add check to see if extension is loaded in?
+    }
 
+    /**
+     * @covers       Zepto\Zepto::__construct()
+     * @dataProvider providerConfigs
+     */
+    public function testDependenciesAddedInProductionMode($config)
+    {
+        $zepto = new Zepto($config);
+
+        // Check for request
+        $this->assertArrayHasKey('request', $zepto->app);
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Request',
+            $zepto->app['request']
+        );
+
+        // Check for response
+        $this->assertArrayHasKey('response', $zepto->app);
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $zepto->app['response']
+        );
+
+        // Check for router
+        $this->assertArrayHasKey('router', $zepto->app);
+        $this->assertInstanceOf(
+            'Zepto\Router',
+            $zepto->app['router']
+        );
+
+        // Check for filesystem
+        $this->assertArrayHasKey('filesystem', $zepto->app);
+        $this->assertInstanceOf(
+            'League\Flysystem\Filesystem',
+            $zepto->app['filesystem']
+        );
+
+        // Check for helper
+        $this->assertArrayHasKey('helper', $zepto->app);
+        $this->assertInstanceOf(
+            'Zepto\Helper',
+            $zepto->app['helper']
+        );
+
+        // Check for Twig
+        $this->assertArrayHasKey('twig', $zepto->app);
+        $this->assertInstanceOf(
+            '\Twig_Environment',
+            $zepto->app['twig']
+        );
         // Add check to see if extension is loaded in?
     }
 
@@ -180,9 +183,19 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Zepto\Zepto::load_plugins()
-     * @dataProvider providerConfigWithPluginsEnabled
      */
-    public function testLoadPluginsWhenEnabled($config)
+    public function testLoadPlugins()
+    {
+        // Add assertion to check if plugins_enabled is true or not
+        $zepto = new Zepto();
+        $this->assertArrayNotHasKey('plugins', $zepto->app);
+    }
+
+    /**
+     * @covers       Zepto\Zepto::load_plugins()
+     * @dataProvider providerConfigs
+     */
+    public function testLoadPluginsInProductionMode($config)
     {
         $config['zepto.plugins_enabled'] = TRUE;
         // Add assertion to check if plugins_enabled is true or not
@@ -194,22 +207,34 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers       Zepto\Zepto::load_plugins()
-     * @dataProvider providerConfigWithPluginsEnabled
-     */
-    public function testLoadPluginsWhenDisabled()
-    {
-        // Add assertion to check if plugins_enabled is true or not
-        $zepto = new Zepto();
-        $this->assertArrayNotHasKey('plugins', $zepto->app);
-    }
-
-    /**
      * @covers Zepto\Zepto::setup_router()
      */
     public function testSetupRouter()
     {
         $zepto = new Zepto();
+        $routes = $zepto->app['router']->routes();
+
+        // Check that routes were added as HTTP GET requests
+        $this->assertArrayHasKey('GET', $routes);
+
+        // Check to see only expected routes
+        $expected = array('#^/404/$#', '#^/$#', '#^/sub/$#', '#^/sub/page/$#');
+
+        // Check that all routes have a callback function
+        $this->assertContainsOnly('Zepto\Route', $routes['GET']);
+
+        foreach ($expected as $route_regex) {
+            $this->assertArrayHasKey($route_regex, $routes['GET']);
+        }
+    }
+
+    /**
+     * @covers       Zepto\Zepto::setup_router()
+     * @dataProvider providerConfigs
+     */
+    public function testSetupRouterInProductionMode($config)
+    {
+        $zepto = new Zepto($config);
         $routes = $zepto->app['router']->routes();
 
         // Check that routes were added as HTTP GET requests
@@ -238,6 +263,18 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers       Zepto\Zepto::run()
+     * @dataProvider providerConfigs
+     */
+    public function testRunInProductionMode($config)
+    {
+        ob_start();
+        $zepto = new Zepto($config);
+        $this->assertTrue($zepto->run());
+        ob_end_clean();
+    }
+
+    /**
      * @covers Zepto\Zepto::run()
      */
     public function testRunError()
@@ -251,23 +288,36 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Zepto::run_hooks()
-     * @dataProvider providerConfigWithPluginsEnabled
+     * @covers       Zepto\Zepto::run()
+     * @dataProvider providerConfigs
      */
-    public function testRunHooks($config)
+    public function testRunErrorInProductionMode($config)
     {
+        $_SERVER['REQUEST_URL']     = '/non-existent';
+        $_SERVER['REQUEST_URI']     = '/non-existent';
+        ob_start();
         $zepto = new Zepto($config);
-        $this->assertTrue($zepto->run_hooks('before_response_send'));
+        $this->assertFalse($zepto->run());
+        ob_end_clean();
+    }
+
+    /**
+     * @covers Zepto\Zepto::run_hooks()
+     */
+    public function testRunHooks()
+    {
+        $zepto = new Zepto();
+        $this->assertFalse($zepto->run_hooks('before_response_send'));
     }
 
     /**
      * @covers       Zepto\Zepto::run_hooks()
-     * @dataProvider providerConfigWithPluginsEnabled
+     * @dataProvider providerConfigs
      */
-    public function testRunHooksReturnsFalseWhenPluginsAreDisabled()
+    public function testRunHooksInProductionMode($config)
     {
-        $zepto = new Zepto();
-        $this->assertFalse($zepto->run_hooks('before_response_send'));
+        $zepto = new Zepto($config);
+        $this->assertTrue($zepto->run_hooks('before_response_send'));
     }
 
     /**
@@ -292,6 +342,16 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Zepto\Zepto::instance()
+     * @dataProvider providerConfigs
+     */
+    public function testInstanceAfterInitializationInProductionMode($config)
+    {
+        $zepto = new Zepto($config);
+        $this->assertInstanceOf('Zepto\Zepto', Zepto::instance());
+    }
+
+    /**
      * @covers Zepto\Zepto::kill()
      */
     public function testKill()
@@ -302,12 +362,47 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
         $this->assertNull(Zepto::instance());
     }
 
-    public function providerConfigWithPluginsEnabled()
+    /**
+     * @covers Zepto\Zepto::kill()
+     * @dataProvider providerConfigs
+     */
+    public function testKillInProductionMode($config)
+    {
+        $zepto = new Zepto($config);
+        $this->assertInstanceOf('Zepto\Zepto', Zepto::instance());
+        Zepto::kill();
+        $this->assertNull(Zepto::instance());
+    }
+
+    /**
+     * Returns config with plugins enabled
+     */
+    public function providerConfigs()
     {
         return array(
             array(
                 array(
                     'zepto.environment'           => 'dev',
+                    'zepto.content_dir'           => 'content',
+                    'zepto.plugins_dir'           => 'plugins',
+                    'zepto.templates_dir'         => 'templates',
+                    'zepto.default_template'      => 'base.twig',
+                    'zepto.content_ext'           => array('.md', '.markdown'),
+                    'zepto.plugins_enabled'       => true,
+                    'site.site_root'              => 'http://localhost:8888/zepto/',
+                    'site.site_title'             => 'Zepto',
+                    'site.date_format'            => 'jS M Y',
+                    'site.excerpt_length'         => '50',
+                    'twig'                       => array(
+                        'charset'           => 'utf-8',
+                        'cache'             => 'cache',
+                        'strict_variables'  => false,
+                        'autoescape'        => false,
+                        'auto_reload'       => true
+                    )
+                ),
+                array(
+                    'zepto.environment'           => 'production',
                     'zepto.content_dir'           => 'content',
                     'zepto.plugins_dir'           => 'plugins',
                     'zepto.templates_dir'         => 'templates',
