@@ -17,45 +17,41 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
     public function after_plugins_load(\Pimple $app)
     {
         // Add Whoops handlers
-        $app['whoopsPrettyPageHandler'] = function () {
-            return new PrettyPageHandler();
-        };
+        $app['whoopsPrettyPageHandler'] = $app->factory(
+            function () {
+                return new PrettyPageHandler();
+            }
+        );
         $app['whoopsJsonResponseHandler'] = function () {
             $handler = new JsonResponseHandler();
             $handler->onlyForAjaxRequests(true);
             return $handler;
         };
         $app["whoopsZeptoInfoHandler"] = function () use ($app) {
-            // Check to see if there is a current route, otherwise
-            // ignore because router isn't set up yet
-            try{
-                $current_route = $app['router']->current_route();
-            }
-            catch (\Exception $e) {
-                return;
-            }
 
+            $handler       = $app['whoopsPrettyPageHandler'];
             $route_details = array();
 
-            $app['whoopsPrettyPageHandler']->setPageTitle('Shit hit the fan!');
-            $app['whoopsPrettyPageHandler']->setEditor('sublime');
+            $handler->setPageTitle('Shit hit the fan!');
+            $handler->setEditor('sublime');
 
-            if ($current_route !== null) {
+            if ($app['router']->current_route() !== null) {
                 $route_details = array(
-                    'Route URL'     => $current_route->url(),
-                    'Route Pattern' => $current_route->pattern()
+                    'Route URL'     => $app['router']->current_route()->url(),
+                    'Route Pattern' => $app['router']->current_route()->pattern()
                 );
             }
 
-            $app["whoopsPrettyPageHandler"]->addDataTable(
+            $handler->addDataTable(
                 'Zepto Application',
                 array_merge(array(
+                    'Version' => \Zepto\Zepto::VERSION,
                     'Charset' => $app['request']->headers->get('Accept-Charset'),
                     'Locale'  => $app['request']->getPreferredLanguage()
                 ), $route_details)
             );
 
-            $app["whoopsPrettyPageHandler"]->addDataTable(
+            $handler->addDataTable(
                 'Request Information',
                 array(
                     'URI'          => $app['request']->getUri(),
@@ -70,10 +66,12 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
                     'Host'         => $app['request']->getHost()
                 )
             );
+
+            return $handler;
         };
 
         // Add actual Whoops\Run object
-        $app['whoops'] = function($app) {
+        $app['whoops'] = function ($app) {
             $run = new Run();
             $run->pushHandler($app['whoopsPrettyPageHandler']);
             $run->pushHandler($app['whoopsJsonResponseHandler']);
@@ -93,7 +91,8 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
         try {
             $app['whoops']->register();
             $app['router']->error(array($app['whoops'], Run::EXCEPTION_HANDLER));
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             return;
         }
     }
