@@ -34,9 +34,9 @@ class Route
     protected $pattern;
 
     /**
-     * Contains the callback function to execute, retrieved on ``Zepto\Router::run()``
+     * Contains the callable function to execute, retrieved on ``Zepto\Router::run()``
      *
-     * @var Closure
+     * @var \Closure
      */
     protected $callback = null;
 
@@ -44,11 +44,16 @@ class Route
      * Initializes the route by creating a regex pattern from the provided URL,
      * and assigns the callable function for this route
      *
-     * @param string $url
+     * @param  string                $pattern
+     * @param  array|\Closure|string $callback
      * @codeCoverageIgnore
      */
-    public function __construct($pattern, \Closure $callback)
+    public function __construct($pattern, $callback)
     {
+        if (is_callable($callback) === FALSE && is_array($callback) === FALSE) {
+            throw new \Exception('Callback is not a valid callable function');
+        }
+
         // Keep the original route pattern
         $url = $pattern;
 
@@ -116,7 +121,7 @@ class Route
     /**
      * Returns the callable function to be invoked for this route
      *
-     * @return Closure
+     * @return array|\Closure|string
      */
     public function callback()
     {

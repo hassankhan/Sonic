@@ -148,10 +148,10 @@ class Router
      * Add HTTP GET route
      *
      * @see    Router::route()
-     * @param  string   $route
-     * @param  \Closure $callback
+     * @param  string                $route
+     * @param  array|\Closure|string $callback
      */
-    public function get($route, \Closure $callback)
+    public function get($route, $callback)
     {
         $this->route(new Route($route, $callback));
     }
@@ -160,10 +160,10 @@ class Router
      * Add HTTP POST route
      *
      * @see    Router::route()
-     * @param  string   $route
-     * @param  \Closure $callback
+     * @param  string                $route
+     * @param  array|\Closure|string $callback
      */
-    public function post($route, \Closure $callback)
+    public function post($route, $callback)
     {
         $this->route(new Route($route, $callback), self::METHOD_POST);
     }
