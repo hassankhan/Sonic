@@ -12,12 +12,13 @@ Its interface is _supposed_ to be simple and is in process of documentation. Tha
 
 ## Features
 
-* Uses Markdown for content
+* Uses [Markdown Extra](http://michelf.ca/projects/php-markdown/extra/) for content
 * Uses a powerful(ish) [Slim](http://slimframework.com/)/[Silex](http://silex.sensiolabs.org/)-style router
-    * Standard and custom HTTP methods
+    * Standard HTTP methods
     * Route parameters with wildcards and conditions
 * Dependency injection container using [Pimple](http://pimple.sensiolabs.org/)
 * Template rendering using [Twig](http://twig.sensiolabs.org/)
+* Filesystem handling using [Flysystem](http://flysystem.thephpleague.com/)
 * HTTP caching
 * Error handling and debugging
 * Application hooks and extensible components for extending functionality
