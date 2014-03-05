@@ -8,6 +8,5 @@
 
     require_once realpath(__DIR__ . '/../vendor/autoload.php');
 
-    // Usually, this would be defined in ``Zepto\Zepto->container['ROOT_DIR']
     defined('ROOT_DIR')
     || define('ROOT_DIR', realpath(dirname(__FILE__) . '/..') . '/');

@@ -18,6 +18,7 @@ To-Do
 ## Plugin
 - Update NavGenPlugin to include subfolders
 - Think of a better way to inject variables into route callback
+- Move plugins to separate repo
 
 ## Application
 - [Add support for environments ``[production|dev]``](https://github.com/hassankhan/Zepto/issues/4)

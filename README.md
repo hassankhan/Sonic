@@ -6,7 +6,7 @@
 
 Zepto is a stupidly simple, blazing fast, flat-file CMS based on [Pico](http://pico.dev7studios.com).
 
-Zepto is a flat-file CMS - this means there is no administration backend and database to deal with. You simply create ``.md`` files in the "content" folder and that becomes a page.
+Zepto is a microCMS - this means there is no administration backend and database to deal with. You simply create ``.md`` files in the "content" folder and that becomes a page.
 
 Its interface is _supposed_ to be simple and is in process of documentation. Thank you for choosing Zepto for your next project.
 
@@ -68,7 +68,7 @@ Your project root should now look like this:
 
 Crack open ``index.php`` in your text editor and you'll see
 
-    require('vendor/autoload.php' );
+    require('vendor/autoload.php');
     require('config.php');
 
     $zepto = new Zepto\Zepto($config); // Create instance of Zepto

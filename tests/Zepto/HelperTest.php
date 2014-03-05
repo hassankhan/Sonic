@@ -169,7 +169,6 @@ class HelperTest extends \PHPUnit_Framework_TestCase
         error_reporting(0);
         $actual = Helper::handle_errors();
         $this->assertNull($actual);
-        // $this->markTestIncomplete('Not yet implemented');
     }
 
 }
