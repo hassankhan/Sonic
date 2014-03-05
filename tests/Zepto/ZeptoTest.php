@@ -375,7 +375,7 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Returns config with plugins enabled
+     * Returns a config with plugins enabled, and another with production mode enabled
      */
     public function providerConfigs()
     {

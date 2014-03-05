@@ -200,9 +200,8 @@ class Zepto
     }
 
     /**
-     * Does the initial setup for the router. This entails getting the list of
-     * loaded files as returned by Zepto\FileLoader and turning that into
-     * routes.
+     * Does the initial setup for the router. This entails creating the routes
+     * for the application, mainly
      *
      * @return
      */
@@ -258,9 +257,6 @@ class Zepto
                 // Render template with Twig
                 return $app['twig']->render($template_name, $options);
             });
-
-            // If a file's name is 404.md or 500.md, use that to set an ErrorRoute with them
-
         }
     }
 

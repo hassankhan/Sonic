@@ -36,6 +36,58 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Zepto\Helper::url_for()
+     * @covers Zepto\Helper::dot_extensions()
+     */
+    public function testUrlFor()
+    {
+        $zepto    = new Zepto;
+        $helper   = new Helper($zepto->app);
+        $actual   = $helper->url_for('index.md');
+        $expected = 'http://localhost:8888/zepto/';
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Zepto\Helper::url_for()
+     * @covers Zepto\Helper::dot_extensions()
+     */
+    public function testUrlForFailure()
+    {
+        ob_start();
+        $zepto    = new Zepto;
+        $helper   = new Helper($zepto->app);
+        $actual   = $helper->url_for('non-index.md');
+        $this->assertNull($actual);
+        ob_end_clean();
+    }
+
+    /**
+     * @covers Zepto\Helper::link_for()
+     */
+    public function testLinkFor()
+    {
+        $zepto    = new Zepto;
+        $helper   = new Helper($zepto->app);
+        $actual   = $helper->link_for('index.md');
+        $expected = '<a href="http://localhost:8888/zepto/"> Welcome </a>';
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Zepto\Helper::link_for()
+     */
+    public function testLinkForFailure()
+    {
+        ob_start();
+        $zepto  = new Zepto;
+        $helper = new Helper($zepto->app);
+        $actual = $helper->link_for('non-index.md');
+        $this->assertNull($actual);
+        ob_end_clean();
+    }
+
+    /**
      * @covers Zepto\Helper::validate_config()
      */
     public function testValidateConfig()
@@ -101,55 +153,23 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zepto\Helper::url_for()
-     * @covers Zepto\Helper::dot_extensions()
+     * @covers            Zepto\Helper::handle_errors()
+     * @expectedException ErrorException
      */
-    public function testUrlFor()
+    public function testHandleErrors()
     {
-        $zepto    = new Zepto;
-        $helper   = new Helper($zepto->app);
-        $actual   = $helper->url_for('index.md');
-        $expected = 'http://localhost:8888/zepto/';
-        $this->assertEquals($expected, $actual);
+        Helper::handle_errors();
     }
 
     /**
-     * @covers Zepto\Helper::url_for()
-     * @covers Zepto\Helper::dot_extensions()
+     * @covers Zepto\Helper::handle_errors()
      */
-    public function testUrlForFailure()
+    public function testHandleErrorsWhenTurnedOff()
     {
-        ob_start();
-        $zepto    = new Zepto;
-        $helper   = new Helper($zepto->app);
-        $actual   = $helper->url_for('non-index.md');
+        error_reporting(0);
+        $actual = Helper::handle_errors();
         $this->assertNull($actual);
-        ob_end_clean();
-    }
-
-    /**
-     * @covers Zepto\Helper::link_for()
-     */
-    public function testLinkFor()
-    {
-        $zepto    = new Zepto;
-        $helper   = new Helper($zepto->app);
-        $actual   = $helper->link_for('index.md');
-        $expected = '<a href="http://localhost:8888/zepto/"> Welcome </a>';
-        $this->assertEquals($expected, $actual);
-    }
-
-    /**
-     * @covers Zepto\Helper::link_for()
-     */
-    public function testLinkForFailure()
-    {
-        ob_start();
-        $zepto  = new Zepto;
-        $helper = new Helper($zepto->app);
-        $actual = $helper->link_for('non-index.md');
-        $this->assertNull($actual);
-        ob_end_clean();
+        // $this->markTestIncomplete('Not yet implemented');
     }
 
 }
