@@ -104,23 +104,20 @@ class Zepto
             return $twig;
         };
 
-        // If settings array is empty, then get a default one
-        if (empty($settings) === TRUE) {
-            $settings = $this->app['helper']->default_config();
-        }
+        // If settings array is empty, then get a default one and validate it
+        $settings = array_merge($this->app['helper']->default_config(), $settings);
         $this->app['helper']->validate_config($settings);
 
         // Set this particular setting now
-        $app['plugins_enabled'] = $settings['zepto.plugins_enabled'];
-        $app['settings'] = $settings;
-        // So if plugins ARE indeed enabled, initialise the plugin loader
+        $this->app['settings'] = $settings;
+        // If plugins ARE indeed enabled, initialise the plugin loader
         // and load the fuckers
-        if ($app['plugins_enabled'] === true) {
+        if ($this->app['settings']['zepto.plugins_enabled'] === TRUE) {
             $this->load_plugins();
             $this->run_hooks('after_plugins_load');
         }
 
-        // Run application hooks and set application settings
+        // Run application hooks and reload application settings
         $this->run_hooks('before_config_load', array(&$settings));
         $app['settings'] = $settings;
 
@@ -157,8 +154,8 @@ class Zepto
     public function run_hooks($hook_id, $args = array())
     {
         // If plugins are disabled, do not run
-        if ($this->app['plugins_enabled'] === false) {
-            return false;
+        if ($this->app['settings']['zepto.plugins_enabled'] === FALSE) {
+            return FALSE;
         }
 
         // Send app reference to hooks
@@ -170,7 +167,7 @@ class Zepto
                 call_user_func_array(array($plugin, $hook_id), $args);
             }
         }
-        return true;
+        return TRUE;
     }
 
     /**
@@ -180,7 +177,7 @@ class Zepto
      */
     protected function load_plugins()
     {
-        if ($this->app['plugins_enabled'] === true) {
+        if ($this->app['settings']['zepto.plugins_enabled'] === TRUE) {
 
             // Load plugins from 'plugins' folder
             $file_list    = $this->app['filesystem']->listContents($this->app['settings']['zepto.plugins_dir']);
