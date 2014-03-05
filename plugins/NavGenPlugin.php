@@ -65,11 +65,13 @@ class NavGenPlugin implements \Zepto\PluginInterface {
         });
 
         foreach ($content_files as $file) {
-            if ($file['dirname'] === '') {
-                $nav_html .= '<li>' . $app['helper']->link_for($file['path']) . '</li>' . PHP_EOL;
+            if ($file['dirname'] === 'content') {
+                $nav_html .= '<li>' . $app['helper']->link_for($file['basename']) . '</li>' . PHP_EOL;
                 continue;
             }
         }
+
+        // Add subfolders here
 
         $nav_html .= '</ul>' . PHP_EOL;
         return $nav_html;
