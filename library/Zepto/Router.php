@@ -311,6 +311,26 @@ class Router
      */
 
     /**
+     * Returns request object
+     *
+     * @return \Symfony\Component\HttpFoundation\Request
+     */
+    public function request()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Returns response object
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function response()
+    {
+        return $this->response;
+    }
+
+    /**
      * Returns all routes mapped on the routing table.
      *
      * @return Route[]
