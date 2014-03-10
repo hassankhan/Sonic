@@ -130,7 +130,6 @@ class Router
      * @link http://api.symfony.com/2.4/Symfony/Component/HttpFoundation/Request.html Documentation for Request object
      * @param \Symfony\Component\HttpFoundation\Response $response
      * @link http://api.symfony.com/2.4/Symfony/Component/HttpFoundation/Response.html Documentation for Response object
-     * @codeCoverageIgnore
      */
     public function __construct(
         \Symfony\Component\HttpFoundation\Request  $request,

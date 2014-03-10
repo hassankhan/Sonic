@@ -289,6 +289,26 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Zepto\Router::__construct()
+     * @covers Zepto\Router::request()
+     */
+    public function testRequest()
+    {
+        $actual = $this->router->request();
+        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Request', $actual);
+    }
+
+    /**
+     * @covers Zepto\Router::__construct()
+     * @covers Zepto\Router::response()
+     */
+    public function testResponse()
+    {
+        $actual = $this->router->response();
+        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $actual);
+    }
+
+    /**
      * @covers Zepto\Router::routes()
      */
     public function testRoutes()
