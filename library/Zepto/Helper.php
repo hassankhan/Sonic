@@ -34,7 +34,7 @@ class Helper
         $this->app = $app;
 
         // Convert errors to exceptions
-        set_error_handler(array('\Zepto\Helper', 'handle_errors'));
+        set_error_handler(array($this, 'handle_errors'));
     }
 
     /**
