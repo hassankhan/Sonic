@@ -252,6 +252,41 @@ class ZeptoTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Zepto\Zepto::create_route()
+     */
+    public function testCreateRoute()
+    {
+        $_SERVER['REQUEST_URL'] = '/404';
+        $_SERVER['REQUEST_URI'] = '/404';
+
+        $zepto   = new Zepto();
+        $actual  = $zepto->create_route();
+        $matcher = array(
+            'tag'     => 'title',
+            'content' => 'Error 404'
+        );
+        $this->assertTag($matcher, $actual, TRUE);
+    }
+
+    /**
+     * @covers       Zepto\Zepto::create_route()
+     * @dataProvider providerConfigs
+     */
+    public function testCreateRouteInProductionMode($config)
+    {
+        $_SERVER['REQUEST_URL'] = '/404';
+        $_SERVER['REQUEST_URI'] = '/404';
+
+        $zepto   = new Zepto();
+        $actual  = $zepto->create_route();
+        $matcher = array(
+            'tag'     => 'title',
+            'content' => 'Error 404'
+        );
+        $this->assertTag($matcher, $actual, TRUE);
+    }
+
+    /**
      * @covers Zepto\Zepto::run()
      */
     public function testRun()
