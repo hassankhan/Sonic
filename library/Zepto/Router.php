@@ -130,7 +130,6 @@ class Router
      * @link http://api.symfony.com/2.4/Symfony/Component/HttpFoundation/Request.html Documentation for Request object
      * @param \Symfony\Component\HttpFoundation\Response $response
      * @link http://api.symfony.com/2.4/Symfony/Component/HttpFoundation/Response.html Documentation for Response object
-     * @codeCoverageIgnore
      */
     public function __construct(
         \Symfony\Component\HttpFoundation\Request  $request,
@@ -309,6 +308,26 @@ class Router
     /**
      * ACCESSORS
      */
+
+    /**
+     * Returns request object
+     *
+     * @return \Symfony\Component\HttpFoundation\Request
+     */
+    public function request()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Returns response object
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function response()
+    {
+        return $this->response;
+    }
 
     /**
      * Returns all routes mapped on the routing table.

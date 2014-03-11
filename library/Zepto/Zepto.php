@@ -226,35 +226,46 @@ class Zepto
 
             $route = '/' . trim(str_replace('/index', '/', $file_name), '/');
 
-            $this->app['router']->get($route, function() use ($app, $file) {
-
-                // Load content now
-                // @todo This is temporary until some sort of Page-based abstraction
-                // is implemented. Its horrible, but fuck you
-                $loaded_file = $app['filesystem']->parse($file['path']);
-
-                // Set Twig options
-                $twig_vars = array(
-                    'config'     => $app['settings'],
-                    'base_url'   => $app['settings']['site.site_root'],
-                    'site_title' => $app['settings']['site.site_title']
-                );
-
-                $app['nav'] = isset($app['nav']) === TRUE ? $app['nav'] : array();
-
-                // Merge Twig options and content into one array
-                // @todo Change $app['nav'], and make a better way to inject content into Twig
-                $options = array_merge($twig_vars, $loaded_file, $app['nav']);
-
-                // Get template name from file, if not set, then use default
-                $template_name = array_key_exists('template', $loaded_file['meta']) === true
-                    ? $loaded_file['meta']['template']
-                    : $app['settings']['zepto.default_template'];
-
-                // Render template with Twig
-                return $app['twig']->render($template_name, $options);
-            });
+            $this->app['router']->get($route, array($this, 'create_route'));
         }
+    }
+
+    public function create_route()
+    {
+        // Get resource URL
+        $resource_url = $this->app['router']->request()->getPathInfo();
+
+        // Get file path
+        $path = rtrim($this->app['settings']['zepto.content_dir'] . $resource_url, '/');
+
+        // Check if file(s) exist
+        $contents = $this->app['filesystem']->listContents($path);
+
+        // Load file
+        $loaded_file = empty($contents) === TRUE
+            ? $loaded_file = $this->app['filesystem']->parse($path . '.md')
+            : $loaded_file = $this->app['filesystem']->parse(rtrim($path, '/') . '/' . 'index.md');
+
+        // Set Twig options
+        $twig_vars = array(
+            'config'     => $this->app['settings'],
+            'base_url'   => $this->app['settings']['site.site_root'],
+            'site_title' => $this->app['settings']['site.site_title']
+        );
+
+        $this->app['nav'] = isset($this->app['nav']) === TRUE ? $this->app['nav'] : array();
+
+        // Merge Twig options and content into one array
+        // @todo Change $this->app['nav'], and make a better way to inject content into Twig
+        $options = array_merge($twig_vars, $loaded_file, $this->app['nav']);
+
+        // Get template name from file, if not set, then use default
+        $template_name = array_key_exists('template', $loaded_file['meta']) === true
+            ? $loaded_file['meta']['template']
+            : $this->app['settings']['zepto.default_template'];
+
+        // Render template with Twig
+        return $this->app['twig']->render($template_name, $options);
     }
 
     /**
