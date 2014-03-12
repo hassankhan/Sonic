@@ -72,7 +72,7 @@ class Zepto
             return new Router($app['request'], $app['response']);
         };
 
-        $app['content_plugin'] = function ($app) {
+        $app['content_plugin'] = function () {
             $plugin = new Flysystem\Plugin\Markdown();
             $plugin->setParser(new \Michelf\MarkdownExtra);
             return $plugin;
