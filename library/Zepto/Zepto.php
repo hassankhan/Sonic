@@ -253,11 +253,10 @@ class Zepto
             'site_title' => $this->app['settings']['site.site_title']
         );
 
-        $this->app['nav'] = isset($this->app['nav']) === TRUE ? $this->app['nav'] : array();
+        $this->app['extra'] = isset($this->app['extra']) === TRUE ? $this->app['extra'] : array();
 
         // Merge Twig options and content into one array
-        // @todo Change $this->app['nav'], and make a better way to inject content into Twig
-        $options = array_merge($twig_vars, $loaded_file, $this->app['nav']);
+        $options = array_merge($twig_vars, $loaded_file, $this->app['extra']);
 
         // Get template name from file, if not set, then use default
         $template_name = array_key_exists('template', $loaded_file['meta']) === true
