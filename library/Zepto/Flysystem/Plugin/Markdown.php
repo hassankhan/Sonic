@@ -90,7 +90,7 @@ class Markdown implements \League\Flysystem\PluginInterface
         preg_match_all('#/\*(.*?)\*/#s', $file, $meta);
 
         // Retrieve individual meta fields
-        preg_match_all('/^[\t\/*#@]*(.*):(.*)$/mi', $meta[1][0], $match);
+        preg_match_all('#^[\t*\#@]*(.*):(.*)$#mi', $meta[1][0], $match);
 
         for ($i=0; $i < count($match[1]); $i++) {
             $result[strtolower($match[1][$i])] = trim(htmlentities($match[2][$i]));
