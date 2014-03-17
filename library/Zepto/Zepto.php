@@ -230,6 +230,11 @@ class Zepto
         }
     }
 
+    /**
+     * The default route callback for any files in the 'content' folder
+     *
+     * @return string
+     */
     public function create_route()
     {
         // Get resource URL
