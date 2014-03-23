@@ -125,6 +125,7 @@ class Zepto
         // Run application hooks and reload application settings
         $this->run_hooks('before_config_load', array(&$settings));
         $app['settings'] = $settings;
+        $app['tags']     = $this->app['filesystem']->tags('content');
 
         // Add basic routes to router and run application hooks
         $this->run_hooks('before_router_setup');
@@ -233,6 +234,7 @@ class Zepto
 
             $this->app['router']->get($route, array($this, 'create_route'));
         }
+        $this->app['router']->get('/tag/<:tag_name>', array($this, 'create_tag_route'));
     }
 
     /**
@@ -275,6 +277,33 @@ class Zepto
 
         // Render template with Twig
         return $this->app['twig']->render($template_name, $options);
+    }
+
+    /**
+     * The default route callback for the '/tag/<tag_name>' route
+     *
+     * @return string
+     */
+    public function create_tag_route($tag_name)
+    {
+
+        $loaded_file = $this->app['tags'][$tag_name];
+        $loaded_file['contents'] = implode(' ', $loaded_file);
+
+        // Set Twig options
+        $twig_vars = array(
+            'config'     => $this->app['settings'],
+            'base_url'   => $this->app['settings']['site.site_root'],
+            'site_title' => $this->app['settings']['site.site_title']
+        );
+
+        $this->app['extra'] = isset($this->app['extra']) === TRUE ? $this->app['extra'] : array();
+
+        // Merge Twig options and content into one array
+        $options = array_merge($twig_vars, $loaded_file, $this->app['extra']);
+
+        // Render template with Twig
+        return $this->app['twig']->render($this->app['settings']['zepto.default_template'], $options);
     }
 
     /**
