@@ -37,7 +37,13 @@ class NavGenPlugin implements \Zepto\PluginInterface {
     {
         // Use this one
         $html         = $this->generate_html($app);
-        $app['extra'] = isset($app['extra']) === TRUE ? $app['extra'] : array('nav' => $html);
+
+        if (isset($app['extra']) === TRUE) {
+            $app['extra']['nav'] = $html;
+        }
+        else {
+            $app['extra'] = array('nav' => $html);
+        }
     }
 
     public function before_response_send(\Pimple $app)
