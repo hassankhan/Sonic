@@ -261,7 +261,6 @@ class Router
 
         // Get parameters from request
         $params = $this->parse_parameters($route);
-
         // Try to execute callback for route, if it fails, catch the exception and generate a HTTP 500 error
         try {
             $this->current_http_status = \Symfony\Component\HttpFoundation\Response::HTTP_OK;
@@ -469,7 +468,7 @@ class Router
     protected function parse_parameters(Route $route)
     {
         // Get all parameter matches from URL for this route
-        preg_match($route->pattern(), "{$this->request->getPathInfo()}/", $matches);
+        preg_match($route->pattern(), "{$this->request->getPathInfo()}", $matches);
 
         $params = array();
 
