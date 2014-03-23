@@ -468,7 +468,8 @@ class Router
     protected function parse_parameters(Route $route)
     {
         // Get all parameter matches from URL for this route
-        preg_match($route->pattern(), "{$this->request->getPathInfo()}", $matches);
+        $request_url = rtrim($this->request->getPathInfo(), '/') . '/';
+        preg_match($route->pattern(), "{$request_url}", $matches);
 
         $params = array();
 
