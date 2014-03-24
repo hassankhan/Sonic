@@ -29,7 +29,9 @@ To-Do
 
 ## Router
 - Add functionality to allow for other HTTP verbs
-- Also, should request and response be protected or public?
+
+## Routes
+Make DefaultRoute, TagRoute, ListRoute
 
 ## [Tests](https://github.com/hassankhan/Zepto/issues?milestone=1&state=open)
 - Write MORE unit tests
