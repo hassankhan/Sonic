@@ -42,10 +42,6 @@ Zepto uses Twig for templating, and therefore assumes you already know how to us
 
 You'll have the following variables available to you in every template:
 
-    {{ config }} - Contains the values you set in config.php (e.g. {{ config.theme }} = "default")
-    {{ base_dir }} - The path to your Zepto root directory
-    {{ base_url }} - The URL to your Zepto site
-    {{ site_title }} - Shortcut to the site title (defined in config.php)
     {{ meta }} - Contains the meta values from the current page
         {{ meta.title }}
         {{ meta.description }}
@@ -60,6 +56,9 @@ You will also have access to the following helper functions:
 
     {{ url_for('name-of-file.md') }}    - Returns the fully-qualified URL for the file
     {{ link_for('name-of-file.md') }}   - Returns an &lt;a&gt; tag for the file
+    {{ config }}                        - Contains config.php
+    {{ site_url }}                      - The site URL as defined in config.php
+    {{ site_title }}                    - The site title as defined in config.php
 
 ### Plugins
 

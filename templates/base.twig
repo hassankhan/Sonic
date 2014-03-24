@@ -12,7 +12,7 @@
 
 {% block css %}
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,700" type="text/css" />
-	<link rel="stylesheet" href="{{ base_url() }}/assets/css/style.css" type="text/css" />
+	<link rel="stylesheet" href="{{ site_url() }}/assets/css/style.css" type="text/css" />
 {% endblock %}
 
 </head>
@@ -22,7 +22,7 @@
 	</a>
 	<header id="header">
 		<div class="inner clearfix">
-			<h1><a href="{{ base_url() }}">{{ site_title() }}</a></h1>
+			<h1><a href="{{ site_url() }}">{{ site_title() }}</a></h1>
 			{{ nav | raw }}
 		</div>
 	</header>
@@ -45,7 +45,7 @@
 	<!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{{ base_url() }}/assets/js/modernizr-2.6.1.min.js"></script>
+    <script src="{{ site_url() }}/assets/js/modernizr-2.6.1.min.js"></script>
 {% endblock %}
 
 </body>

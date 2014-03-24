@@ -52,7 +52,7 @@ class Helper
      *
      * @return string
      */
-    public function base_url()
+    public function site_url()
     {
         return $this->app['settings']['site.site_root'];
     }
