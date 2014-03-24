@@ -86,6 +86,10 @@ class Zepto
             return new Flysystem\Plugin\TagParser();
         };
 
+        $app['date_parser_plugin'] = function ($app) {
+            return new Flysystem\Plugin\DateParser();
+        };
+
         $app['filesystem'] = function ($app) {
             $filesystem = new \League\Flysystem\Filesystem(
                 new \League\Flysystem\Adapter\Local($app['ROOT_DIR'])
@@ -93,6 +97,7 @@ class Zepto
             $filesystem->addPlugin($app['content_plugin']);
             $filesystem->addPlugin($app['plugin_plugin']);
             $filesystem->addPlugin($app['tag_parser_plugin']);
+            $filesystem->addPlugin($app['date_parser_plugin']);
             return $filesystem;
         };
 
