@@ -255,8 +255,8 @@ class Zepto
 
         // Load file
         $loaded_file = empty($contents) === TRUE
-            ? $loaded_file = $this->app['filesystem']->parse($path . '.md')
-            : $loaded_file = $this->app['filesystem']->parse(rtrim($path, '/') . '/' . 'index.md');
+            ? $this->app['filesystem']->parse($path . '.md')
+            : $this->app['filesystem']->parse(rtrim($path, '/') . '/' . 'index.md');
 
         $this->app['extra'] = isset($this->app['extra']) === TRUE ? $this->app['extra'] : array();
 
