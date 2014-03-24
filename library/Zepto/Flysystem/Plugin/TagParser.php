@@ -3,7 +3,7 @@
 namespace Zepto\Flysystem\Plugin;
 
 /**
- * Plugin
+ * TagParser
  *
  * @package    Zepto
  * @subpackage Flysystem
@@ -78,7 +78,9 @@ class TagParser implements \League\Flysystem\PluginInterface
                 preg_match_all('#^[\t*\#@]*(Tags):(.*)$#m', $meta[1][0], $matches);
 
                 $tags = isset($matches[2][0]) === TRUE ? trim($matches[2][0], ' ') : NULL;
-                $tags = explode(', ', $tags);
+                // @todo Make this work for ',' or ', '
+                $tags = explode(',', $tags);
+
 
                 // Add tags to tag list
                 foreach ($tags as $tag) {
