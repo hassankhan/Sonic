@@ -258,17 +258,10 @@ class Zepto
             ? $loaded_file = $this->app['filesystem']->parse($path . '.md')
             : $loaded_file = $this->app['filesystem']->parse(rtrim($path, '/') . '/' . 'index.md');
 
-        // Set Twig options
-        $twig_vars = array(
-            'config'     => $this->app['settings'],
-            'base_url'   => $this->app['settings']['site.site_root'],
-            'site_title' => $this->app['settings']['site.site_title']
-        );
-
         $this->app['extra'] = isset($this->app['extra']) === TRUE ? $this->app['extra'] : array();
 
         // Merge Twig options and content into one array
-        $options = array_merge($twig_vars, $loaded_file, $this->app['extra']);
+        $options = array_merge($loaded_file, $this->app['extra']);
 
         // Get template name from file, if not set, then use default
         $template_name = array_key_exists('template', $loaded_file['meta']) === true
@@ -286,7 +279,6 @@ class Zepto
      */
     public function create_tag_route($tag_name)
     {
-
         $loaded_file = $this->app['tags'][$tag_name];
         $loaded_file['contents'] = implode(' ', $loaded_file);
 

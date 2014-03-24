@@ -38,6 +38,36 @@ class Helper
     }
 
     /**
+     * Returns Zepto configuration
+     *
+     * @return array
+     */
+    public function config()
+    {
+        return $this->app['settings'];
+    }
+
+    /**
+     * Returns the site root
+     *
+     * @return string
+     */
+    public function base_url()
+    {
+        return $this->app['settings']['site.site_root'];
+    }
+
+    /**
+     * Returns the site title
+     *
+     * @return string
+     */
+    public function site_title()
+    {
+        return $this->app['settings']['site.site_title'];
+    }
+
+    /**
      * Returns a fully-qualified URL for a given filename in the 'content' directory
      *
      * @param  string $file_name

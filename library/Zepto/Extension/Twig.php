@@ -33,9 +33,45 @@ class Twig extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('url_for',  array($this, 'url_for')),
-            new \Twig_SimpleFunction('link_for', array($this, 'link_for'), array('is_safe' => array('html')))
+            new \Twig_SimpleFunction('config',     array($this, 'config')),
+            new \Twig_SimpleFunction('base_url',   array($this, 'base_url')),
+            new \Twig_SimpleFunction('site_title', array($this, 'site_title')),
+            new \Twig_SimpleFunction('url_for',    array($this, 'url_for')),
+            new \Twig_SimpleFunction('link_for',   array($this, 'link_for'), array('is_safe' => array('html')))
         );
+    }
+
+    /**
+     * Returns Zepto configuration
+     *
+     * @return array
+     */
+    public function config()
+    {
+        $zepto = \Zepto\Zepto::instance();
+        return $zepto->app['settings'];
+    }
+
+    /**
+     * Returns the site root
+     *
+     * @return string
+     */
+    public function base_url()
+    {
+        $zepto = \Zepto\Zepto::instance();
+        return $zepto->app['settings']['site.site_root'];
+    }
+
+    /**
+     * Returns the site title
+     *
+     * @return string
+     */
+    public function site_title()
+    {
+        $zepto = \Zepto\Zepto::instance();
+        return $zepto->app['settings']['site.site_title'];
     }
 
     /**
