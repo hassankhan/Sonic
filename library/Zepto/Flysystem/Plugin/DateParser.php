@@ -74,12 +74,7 @@ class DateParser implements \League\Flysystem\PluginInterface
         }
 
         // Sort the files by date
-        uasort($this->date_list, function ($a, $b) {
-            if ($a === $b) {
-                return 0;
-            }
-            return ($a > $b) ? -1 : 1;
-        });
+        arsort($this->date_list);
 
         return $this->date_list;
     }
