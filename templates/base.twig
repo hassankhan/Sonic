@@ -29,7 +29,8 @@
 
 	<section id="content">
 		<div class="inner">
-			{{ contents }}
+			{% block content %} {{ contents }} {% endblock %}
+			{# {{ contents }} #}
 		</div>
 	</section>
 
