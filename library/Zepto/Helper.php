@@ -202,6 +202,23 @@ class Helper
     }
 
     /**
+     * Returns an excerpt of text from a file
+     *
+     * @param  array  $file_contents
+     * @param  int    $br_limit
+     * @return string
+     */
+    public static function get_excerpt($file_contents, $br_limit = 3)
+    {
+        if (substr_count($file_contents, "\n") > $br_limit) {
+            $excerpt = explode(PHP_EOL . PHP_EOL, $file_contents, $br_limit);
+            array_pop($excerpt);
+            return implode(' ', $excerpt);
+        }
+        return $file_contents;
+    }
+
+    /**
      * Convert errors into ErrorException objects
      *
      * @param  int            $err_no
