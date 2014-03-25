@@ -60,10 +60,8 @@ class DateParser implements \League\Flysystem\PluginInterface
     {
         // Get all files in path
         $contents = $this->filesystem->listContents($path, TRUE);
+        // Create array
         $this->date_list = array();
-
-        // Create empty variable
-        $this->oldest_date = '';
 
         // Iterate through files and get dates
         foreach ($contents as $file) {
@@ -71,21 +69,23 @@ class DateParser implements \League\Flysystem\PluginInterface
                 isset($file['extension']) === TRUE
                 && $file['extension'] === 'md'
             ) {
-                $file_contents = $this->filesystem->parse($file['path']);
-                $date = new \DateTime($file_contents['meta']['date']);
-                $this->date_list[$file['path']] = $date;
+                $this->date_list[$file['path']] = $this->get_date($file);
             }
         }
 
         // Sort the files by date
-        uasort($this->date_list, function ($a, $b) {
-            if ($a === $b) {
-                return 0;
-            }
-            return ($a > $b) ? -1 : 1;
-        });
+        arsort($this->date_list);
 
         return $this->date_list;
+    }
+
+    public function get_date($file)
+    {
+        $file_contents = $this->filesystem->parse($file['path']);
+        if (isset($file_contents['meta']['date']) === FALSE) {
+            return NULL;
+        }
+        return new \DateTime($file_contents['meta']['date']);
     }
 
 }

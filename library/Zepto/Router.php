@@ -127,9 +127,9 @@ class Router
      * Initializes the router, and handles the request and response objects
      *
      * @param \Symfony\Component\HttpFoundation\Request  $request
-     * @link http://api.symfony.com/2.4/Symfony/Component/HttpFoundation/Request.html Documentation for Request object
+     * @link  http://api.symfony.com/2.4/Symfony/Component/HttpFoundation/Request.html Documentation for Request object
      * @param \Symfony\Component\HttpFoundation\Response $response
-     * @link http://api.symfony.com/2.4/Symfony/Component/HttpFoundation/Response.html Documentation for Response object
+     * @link  http://api.symfony.com/2.4/Symfony/Component/HttpFoundation/Response.html Documentation for Response object
      */
     public function __construct(
         \Symfony\Component\HttpFoundation\Request  $request,
