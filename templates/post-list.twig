@@ -1,0 +1,19 @@
+{% extends "base.twig" %}
+
+{% block content %}
+{% for file, post in contents %}
+<div class="inner">
+    <div >
+        <h1><a href="{{ url_for(file) }}">{{ post.meta.title }}</a></h1>
+        <div>
+            <i class="fa fa-clock-o"></i>
+            <div class="content-meta-date">{{ post.meta.date }}</div>
+        </div>
+    </div>
+    <div class="content-body">
+        {{ post.contents }}
+    </div>
+    <hr>
+</div>
+{% endfor %}
+{% endblock %}
