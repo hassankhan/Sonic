@@ -3,18 +3,18 @@
 namespace Zepto\Route;
 
 /**
- * ListRoute
+ * TagRoute
  *
- * This route displays a list of posts
+ * This route is executed when a ``/tag | /tags`` URL is matched
  *
  * @package    Zepto
  * @subpackage Route
  * @author     Hassan Khan <contact@hassankhan.me>
- * @link       https://github.com/hassankhan/hassankhan-me
+ * @link       https://github.com/hassankhan/Zepto
  * @license    MIT
  * @since      0.7
  */
-class ListRoute extends \Zepto\Route implements \Zepto\RouteInterface
+class TagRoute extends \Zepto\Route implements \Zepto\RouteInterface
 {
 
     /**
@@ -39,15 +39,15 @@ class ListRoute extends \Zepto\Route implements \Zepto\RouteInterface
         // Get reference to Zepto
         $zepto = \Zepto\Zepto::instance();
 
-        // Get dates from all content
-        $dates = $zepto->app['filesystem']->dates('content');
-        // Get filenames of content
-        $files = array_keys($dates);
+        // Get parameters from URL
+        list($tag_name) = func_get_args();
+        // Load file
+        $tagged_files   = $zepto->app['tags'][$tag_name];
         // Create array to hold posts
-        $posts = array();
+        $posts          = array();
 
         // Iterate through files and get excerpts for all of them
-        foreach ($files as $file) {
+        foreach ($tagged_files as $file) {
             $file_contents = $zepto->app['filesystem']->parse($file);
 
             if ($file_contents['meta']['title'] !== 'Quote') {
@@ -55,6 +55,12 @@ class ListRoute extends \Zepto\Route implements \Zepto\RouteInterface
             }
             $posts[str_replace('content/', '', $file)] = $file_contents;
         }
+
+        // Load in any extra stuffs
+        $zepto->app['extra'] = isset($zepto->app['extra']) === TRUE ? $zepto->app['extra'] : array();
+
+        // Merge Twig options and content into one array
+        $options             = array_merge($posts, $zepto->app['extra']);
 
         // Render template with Twig
         return $zepto->app['twig']->render('post-list.twig', array('contents' => $posts));
