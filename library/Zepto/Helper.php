@@ -128,18 +128,19 @@ class Helper
     public static function default_config()
     {
         return array(
-            'zepto.environment'       => 'dev',
-            'zepto.content_dir'       => 'content',
-            'zepto.plugins_dir'       => 'plugins',
-            'zepto.templates_dir'     => 'templates',
-            'zepto.default_template'  => 'base.twig',
-            'zepto.content_ext'       => array('md', 'markdown'),
-            'zepto.plugins_enabled'   => false,
-            'site.site_root'          => 'http://localhost:8888/zepto/',
-            'site.site_title'         => 'Zepto',
-            'site.date_format'        => 'jS M Y',
-            'site.excerpt_length'     => '50',
-            'twig'                    => array(
+            'zepto.environment'           => 'dev',
+            'zepto.content_dir'           => 'content',
+            'zepto.plugins_dir'           => 'plugins',
+            'zepto.templates_dir'         => 'templates',
+            'zepto.default_template'      => 'base.twig',
+            'zepto.default_list_template' => 'list.twig',
+            'zepto.content_ext'           => array('md', 'markdown'),
+            'zepto.plugins_enabled'       => false,
+            'site.site_root'              => 'http://localhost:8888/zepto/',
+            'site.site_title'             => 'Zepto',
+            'site.date_format'            => 'jS M Y',
+            'site.excerpt_length'         => '50',
+            'twig'                        => array(
                 'charset'           => 'utf-8',
                 'cache'             => 'cache',
                 'strict_variables'  => false,

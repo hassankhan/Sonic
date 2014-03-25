@@ -18,6 +18,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
             'zepto.plugins_dir'           => 'plugins',
             'zepto.templates_dir'         => 'templates',
             'zepto.default_template'      => 'base.twig',
+            'zepto.default_list_template' => 'list.twig',
             'zepto.content_ext'           => array('md', 'markdown'),
             'zepto.plugins_enabled'       => false,
             'site.site_root'              => 'http://localhost:8888/zepto/',

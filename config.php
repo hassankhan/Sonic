@@ -6,6 +6,7 @@ $config = array(
     'zepto.plugins_dir'           => 'plugins',
     'zepto.templates_dir'         => 'templates',
     'zepto.default_template'      => 'base.twig',
+    'zepto.default_list_template' => 'list.twig',
     'zepto.content_ext'           => array('md', 'markdown'),
     'zepto.plugins_enabled'       => true,
     'site.site_root'              => 'http://localhost:8888/zepto/',
