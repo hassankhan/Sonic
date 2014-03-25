@@ -229,78 +229,17 @@ class Zepto
         foreach ($files as $file) {
 
             // Get filename without extension
-            $file_name = str_replace(
+            $file_path = str_replace(
                 $app['settings']['zepto.content_dir'],
                 '',
                 $file['dirname'] . '/' . $file['filename']
             );
 
-            $route = '/' . trim(str_replace('/index', '/', $file_name), '/');
+            $route = '/' . trim(str_replace('/index', '/', $file_path), '/');
 
-            $this->app['router']->get($route, array($this, 'create_route'));
+            $this->app['router']->route(new Route\DefaultRoute($route));
         }
-        $this->app['router']->get('/tag/<:tag_name>', array($this, 'create_tag_route'));
-    }
-
-    /**
-     * The default route callback for any files in the 'content' folder
-     *
-     * @return string
-     */
-    public function create_route()
-    {
-        // Get resource URL
-        $resource_url = $this->app['router']->request()->getPathInfo();
-
-        // Get file path
-        $path = rtrim($this->app['settings']['zepto.content_dir'] . $resource_url, '/');
-
-        // Check if file(s) exist
-        $contents = $this->app['filesystem']->listContents($path);
-
-        // Load file
-        $loaded_file = empty($contents) === TRUE
-            ? $this->app['filesystem']->parse($path . '.md')
-            : $this->app['filesystem']->parse(rtrim($path, '/') . '/' . 'index.md');
-
-        $this->app['extra'] = isset($this->app['extra']) === TRUE ? $this->app['extra'] : array();
-
-        // Merge Twig options and content into one array
-        $options = array_merge($loaded_file, $this->app['extra']);
-
-        // Get template name from file, if not set, then use default
-        $template_name = array_key_exists('template', $loaded_file['meta']) === true
-            ? $loaded_file['meta']['template']
-            : $this->app['settings']['zepto.default_template'];
-
-        // Render template with Twig
-        return $this->app['twig']->render($template_name, $options);
-    }
-
-    /**
-     * The default route callback for the '/tag/<tag_name>' route
-     *
-     * @return string
-     */
-    public function create_tag_route($tag_name)
-    {
-        $loaded_file = $this->app['tags'][$tag_name];
-        $loaded_file['contents'] = implode(' ', $loaded_file);
-
-        // Set Twig options
-        $twig_vars = array(
-            'config'     => $this->app['settings'],
-            'base_url'   => $this->app['settings']['site.site_root'],
-            'site_title' => $this->app['settings']['site.site_title']
-        );
-
-        $this->app['extra'] = isset($this->app['extra']) === TRUE ? $this->app['extra'] : array();
-
-        // Merge Twig options and content into one array
-        $options = array_merge($twig_vars, $loaded_file, $this->app['extra']);
-
-        // Render template with Twig
-        return $this->app['twig']->render($this->app['settings']['zepto.default_template'], $options);
+        $this->app['router']->route(new Route\TagRoute('/tag/<:tag_name>'));
     }
 
     /**
