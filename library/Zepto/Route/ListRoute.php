@@ -47,7 +47,7 @@ class ListRoute extends \Zepto\Route implements \Zepto\RouteInterface
         $zepto->app['extra'] = isset($zepto->app['extra']) === TRUE ? $zepto->app['extra'] : array();
 
         // Render template with Twig
-        return $zepto->app['twig']->render('post-list.twig', array('contents' => $posts));
+        return $zepto->app['twig']->render($zepto->app['settings']['zepto.default_list_template'], array('contents' => $posts));
     }
 
     /**

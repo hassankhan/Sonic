@@ -55,7 +55,7 @@ class TagRoute extends \Zepto\Route\ListRoute implements \Zepto\RouteInterface
         $options             = array_merge($posts, $zepto->app['extra']);
 
         // Render template with Twig
-        return $zepto->app['twig']->render('post-list.twig', array('contents' => $posts));
+        return $zepto->app['twig']->render($zepto->app['settings']['zepto.default_list_template'], array('contents' => $posts));
     }
 
 }
