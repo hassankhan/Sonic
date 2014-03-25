@@ -1,6 +1,6 @@
 /*
 Title: Dated Post
-Tags:  date, test
+Tags:  date,test
 Date: 2014-03-24
 */
 

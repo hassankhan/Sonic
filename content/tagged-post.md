@@ -1,6 +1,6 @@
 /*
 Title: Tagged Post
-Tags:  tag, test
+Tags:  tag,test
 */
 
 Tagged Post
