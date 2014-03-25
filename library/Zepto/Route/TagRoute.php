@@ -14,7 +14,7 @@ namespace Zepto\Route;
  * @license    MIT
  * @since      0.7
  */
-class TagRoute extends \Zepto\Route implements \Zepto\RouteInterface
+class TagRoute extends \Zepto\Route\ListRoute implements \Zepto\RouteInterface
 {
 
     /**
@@ -41,20 +41,12 @@ class TagRoute extends \Zepto\Route implements \Zepto\RouteInterface
 
         // Get parameters from URL
         list($tag_name) = func_get_args();
+
         // Load file
         $tagged_files   = $zepto->app['tags'][$tag_name];
+
         // Create array to hold posts
-        $posts          = array();
-
-        // Iterate through files and get excerpts for all of them
-        foreach ($tagged_files as $file) {
-            $file_contents = $zepto->app['filesystem']->parse($file);
-
-            if ($file_contents['meta']['title'] !== 'Quote') {
-                $file_contents['contents'] = $zepto->app['helper']->get_excerpt($file_contents['contents']);
-            }
-            $posts[str_replace('content/', '', $file)] = $file_contents;
-        }
+        $posts          = $this->get_excerpts($tagged_files);
 
         // Load in any extra stuffs
         $zepto->app['extra'] = isset($zepto->app['extra']) === TRUE ? $zepto->app['extra'] : array();

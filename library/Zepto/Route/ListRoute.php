@@ -38,11 +38,28 @@ class ListRoute extends \Zepto\Route implements \Zepto\RouteInterface
     {
         // Get reference to Zepto
         $zepto = \Zepto\Zepto::instance();
-
         // Get dates from all content
         $dates = $zepto->app['filesystem']->dates('content');
-        // Get filenames of content
-        $files = array_keys($dates);
+        // Get filenames of content and create array to hold posts
+        $posts = $this->get_excerpts(array_keys($dates));
+
+        // Load in any extra stuffs
+        $zepto->app['extra'] = isset($zepto->app['extra']) === TRUE ? $zepto->app['extra'] : array();
+
+        // Render template with Twig
+        return $zepto->app['twig']->render('post-list.twig', array('contents' => $posts));
+    }
+
+    /**
+     * Gets file excerpts from all files
+     *
+     * @param  array $files
+     * @return array
+     */
+    public function get_excerpts($files)
+    {
+        // Get reference to Zepto
+        $zepto = \Zepto\Zepto::instance();
         // Create array to hold posts
         $posts = array();
 
@@ -56,8 +73,7 @@ class ListRoute extends \Zepto\Route implements \Zepto\RouteInterface
             $posts[str_replace('content/', '', $file)] = $file_contents;
         }
 
-        // Render template with Twig
-        return $zepto->app['twig']->render('post-list.twig', array('contents' => $posts));
+        return $posts;
     }
 
 }
