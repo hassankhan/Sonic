@@ -37,23 +37,12 @@ class ListRoute extends \Zepto\Route
     /**
      * The route callback
      *
-     * @param  string $year (Optional)
      * @return string
      */
-    public function build_route($year = '')
+    public function build_route()
     {
-        if ($year === '') {
-            // Get current year
-            $current_year = date('Y');
-            // Check if a folder exists with that year, otherwise decrease by 1 and try again
-            while ($this->filesystem->has('content/' . $year) === FALSE) {
-                $year--;
-            }
-            $year = '/' . $year;
-        }
-
         // Get dates from all content
-        $dates = $this->filesystem->dates('content' . $year);
+        $dates = $this->filesystem->dates('content');
         // Get filenames of content
         $files = array_keys($dates);
         // Create array to hold posts
@@ -72,17 +61,18 @@ class ListRoute extends \Zepto\Route
     /**
      * Returns an excerpt of text from a file
      *
-     * @param  array $file_contents
+     * @param  array  $file_contents
+     * @param  int    $br_limit
      * @return string
      */
-    public function get_file_excerpt($file_contents)
+    public function get_file_excerpt($file_contents, $br_limit = 3)
     {
         if (
-            substr_count($file_contents['contents'], "\n") > 4
+            substr_count($file_contents['contents'], "\n") > $br_limit
             &&
             $file_contents['meta']['title'] !== 'Quote'
         ) {
-            $excerpt = explode(PHP_EOL . PHP_EOL, $file_contents['contents'], 3);
+            $excerpt = explode(PHP_EOL . PHP_EOL, $file_contents['contents'], $br_limit);
             array_pop($excerpt);
             return implode(' ', $excerpt);
         }
