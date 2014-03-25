@@ -42,9 +42,9 @@ class Helper
      *
      * @return array
      */
-    public function config()
+    public function config($option)
     {
-        return $this->app['settings'];
+        return $this->app['settings'][$option];
     }
 
     /**

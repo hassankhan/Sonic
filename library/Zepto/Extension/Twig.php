@@ -47,10 +47,10 @@ class Twig extends \Twig_Extension
      * @return array
      * @codeCoverageIgnore
      */
-    public function config()
+    public function config($option)
     {
         $zepto = \Zepto\Zepto::instance();
-        return $zepto->app['settings'];
+        return $zepto->app['settings'][$option];
     }
 
     /**
