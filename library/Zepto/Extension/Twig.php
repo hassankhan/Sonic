@@ -45,6 +45,7 @@ class Twig extends \Twig_Extension
      * Returns Zepto configuration
      *
      * @return array
+     * @codeCoverageIgnore
      */
     public function config()
     {
@@ -56,6 +57,7 @@ class Twig extends \Twig_Extension
      * Returns the site root
      *
      * @return string
+     * @codeCoverageIgnore
      */
     public function site_url()
     {
@@ -67,6 +69,7 @@ class Twig extends \Twig_Extension
      * Returns the site title
      *
      * @return string
+     * @codeCoverageIgnore
      */
     public function site_title()
     {
