@@ -42,8 +42,10 @@ class TagRoute extends \Zepto\Route\ListRoute implements \Zepto\RouteInterface
         // Get parameters from URL
         list($tag_name) = func_get_args();
 
+        $tags           = $zepto->app['filesystem']->tags('content');
+
         // Load file
-        $tagged_files   = $zepto->app['tags'][$tag_name];
+        $tagged_files   = $tags[$tag_name];
 
         // Create array to hold posts
         $posts          = $this->get_excerpts($tagged_files);

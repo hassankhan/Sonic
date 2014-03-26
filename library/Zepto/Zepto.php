@@ -130,7 +130,6 @@ class Zepto
         // Run application hooks and reload application settings
         $this->run_hooks('before_config_load', array(&$settings));
         $app['settings'] = $settings;
-        $app['tags']     = $this->app['filesystem']->tags('content');
 
         // Add basic routes to router and run application hooks
         $this->run_hooks('before_router_setup');
