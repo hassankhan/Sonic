@@ -68,7 +68,8 @@ class ListRoute extends \Zepto\Route implements \Zepto\RouteInterface
             $file_contents = $zepto->app['filesystem']->parse($file);
 
             if ($file_contents['meta']['title'] !== 'Quote') {
-                $file_contents['contents'] = $zepto->app['helper']->get_excerpt($file_contents['contents']);
+                $file_contents['contents'] = $zepto->app['helper']->get_excerpt($file_contents['contents'])
+                    . '<br />&#8230;<a href="">Read more</a>';
             }
             $posts[str_replace('content/', '', $file)] = $file_contents;
         }
