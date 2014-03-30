@@ -12,10 +12,13 @@ use Whoops\Run;
  * @license    MIT
  * @since      0.4
  */
-class WhoopsPlugin implements \Zepto\PluginInterface {
+class WhoopsPlugin extends \Zepto\PluginAbstract {
 
-    public function after_plugins_load(\Pimple $app)
+    public function after_plugins_load()
     {
+        // Get local reference
+        $app = $this->zepto->app;
+
         // Add Whoops handlers
         $app['whoopsPrettyPageHandler'] = $app->factory(
             function () {
@@ -80,7 +83,7 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
         };
     }
 
-    public function before_config_load(\Pimple $app, &$settings)
+    public function before_config_load(&$settings)
     {
         // If we're not on dev, then don't load up
         if ($settings['zepto.environment'] !== 'dev') {
@@ -97,19 +100,19 @@ class WhoopsPlugin implements \Zepto\PluginInterface {
         }
     }
 
-    public function before_router_setup(\Pimple $app)
+    public function before_router_setup()
     {
     }
 
-    public function after_router_setup(\Pimple $app)
+    public function after_router_setup()
     {
     }
 
-    public function before_response_send(\Pimple $app)
+    public function before_response_send()
     {
     }
 
-    public function after_response_send(\Pimple $app)
+    public function after_response_send()
     {
     }
 

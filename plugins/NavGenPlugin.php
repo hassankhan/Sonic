@@ -10,13 +10,13 @@
  * @license    MIT
  * @since      0.6
  */
-class NavGenPlugin implements \Zepto\PluginInterface {
+class NavGenPlugin extends \Zepto\PluginAbstract {
 
-    public function after_plugins_load(\Pimple $app)
+    public function after_plugins_load()
     {
     }
 
-    public function before_config_load(\Pimple $app, &$settings)
+    public function before_config_load(&$settings)
     {
         $nav_settings = array(
             'site.nav.class'              => 'nav',
@@ -29,35 +29,35 @@ class NavGenPlugin implements \Zepto\PluginInterface {
 
     }
 
-    public function before_router_setup(\Pimple $app)
+    public function before_router_setup()
     {
     }
 
-    public function after_router_setup(\Pimple $app)
+    public function after_router_setup()
     {
         // Use this one
-        $html         = $this->generate_html($app);
+        $html         = $this->generate_html($this->zepto->app);
 
-        if (isset($app['extra']) === TRUE) {
-            $app['extra']['nav'] = $html;
+        if (isset($this->zepto->app['extra']) === TRUE) {
+            $this->zepto->app['extra']['nav'] = $html;
         }
         else {
-            $app['extra'] = array('nav' => $html);
+            $this->zepto->app['extra'] = array('nav' => $html);
         }
     }
 
-    public function before_response_send(\Pimple $app)
+    public function before_response_send()
     {
     }
 
-    public function after_response_send(\Pimple $app)
+    public function after_response_send()
     {
     }
 
-    public function generate_html($app)
+    public function generate_html()
     {
-        $settings   = $app['settings'];
-        $filesystem = $app['filesystem'];
+        $settings   = $this->zepto->app['settings'];
+        $filesystem = $this->zepto->app['filesystem'];
 
         // Opening ``<ul>`` tag and adding class name
         $nav_html   = sprintf('<ul class="%s">' . PHP_EOL, $settings['site.nav.class']);
@@ -72,7 +72,7 @@ class NavGenPlugin implements \Zepto\PluginInterface {
 
         foreach ($content_files as $file) {
             if ($file['dirname'] === 'content') {
-                $nav_html .= '<li>' . $app['helper']->link_for($file['basename']) . '</li>' . PHP_EOL;
+                $nav_html .= '<li>' . $this->zepto->app['helper']->link_for($file['basename']) . '</li>' . PHP_EOL;
                 continue;
             }
         }

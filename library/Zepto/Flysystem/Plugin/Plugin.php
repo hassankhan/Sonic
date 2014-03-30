@@ -58,9 +58,9 @@ class Plugin implements \League\Flysystem\PluginInterface
         include_once(getcwd() . '/' . $file['path']);
 
         // Check class implements correct interface
-        $interfaces = class_implements($file['filename']);
-        if (isset($interfaces['Zepto\PluginInterface']) === FALSE) {
-            throw new \UnexpectedValueException('Plugin does not implement Zepto\PluginInterface');
+        $parents = class_parents($file['filename']);
+        if (isset($parents['Zepto\PluginAbstract']) === FALSE) {
+            throw new \UnexpectedValueException('Plugin does not implement Zepto\PluginAbstract');
         }
 
         return new $file['filename'];
