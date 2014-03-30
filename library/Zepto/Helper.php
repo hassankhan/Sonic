@@ -44,7 +44,9 @@ class Helper
      */
     public function config($option)
     {
-        return $this->app['settings'][$option];
+        return isset($this->app['settings'][$option]) === TRUE
+            ? $this->app['settings'][$option]
+            : NULL;
     }
 
     /**
@@ -203,20 +205,20 @@ class Helper
     }
 
     /**
-     * Returns an excerpt of text from a file
+     * Returns an excerpt of a string by breaking at new lines
      *
-     * @param  array  $file_contents
+     * @param  array  $text
      * @param  int    $br_limit
      * @return string
      */
-    public static function get_excerpt($file_contents, $br_limit = 3)
+    public static function get_excerpt($text, $br_limit = 3)
     {
-        if (substr_count($file_contents, "\n") > $br_limit) {
-            $excerpt = explode(PHP_EOL . PHP_EOL, $file_contents, $br_limit);
+        if (substr_count($text, PHP_EOL) > $br_limit) {
+            $excerpt = explode(PHP_EOL, $text, ++$br_limit);
             array_pop($excerpt);
             return implode(' ', $excerpt);
         }
-        return $file_contents;
+        return $text;
     }
 
     /**
