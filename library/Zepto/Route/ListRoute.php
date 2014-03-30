@@ -70,7 +70,7 @@ class ListRoute extends \Zepto\Route implements \Zepto\RouteInterface
             if ($file_contents['meta']['title'] !== 'Quote') {
                 $contents  = $zepto->app['helper']->get_excerpt(
                     $file_contents['contents'],
-                    $zepto->app['settings']['site.excerpt_length']
+                    $zepto->app['settings']['site.excerpt_newline_limit']
                 );
                 $contents .= '<br /><a href="">&#8230; Read more</a>';
 

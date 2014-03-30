@@ -139,7 +139,7 @@ class Helper
             'site.site_root'              => 'http://localhost:8888/zepto/',
             'site.site_title'             => 'Zepto',
             'site.date_format'            => 'jS M Y',
-            'site.excerpt_length'         => '50',
+            'site.excerpt_newline_limit'  => '5',
             'twig'                        => array(
                 'charset'           => 'utf-8',
                 'cache'             => 'cache',

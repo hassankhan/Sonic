@@ -6,34 +6,40 @@ namespace Zepto;
  */
 class HelperTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @covers Zepto\Helper::config()
+     */
+    public function testConfig()
+    {
+        $zepto    = new Zepto;
+        $helper   = new Helper($zepto->app);
+        $actual   = $helper->config('site.excerpt_newline_limit');
+        $expected = '5';
+        $this->assertEquals($expected, $actual);
+    }
 
     /**
-     * @covers Zepto\Helper::default_config()
+     * @covers Zepto\Helper::site_url()
      */
-    public function testDefaultConfig()
+    public function testSiteUrl()
     {
-        $expected = array(
-            'zepto.environment'           => 'dev',
-            'zepto.content_dir'           => 'content',
-            'zepto.plugins_dir'           => 'plugins',
-            'zepto.templates_dir'         => 'templates',
-            'zepto.default_template'      => 'base.twig',
-            'zepto.default_list_template' => 'list.twig',
-            'zepto.content_ext'           => array('md', 'markdown'),
-            'zepto.plugins_enabled'       => false,
-            'site.site_root'              => 'http://localhost:8888/zepto/',
-            'site.site_title'             => 'Zepto',
-            'site.date_format'            => 'jS M Y',
-            'site.excerpt_length'         => '50',
-            'twig'                       => array(
-                'charset'           => 'utf-8',
-                'cache'             => 'cache',
-                'strict_variables'  => false,
-                'autoescape'        => false,
-                'auto_reload'       => true
-            )
-        );
-        $this->assertEquals($expected, Helper::default_config());
+        $zepto    = new Zepto;
+        $helper   = new Helper($zepto->app);
+        $actual   = $helper->site_url();
+        $expected = 'http://localhost:8888/zepto/';
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Zepto\Helper::site_title()
+     */
+    public function testSiteTitle()
+    {
+        $zepto    = new Zepto;
+        $helper   = new Helper($zepto->app);
+        $actual   = $helper->site_title();
+        $expected = 'Zepto';
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -86,6 +92,35 @@ class HelperTest extends \PHPUnit_Framework_TestCase
         $actual = $helper->link_for('non-index.md');
         $this->assertNull($actual);
         ob_end_clean();
+    }
+
+    /**
+     * @covers Zepto\Helper::default_config()
+     */
+    public function testDefaultConfig()
+    {
+        $expected = array(
+            'zepto.environment'           => 'dev',
+            'zepto.content_dir'           => 'content',
+            'zepto.plugins_dir'           => 'plugins',
+            'zepto.templates_dir'         => 'templates',
+            'zepto.default_template'      => 'base.twig',
+            'zepto.default_list_template' => 'list.twig',
+            'zepto.content_ext'           => array('md', 'markdown'),
+            'zepto.plugins_enabled'       => false,
+            'site.site_root'              => 'http://localhost:8888/zepto/',
+            'site.site_title'             => 'Zepto',
+            'site.date_format'            => 'jS M Y',
+            'site.excerpt_newline_limit'  => '5',
+            'twig'                       => array(
+                'charset'           => 'utf-8',
+                'cache'             => 'cache',
+                'strict_variables'  => false,
+                'autoescape'        => false,
+                'auto_reload'       => true
+            )
+        );
+        $this->assertEquals($expected, Helper::default_config());
     }
 
     /**
@@ -151,6 +186,28 @@ class HelperTest extends \PHPUnit_Framework_TestCase
         $config['zepto.environment'] = 'production';
         $config['site']['site_root'] = 'fuck://this@should?fail';
         Helper::validate_config($config);
+    }
+
+    /**
+     * @covers Zepto\Helper::get_excerpt()
+     */
+    public function testGetExcerpt()
+    {
+        $content  = "First line\nSecond Line\nThird Line\nFourth Line\nFifth Line";
+        $expected = "First line Second Line Third Line";
+        $actual   = Helper::get_excerpt($content);
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Zepto\Helper::get_excerpt()
+     */
+    public function testGetExcerptFromSmallText()
+    {
+        $content  = "First line\nSecond Line";
+        $expected = "First line\nSecond Line";
+        $actual   = Helper::get_excerpt($content);
+        $this->assertEquals($expected, $actual);
     }
 
     /**
