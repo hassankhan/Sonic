@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+    <title>{{ site_title() }}</title>
+    <link href="{{ site_url() }}" />
+    <link type="application/atom+xml" rel="self" href="{{ site_url() }}rss" />
+    <updated>{{ date }}</updated>
+    <id>{{ site_url() }}</id>
+    <author>
+        <name>{{ config('site.author') }}</name>
+        <email>{{ config('site.author_email') }}</email>
+    </author>
+
+    {% for path, entry in entries %}
+        <entry>
+            <id>{{ entry.id }}</id>
+            <link type="text/html" rel="alternate" href="{{ url_for(path) }}" />
+            <title>{{ entry.meta.title }}</title>
+            <published>{{ entry.published_date }}</published>
+            <updated>{{ entry.modified_date }}</updated>
+            <author>
+                <name>{{ config('site.author') }}</name>
+                <uri>{{ site_url() }}</uri>
+            </author>
+            <content type="html"><![CDATA[{{ entry.contents }}]]></content>
+        </entry>
+    {% endfor %}
+</feed>

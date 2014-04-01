@@ -110,6 +110,8 @@ class HelperTest extends \PHPUnit_Framework_TestCase
             'zepto.plugins_enabled'       => false,
             'site.site_root'              => 'http://localhost:8888/zepto/',
             'site.site_title'             => 'Zepto',
+            'site.author'                 => '',
+            'site.author_email'           => '',
             'site.date_format'            => 'jS M Y',
             'site.excerpt_newline_limit'  => '5',
             'twig'                       => array(
