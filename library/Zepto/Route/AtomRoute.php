@@ -47,8 +47,6 @@ class AtomRoute extends \Zepto\Route\ListRoute implements \Zepto\RouteInterface
         // Get today's date as a DateTime object
         $todays_date = new \DateTime();
 
-        // var_dump($posts);die();
-
         foreach ($posts as $path => $post) {
 
             // Try and get post date, otherwise use Unix Epoch date
