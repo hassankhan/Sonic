@@ -238,7 +238,6 @@ class Zepto
 
             $this->app['router']->route(new Route\DefaultRoute($route));
         }
-        $this->app['router']->route(new Route\TagRoute('/tags/<:tag_name>'));
     }
 
     /**
