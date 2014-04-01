@@ -1,16 +1,14 @@
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-	{% set author   	= 'Hassan Khan' %}
-	{% set author_email = 'contact@hassankhan.me' %}
     <title>{{ site_title() }}</title>
     <link href="{{ site_url() }}" />
     <link type="application/atom+xml" rel="self" href="{{ site_url() }}rss" />
     <updated>{{ date }}</updated>
     <id>{{ site_url() }}</id>
     <author>
-        <name>{{ author }}</name>
-        <email>{{ author_email }}</email>
+        <name>{{ config('site.author') }}</name>
+        <email>{{ config('site.author_email') }}</email>
     </author>
 
     {% for path, entry in entries %}
@@ -21,7 +19,7 @@
             <published>{{ entry.published_date }}</published>
             <updated>{{ entry.modified_date }}</updated>
             <author>
-                <name>{{ author }}</name>
+                <name>{{ config('site.author') }}</name>
                 <uri>{{ site_url() }}</uri>
             </author>
             <content type="html"><![CDATA[{{ entry.contents }}]]></content>
