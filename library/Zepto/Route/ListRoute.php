@@ -67,7 +67,11 @@ class ListRoute extends \Zepto\Route implements \Zepto\RouteInterface
         foreach ($files as $file) {
             $file_contents = $zepto->app['filesystem']->parse($file);
 
-            if ($file_contents['meta']['title'] !== 'Quote') {
+            if (
+                $file_contents['meta']['title'] !== 'Quote'
+                &&
+                $zepto->app['settings']['site.excerpt_newline_limit'] !== 0
+            ) {
                 $contents  = $zepto->app['helper']->get_excerpt(
                     $file_contents['contents'],
                     $zepto->app['settings']['site.excerpt_newline_limit']
