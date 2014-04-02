@@ -14,7 +14,7 @@ namespace Zepto\Route;
  * @license    MIT
  * @since      0.7
  */
-class DefaultRoute extends \Zepto\Route implements \Zepto\RouteInterface
+class DefaultRoute extends \Zepto\Route
 {
 
     /**

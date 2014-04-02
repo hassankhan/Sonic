@@ -14,7 +14,7 @@ namespace Zepto\Route;
  * @license    MIT
  * @since      0.7
  */
-class ListRoute extends \Zepto\Route implements \Zepto\RouteInterface
+class ListRoute extends \Zepto\Route
 {
 
     /**
@@ -34,7 +34,7 @@ class ListRoute extends \Zepto\Route implements \Zepto\RouteInterface
      *
      * @return string
      */
-    public function build_route()
+    public function build_route($param = '')
     {
         // Get reference to Zepto
         $zepto = \Zepto\Zepto::instance();

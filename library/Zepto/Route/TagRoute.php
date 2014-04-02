@@ -14,7 +14,7 @@ namespace Zepto\Route;
  * @license    MIT
  * @since      0.7
  */
-class TagRoute extends \Zepto\Route\ListRoute implements \Zepto\RouteInterface
+class TagRoute extends \Zepto\Route\ListRoute
 {
 
     /**
@@ -34,22 +34,16 @@ class TagRoute extends \Zepto\Route\ListRoute implements \Zepto\RouteInterface
      *
      * @return string
      */
-    public function build_route()
+    public function build_route($tag_name = '')
     {
         // Get reference to Zepto
         $zepto = \Zepto\Zepto::instance();
-
-        // Get parameters from URL
-        list($tag_name) = func_get_args();
-
+        // Get tags
         $tags           = $zepto->app['filesystem']->tags('content');
-
         // Load file
         $tagged_files   = $tags[$tag_name];
-
         // Create array to hold posts
         $posts          = $this->get_excerpts($tagged_files);
-
         // Load in any extra stuffs
         $zepto->app['extra'] = isset($zepto->app['extra']) === TRUE ? $zepto->app['extra'] : array();
 
