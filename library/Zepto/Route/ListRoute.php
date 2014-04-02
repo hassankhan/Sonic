@@ -75,8 +75,9 @@ class ListRoute extends \Zepto\Route implements \Zepto\RouteInterface
                 $contents  = $zepto->app['helper']->get_excerpt(
                     $file_contents['contents'],
                     $zepto->app['settings']['site.excerpt_newline_limit']
-                );
-                $contents .= '<br /><a href="">&#8230; Read more</a>';
+                ) . '<br /><a href="'
+                . $zepto->app['helper']->url_for(str_replace('content/', '', $file_contents['path']))
+                . '">&#8230; Read more</a>';
 
                 $file_contents['contents'] = $contents;
             }
