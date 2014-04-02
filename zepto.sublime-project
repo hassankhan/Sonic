@@ -3,19 +3,20 @@
 	[
 		{
 			"follow_symlinks": true,
-			"path": "/Volumes/Data HD/Dropbox/Projects/Zepto"
+			"path": "."
 		}
 	],
-    "settings":
-    {
-        "default_line_ending": "unix",
-        "ensure_newline_at_eof_on_save": true,
-        "tab_size": 4,
-        "translate_tabs_to_spaces": true,
-        "trim_automatic_white_space": true,
-        "trim_trailing_white_space_on_save": true,
-        "xdebug": {
-            "url": "http://localhost:8888/zepto/"
-        }
-    }
+	"settings":
+	{
+		"default_line_ending": "unix",
+		"ensure_newline_at_eof_on_save": true,
+		"tab_size": 4,
+		"translate_tabs_to_spaces": true,
+		"trim_automatic_white_space": true,
+		"trim_trailing_white_space_on_save": true,
+		"xdebug":
+		{
+			"url": "http://localhost:8888/zepto/"
+		}
+	}
 }
