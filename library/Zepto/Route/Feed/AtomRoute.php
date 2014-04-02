@@ -1,6 +1,6 @@
 <?php
 
-namespace Zepto\Route;
+namespace Zepto\Route\Feed;
 
 /**
  * AtomRoute
