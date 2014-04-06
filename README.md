@@ -34,7 +34,7 @@ You need **PHP >= 5.3.0**, and [Composer](//getcomposer.org/) is highly recommen
 
 ### Install
 
-![Initial setup demo](//github.com/hassankhan/Zepto/wiki/img/zepto-setup.gif)
+![Initial setup demo](https://github.com/hassankhan/Zepto/wiki/img/zepto-setup.gif)
 
 #### Composer install
     composer install hassankhan/zepto
