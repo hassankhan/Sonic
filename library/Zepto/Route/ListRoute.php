@@ -38,9 +38,53 @@ class ListRoute extends \Zepto\Route\ListRouteAbstract
     public function posts()
     {
         // Get dates from all content
-        $dates = $this->zepto->app['filesystem']->dates('content');
+        $dates = $this->dates('content');
 
         return $this->excerpts(array_keys($dates));
+    }
+
+    /**
+     * Plugin handler
+     *
+     * @param  string $path
+     * @return array
+     */
+    public function dates($path = '')
+    {
+        // Get all files in path
+        $contents = $this->zepto->app['filesystem']->listContents($path, TRUE);
+        // Create array
+        $date_list = array();
+
+        // Iterate through files and get dates
+        foreach ($contents as $file) {
+            if (
+                isset($file['extension']) === TRUE
+                && $file['extension'] === 'md'
+            ) {
+                $date_list[$file['path']] = $this->date($file);
+            }
+        }
+
+        // Sort the files by date
+        arsort($date_list);
+
+        return $date_list;
+    }
+
+    /**
+     * Gets a date from a file
+     *
+     * @param  string $file
+     * @return \DateTime|NULL
+     */
+    protected function date($file)
+    {
+        $file_contents = $this->zepto->app['filesystem']->parse($file['path']);
+        if (isset($file_contents['meta']['date']) === FALSE) {
+            return NULL;
+        }
+        return new \DateTime($file_contents['meta']['date']);
     }
 
 }

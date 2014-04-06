@@ -97,7 +97,6 @@ class Zepto
             $filesystem->addPlugin($app['content_plugin']);
             $filesystem->addPlugin($app['plugin_plugin']);
             $filesystem->addPlugin($app['tag_parser_plugin']);
-            $filesystem->addPlugin($app['date_parser_plugin']);
             return $filesystem;
         };
 
