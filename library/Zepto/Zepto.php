@@ -2,13 +2,6 @@
 
 namespace Zepto;
 
-use Pimple;
-use League\Flysystem\Filesystem;
-use League\Flysystem\Adapter\Local;
-use Michelf\MarkdownExtra;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-
 /**
  * Zepto
  *
@@ -48,7 +41,7 @@ class Zepto
      */
     public function __construct(array $settings = array())
     {
-        $this->app = new Pimple();
+        $this->app = new \Pimple();
 
         // Get local reference to container
         $app = $this->app;
@@ -57,13 +50,13 @@ class Zepto
         $app['ROOT_DIR'] = realpath(getcwd()) . '/';
 
         $app['request'] = function () {
-            return Request::createFromGlobals();
+            return \Symfony\Component\HttpFoundation\Request::createFromGlobals();
         };
 
         $app['response'] = function () {
-            return new Response(
+            return new \Symfony\Component\HttpFoundation\Response(
                 'Content',
-                Response::HTTP_OK,
+                \Symfony\Component\HttpFoundation\Response::HTTP_OK,
                 array('content-type' => 'text/html; charset=utf-8')
             );
         };
