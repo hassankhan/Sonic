@@ -32,20 +32,18 @@ class AtomRoute extends \Zepto\Route\ListRoute
     }
 
     /**
-     * Builds and returns the rendered HTML
+     * Method required by abstract class. Returns an array of posts
+     * that match whatever requirements for this route.
      *
-     * @return string
+     * @return array
      */
-    public function build_route($param = '')
+    public function posts()
     {
-        // Get reference to Zepto
-        $zepto = \Zepto\Zepto::instance();
         // Get dates from all content
-        $dates = $zepto->app['filesystem']->dates('content');
+        $dates = $this->dates('content');
+
         // Get filenames of content and create array to hold posts
-        $posts = $this->get_excerpts(array_keys($dates));
-        // Get today's date as a DateTime object
-        $todays_date = new \DateTime();
+        $posts = $this->excerpts(array_keys($dates));
 
         foreach ($posts as $path => $post) {
 
@@ -54,21 +52,38 @@ class AtomRoute extends \Zepto\Route\ListRoute
                 ? new \DateTime($post['meta']['date'])
                 : new \DateTime('01-01-1970');
 
-            $timestamp = $zepto->app['filesystem']->getTimestamp(
-                $zepto->app['settings']['zepto.content_dir'] .'/' . $path
+            $timestamp = $this->zepto->app['filesystem']->getTimestamp(
+                $this->zepto->app['settings']['zepto.content_dir'] .'/' . $path
             );
 
             // Create additional fields for Atom stuff
-            $posts[$path]['id']             = $this->make_id($zepto->app['helper']->url_for($path));
+            $posts[$path]['id']             = $this->make_id($this->zepto->app['helper']->url_for($path));
             $posts[$path]['published_date'] = $post_date->format(\DateTime::ATOM);
             $posts[$path]['modified_date']  = date('Y-m-d\TH:i:sP', $timestamp);
         }
 
+        return $posts;
+    }
+
+    /**
+     * Builds and returns the rendered HTML
+     *
+     * @return string
+     */
+    public function build_route($param = '')
+    {
+        // Get dates from all content
+        $dates = $this->dates('content');
+        // Get filenames of content and create array to hold posts
+        $posts = $this->posts();
+        // Get today's date as a DateTime object
+        $todays_date = new \DateTime();
+
         // Set response content-type
-        $zepto->app['router']->response()->headers->set('Content-type', 'application/xml');
+        $this->zepto->app['router']->response()->headers->set('Content-type', 'application/xml');
 
         // Render template with Twig
-        return $zepto->app['twig']->render(
+        return $this->zepto->app['twig']->render(
             'feed.twig',
             array(
                 'date' => $todays_date->format(\DateTime::ATOM),
