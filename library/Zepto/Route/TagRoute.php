@@ -29,11 +29,19 @@ class TagRoute extends \Zepto\Route\ListRoute
         parent::__construct($url, array($this, 'build_route'));
     }
 
+    /**
+     * Method required by abstract class. Returns an array of posts
+     * that match whatever requirements for this route.
+     *
+     * @return array
+     */
     public function posts()
     {
+        // Get tag name
         $params = func_get_args();
         $tag_name = $params[0];
-        // Get tags
+
+        // Get tagged files
         $tags           = $this->zepto->app['filesystem']->tags('content');
         $tagged_files   = $tags[$tag_name];
 

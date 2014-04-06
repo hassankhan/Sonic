@@ -29,6 +29,12 @@ class ListRoute extends \Zepto\Route\ListRouteAbstract
         parent::__construct($url, array($this, 'build_route'));
     }
 
+    /**
+     * Method required by abstract class. Returns an array of posts
+     * that match whatever requirements for this route.
+     *
+     * @return array
+     */
     public function posts()
     {
         // Get dates from all content
