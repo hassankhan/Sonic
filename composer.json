@@ -22,7 +22,6 @@
             "Zepto": "library/"
         }
     },
-    "bin": ["bin/zep"],
     "minimum-stability": "stable",
     "authors": [
         {
