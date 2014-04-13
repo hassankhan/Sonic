@@ -85,6 +85,9 @@ class WhoopsPlugin extends \Zepto\PluginAbstract {
 
     public function before_config_load(&$settings)
     {
+        // Get local reference
+        $app = $this->zepto->app;
+
         // If we're not on dev, then don't load up
         if ($settings['zepto.environment'] !== 'dev') {
             return;
