@@ -71,15 +71,15 @@ class Zepto
             return $plugin;
         };
 
-        $app['plugin_plugin'] = function ($app) {
+        $app['plugin_plugin'] = function () {
             return new Flysystem\Plugin\Plugin();
         };
 
-        $app['tag_parser_plugin'] = function ($app) {
+        $app['tag_parser_plugin'] = function () {
             return new Flysystem\Plugin\TagParser();
         };
 
-        $app['date_parser_plugin'] = function ($app) {
+        $app['date_parser_plugin'] = function () {
             return new Flysystem\Plugin\DateParser();
         };
 
@@ -110,7 +110,7 @@ class Zepto
         $settings = array_merge($this->app['helper']->default_config(), $settings);
         $this->app['helper']->validate_config($settings);
 
-        // Set this particular setting now
+        // Set app settings now
         $this->app['settings'] = $settings;
         // If plugins ARE indeed enabled, initialise the plugin loader
         // and load the fuckers
@@ -160,9 +160,6 @@ class Zepto
             return FALSE;
         }
 
-        // Send app reference to hooks
-        $args = array_merge(array($this->app), $args);
-
         // Run hooks associated with that event
         foreach ($this->app['plugins'] as $plugin_id => $plugin) {
             if (is_callable(array($plugin, $hook_id))) {
@@ -191,7 +188,9 @@ class Zepto
             });
 
             foreach ($plugin_files as $plugin_file) {
-                $plugins[$plugin_file['filename']] = $this->app['filesystem']->include($plugin_file['path']);
+                $plugin = $this->app['filesystem']->include($plugin_file['path']);
+                $plugin->set_app($this);
+                $plugins[$plugin_file['filename']] = $plugin;
             }
 
             $this->app['plugins'] = $plugins;
@@ -249,7 +248,7 @@ class Zepto
     }
 
     /**
-     * Annoying method to help with tests. It probably would kill the app too
+     * Annoying method to help with tests. It probably kills the app too
      *
      * @return
      */

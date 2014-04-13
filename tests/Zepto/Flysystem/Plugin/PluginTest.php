@@ -42,7 +42,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     public function testHandle()
     {
         $actual = $this->plugin->handle('tests/mocks/SimplePlugin.php');
-        $this->assertInstanceOf('Zepto\PluginInterface', $actual);
+        $this->assertInstanceOf('Zepto\PluginAbstract', $actual);
     }
 
     /**
