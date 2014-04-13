@@ -54,7 +54,7 @@ class TagParser implements \League\Flysystem\PluginInterface
      * Plugin handler
      *
      * @param  string $path
-     * @return \Zepto\PluginInterface
+     * @return array
      */
     public function handle($path = '')
     {

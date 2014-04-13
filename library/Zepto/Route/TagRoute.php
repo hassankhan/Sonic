@@ -14,7 +14,7 @@ namespace Zepto\Route;
  * @license    MIT
  * @since      0.7
  */
-class TagRoute extends \Zepto\Route\ListRoute implements \Zepto\RouteInterface
+class TagRoute extends \Zepto\Route\ListRoute
 {
 
     /**
@@ -30,34 +30,22 @@ class TagRoute extends \Zepto\Route\ListRoute implements \Zepto\RouteInterface
     }
 
     /**
-     * Builds and returns the rendered HTML
+     * Method required by abstract class. Returns an array of posts
+     * that match whatever requirements for this route.
      *
-     * @return string
+     * @return array
      */
-    public function build_route()
+    public function posts()
     {
-        // Get reference to Zepto
-        $zepto = \Zepto\Zepto::instance();
+        // Get tag name
+        $params = func_get_args();
+        $tag_name = $params[0];
 
-        // Get parameters from URL
-        list($tag_name) = func_get_args();
-
-        $tags           = $zepto->app['filesystem']->tags('content');
-
-        // Load file
+        // Get tagged files
+        $tags           = $this->zepto->app['filesystem']->tags('content');
         $tagged_files   = $tags[$tag_name];
 
-        // Create array to hold posts
-        $posts          = $this->get_excerpts($tagged_files);
-
-        // Load in any extra stuffs
-        $zepto->app['extra'] = isset($zepto->app['extra']) === TRUE ? $zepto->app['extra'] : array();
-
-        // Merge Twig options and content into one array
-        $options             = array_merge($posts, $zepto->app['extra']);
-
-        // Render template with Twig
-        return $zepto->app['twig']->render($zepto->app['settings']['zepto.default_list_template'], array('contents' => $posts));
+        return $this->excerpts($tagged_files);
     }
 
 }

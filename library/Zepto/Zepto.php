@@ -2,13 +2,6 @@
 
 namespace Zepto;
 
-use Pimple;
-use League\Flysystem\Filesystem;
-use League\Flysystem\Adapter\Local;
-use Michelf\MarkdownExtra;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-
 /**
  * Zepto
  *
@@ -48,7 +41,7 @@ class Zepto
      */
     public function __construct(array $settings = array())
     {
-        $this->app = new Pimple();
+        $this->app = new \Pimple();
 
         // Get local reference to container
         $app = $this->app;
@@ -57,13 +50,13 @@ class Zepto
         $app['ROOT_DIR'] = realpath(getcwd()) . '/';
 
         $app['request'] = function () {
-            return Request::createFromGlobals();
+            return \Symfony\Component\HttpFoundation\Request::createFromGlobals();
         };
 
         $app['response'] = function () {
-            return new Response(
+            return new \Symfony\Component\HttpFoundation\Response(
                 'Content',
-                Response::HTTP_OK,
+                \Symfony\Component\HttpFoundation\Response::HTTP_OK,
                 array('content-type' => 'text/html; charset=utf-8')
             );
         };
@@ -97,7 +90,6 @@ class Zepto
             $filesystem->addPlugin($app['content_plugin']);
             $filesystem->addPlugin($app['plugin_plugin']);
             $filesystem->addPlugin($app['tag_parser_plugin']);
-            $filesystem->addPlugin($app['date_parser_plugin']);
             return $filesystem;
         };
 
@@ -237,7 +229,6 @@ class Zepto
 
             $this->app['router']->route(new Route\DefaultRoute($route));
         }
-        $this->app['router']->route(new Route\TagRoute('/tags/<:tag_name>'));
     }
 
     /**

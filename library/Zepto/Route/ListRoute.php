@@ -14,7 +14,7 @@ namespace Zepto\Route;
  * @license    MIT
  * @since      0.7
  */
-class ListRoute extends \Zepto\Route implements \Zepto\RouteInterface
+class ListRoute extends \Zepto\Route\ListRouteAbstract
 {
 
     /**
@@ -30,51 +30,61 @@ class ListRoute extends \Zepto\Route implements \Zepto\RouteInterface
     }
 
     /**
-     * Builds and returns the rendered HTML
+     * Method required by abstract class. Returns an array of posts
+     * that match whatever requirements for this route.
      *
-     * @return string
+     * @return array
      */
-    public function build_route()
+    public function posts()
     {
-        // Get reference to Zepto
-        $zepto = \Zepto\Zepto::instance();
         // Get dates from all content
-        $dates = $zepto->app['filesystem']->dates('content');
-        // Get filenames of content and create array to hold posts
-        $posts = $this->get_excerpts(array_keys($dates));
+        $dates = $this->dates('content');
 
-        // Load in any extra stuffs
-        $zepto->app['extra'] = isset($zepto->app['extra']) === TRUE ? $zepto->app['extra'] : array();
-
-        // Render template with Twig
-        return $zepto->app['twig']->render($zepto->app['settings']['zepto.default_list_template'], array('contents' => $posts));
+        return $this->excerpts(array_keys($dates));
     }
 
     /**
-     * Gets file excerpts from all files
+     * Plugin handler
      *
-     * @param  array $files
+     * @param  string $path
      * @return array
      */
-    public function get_excerpts($files)
+    public function dates($path = '')
     {
-        // Get reference to Zepto
-        $zepto = \Zepto\Zepto::instance();
-        // Create array to hold posts
-        $posts = array();
+        // Get all files in path
+        $contents = $this->zepto->app['filesystem']->listContents($path, TRUE);
+        // Create array
+        $date_list = array();
 
-        // Iterate through files and get excerpts for all of them
-        foreach ($files as $file) {
-            $file_contents = $zepto->app['filesystem']->parse($file);
-
-            if ($file_contents['meta']['title'] !== 'Quote') {
-                $file_contents['contents'] = $zepto->app['helper']->get_excerpt($file_contents['contents'])
-                    . '<br /><a href="">&#8230; Read more</a>';
+        // Iterate through files and get dates
+        foreach ($contents as $file) {
+            if (
+                isset($file['extension']) === TRUE
+                && $file['extension'] === 'md'
+            ) {
+                $date_list[$file['path']] = $this->date($file);
             }
-            $posts[str_replace('content/', '', $file)] = $file_contents;
         }
 
-        return $posts;
+        // Sort the files by date
+        arsort($date_list);
+
+        return $date_list;
+    }
+
+    /**
+     * Gets a date from a file
+     *
+     * @param  string $file
+     * @return \DateTime|NULL
+     */
+    protected function date($file)
+    {
+        $file_contents = $this->zepto->app['filesystem']->parse($file['path']);
+        if (isset($file_contents['meta']['date']) === FALSE) {
+            return NULL;
+        }
+        return new \DateTime($file_contents['meta']['date']);
     }
 
 }

@@ -36,7 +36,7 @@ class Route
     /**
      * Contains the callable function to execute, retrieved on ``Zepto\Router::run()``
      *
-     * @var \Closure
+     * @var array|\Closure
      */
     protected $callback = null;
 
@@ -55,7 +55,7 @@ class Route
         }
 
         // Keep the original route pattern
-        $url = $pattern;
+        $url     = $pattern;
 
         // Make sure the route ends in a / since all of the URLs will
         $pattern = rtrim($pattern, '/') . '/';

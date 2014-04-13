@@ -14,7 +14,7 @@ namespace Zepto\Route;
  * @license    MIT
  * @since      0.7
  */
-class ErrorRoute extends \Zepto\Route implements \Zepto\RouteInterface
+class ErrorRoute extends \Zepto\Route
 {
 
     /**

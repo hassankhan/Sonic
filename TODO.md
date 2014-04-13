@@ -30,9 +30,6 @@ To-Do
 ## Router
 - Add functionality to allow for other HTTP verbs
 
-## Routes
-Make DefaultRoute, TagRoute, ListRoute
-
 ## [Tests](https://github.com/hassankhan/Zepto/issues?milestone=1&state=open)
 - Write MORE unit tests
     - Add @dataProvider to ConsoleTest
