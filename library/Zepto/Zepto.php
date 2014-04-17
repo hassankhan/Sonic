@@ -75,17 +75,12 @@ class Zepto
             return new Flysystem\Plugin\Plugin();
         };
 
-        $app['tag_parser_plugin'] = function () {
-            return new Flysystem\Plugin\TagParser();
-        };
-
         $app['filesystem'] = function ($app) {
             $filesystem = new \League\Flysystem\Filesystem(
                 new \League\Flysystem\Adapter\Local($app['ROOT_DIR'])
             );
             $filesystem->addPlugin($app['content_plugin']);
             $filesystem->addPlugin($app['plugin_plugin']);
-            $filesystem->addPlugin($app['tag_parser_plugin']);
             return $filesystem;
         };
 

@@ -38,12 +38,41 @@ class TagRoute extends \Zepto\Route\ListRoute
     public function posts()
     {
         // Get tag name
-        $params = func_get_args();
+        $params   = func_get_args();
         $tag_name = $params[0];
 
+        // Get all files in path
+        $contents = $this->zepto->app['filesystem']->listContents('content', TRUE);
+
+        // Create array to hold tagged files
+        $tagged_files = array();
+
         // Get tagged files
-        $tags           = $this->zepto->app['filesystem']->tags('content');
-        $tagged_files   = $tags[$tag_name];
+        foreach ($contents as $file) {
+            if (
+                isset($file['extension']) === TRUE
+                && $file['extension'] === 'md'
+            ) {
+
+                $file_contents = $this->zepto->app['filesystem']->read($file['path']);
+
+                // Grab meta section between '/* ... */' in the content file
+                preg_match_all('#/\*(.*?)\*/#s', $file_contents, $meta);
+
+                // Find tag field
+                preg_match_all('#^[\t*\#@]*(Tags):(.*)$#m', $meta[1][0], $matches);
+
+                // Retrieve tags
+                $tags = isset($matches[2][0]) === TRUE ? trim($matches[2][0], ' ') : NULL;
+
+                // Replace ', ' with ',' and then explode
+                $tags = explode(',', str_replace(', ', ',', $tags));
+
+                if (in_array($tag_name, $tags)) {
+                    $tagged_files[] = $file['path'];
+                }
+            }
+        }
 
         return $this->excerpts($tagged_files);
     }
