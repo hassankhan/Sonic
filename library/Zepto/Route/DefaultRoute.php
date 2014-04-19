@@ -5,12 +5,12 @@ namespace Zepto\Route;
 /**
  * DefaultRoute
  *
- * The default route to execute for Zepto content
+ * The default route to execute for Sonic content
  *
- * @package    Zepto
+ * @package    Sonic
  * @subpackage Route
  * @author     Hassan Khan <contact@hassankhan.me>
- * @link       https://github.com/hassankhan/Zepto
+ * @link       https://github.com/hassankhan/Sonic
  * @license    MIT
  * @since      0.7
  */
@@ -36,7 +36,7 @@ class DefaultRoute extends \Zepto\Route
      */
     public function build_route()
     {
-        // Get reference to Zepto
+        // Get reference to Sonic
         $zepto = \Zepto\Zepto::instance();
 
         // Get resource URL

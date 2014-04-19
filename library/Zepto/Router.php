@@ -3,7 +3,7 @@
 namespace Zepto;
 
 /**
- * This is the Zepto URL Router, the layer of a web application between the URL
+ * This is the Sonic URL Router, the layer of a web application between the URL
  * and the route executed to perform a request.
  *
  * The router controls the boring, base-framework-y stuff. This includes
@@ -12,7 +12,7 @@ namespace Zepto;
  *
  * It supports adding routes to different HTTP methods (GET, POST and friends)
  * ```php
- * $router = new Zepto\Router;
+ * $router = new Sonic\Router;
  *
  * // Adding a basic HTTP GET route
  * $router->get( '/get', 'get_page' );
@@ -52,11 +52,10 @@ namespace Zepto;
  * // Run the router
  * $router->run();
  * ```
- * @package    Zepto
- * @subpackage Router
+ * @package    Sonic
  * @author     Brandon Wamboldt <brandon.wamboldt@gmail.com>
  * @author     Hassan Khan <contact@hassankhan.me>
- * @link       https://github.com/hassankhan/Zepto
+ * @link       https://github.com/hassankhan/Sonic
  * @license    MIT
  * @since      0.2
  */

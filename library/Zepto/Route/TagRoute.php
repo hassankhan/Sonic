@@ -7,10 +7,10 @@ namespace Zepto\Route;
  *
  * This route is executed when a ``/tag | /tags`` URL is matched
  *
- * @package    Zepto
+ * @package    Sonic
  * @subpackage Route
  * @author     Hassan Khan <contact@hassankhan.me>
- * @link       https://github.com/hassankhan/Zepto
+ * @link       https://github.com/hassankhan/Sonic
  * @license    MIT
  * @since      0.7
  */

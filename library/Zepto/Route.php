@@ -5,13 +5,12 @@ namespace Zepto;
 /**
  * Route
  *
- * This is the Zepto URL Route, which contains the logic to respond to a request.
+ * This is the Sonic URL Route, which contains the logic to respond to a request.
  * The router determines if the matched URL is for this route and executes its callback.
  *
- * @package    Zepto
- * @subpackage Route
+ * @package    Sonic
  * @author     Hassan Khan <contact@hassankhan.me>
- * @link       https://github.com/hassankhan/Zepto
+ * @link       https://github.com/hassankhan/Sonic
  * @license    MIT
  * @since      0.6
  */
@@ -39,6 +38,13 @@ class Route
      * @var array|\Closure
      */
     protected $callback = null;
+
+    /**
+     * The HTTP response status code for this route
+     *
+     * @var int
+     */
+    protected $status_code;
 
     /**
      * Initializes the route by creating a regex pattern from the provided URL,
@@ -81,6 +87,7 @@ class Route
         $this->url      = $url;
         $this->pattern  = $pattern;
         $this->callback = $callback;
+        // $this->status   = $status;
     }
 
     /**

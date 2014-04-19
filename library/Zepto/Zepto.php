@@ -3,12 +3,11 @@
 namespace Zepto;
 
 /**
- * Zepto
+ * Sonic
  *
- * @package    Zepto
- * @subpackage Zepto
+ * @package    Sonic
  * @author     Hassan Khan <contact@hassankhan.me>
- * @link       https://github.com/hassankhan/Zepto
+ * @link       https://github.com/hassankhan/Sonic
  * @license    MIT
  * @since      0.2
  */

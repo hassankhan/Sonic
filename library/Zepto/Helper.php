@@ -6,17 +6,16 @@ namespace Zepto;
  * Helper class to hold all helper-y functions
  *
  *
- * @package    Zepto
- * @subpackage Helper
+ * @package    Sonic
  * @author     Hassan Khan <contact@hassankhan.me>
- * @link       https://github.com/hassankhan/Zepto
+ * @link       https://github.com/hassankhan/Sonic
  * @license    MIT
  * @since      0.6
  */
 class Helper
 {
     /**
-     * Instance of Zepto's container
+     * Instance of Sonic's container
      *
      * @var \Pimple
      */
@@ -38,7 +37,7 @@ class Helper
     }
 
     /**
-     * Returns Zepto configuration
+     * Returns Sonic configuration option
      *
      * @return array
      */
@@ -122,7 +121,7 @@ class Helper
     }
 
     /**
-     * Returns a standard configuration for Zepto
+     * Returns a standard configuration for Sonic
      *
      * @return array
      * @static

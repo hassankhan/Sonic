@@ -5,10 +5,10 @@ namespace Zepto\Flysystem\Plugin;
 /**
  * Plugin
  *
- * @package    Zepto
+ * @package    Sonic
  * @subpackage Flysystem
  * @author     Hassan Khan <contact@hassankhan.me>
- * @link       https://github.com/hassankhan/Zepto
+ * @link       https://github.com/hassankhan/Sonic
  * @license    MIT
  * @since      0.7
  */
