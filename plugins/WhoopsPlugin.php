@@ -12,12 +12,12 @@ use Whoops\Run;
  * @license    MIT
  * @since      0.4
  */
-class WhoopsPlugin extends \Zepto\PluginAbstract {
+class WhoopsPlugin extends \Sonic\PluginAbstract {
 
     public function after_plugins_load()
     {
         // Get local reference
-        $app = $this->zepto->app;
+        $app = $this->sonic->app;
 
         // Add Whoops handlers
         $app['whoopsPrettyPageHandler'] = $app->factory(
@@ -46,9 +46,9 @@ class WhoopsPlugin extends \Zepto\PluginAbstract {
             }
 
             $handler->addDataTable(
-                'Zepto Application',
+                'Sonic Application',
                 array_merge(array(
-                    'Version' => \Zepto\Zepto::VERSION,
+                    'Version' => \Sonic\Sonic::VERSION,
                     'Charset' => $app['request']->headers->get('Accept-Charset'),
                     'Locale'  => $app['request']->getPreferredLanguage()
                 ), $route_details)
@@ -78,7 +78,7 @@ class WhoopsPlugin extends \Zepto\PluginAbstract {
             $run = new Run();
             $run->pushHandler($app['whoopsPrettyPageHandler']);
             $run->pushHandler($app['whoopsJsonResponseHandler']);
-            $run->pushHandler($app['whoopsZeptoInfoHandler']);
+            $run->pushHandler($app['whoopsSonicInfoHandler']);
             return $run;
         };
     }
@@ -86,10 +86,10 @@ class WhoopsPlugin extends \Zepto\PluginAbstract {
     public function before_config_load(&$settings)
     {
         // Get local reference
-        $app = $this->zepto->app;
+        $app = $this->sonic->app;
 
         // If we're not on dev, then don't load up
-        if ($settings['zepto.environment'] !== 'dev') {
+        if ($settings['sonic.environment'] !== 'dev') {
             return;
         }
 

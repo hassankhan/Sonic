@@ -3,13 +3,13 @@ Title: Welcome
 Description: This description will go in the meta description tag
 */
 
-## Welcome to Zepto
+## Welcome to Sonic
 
-Congratulations, you have successfully installed [Zepto](http://Zepto.dev7studios.com). Zepto is a stupidly simple, blazing fast, flat file CMS.
+Congratulations, you have successfully installed [Sonic](http://Sonic.dev7studios.com). Sonic is a stupidly simple, blazing fast, flat file CMS.
 
 ### Creating Content
 
-Zepto is a flat-file CMS, so there's very little backend and no database to deal with. You simply create ``.md`` or ``.markdown`` files in the ``content`` folder and that becomes a page.
+Sonic is a flat-file CMS, so there's very little backend and no database to deal with. You simply create ``.md`` or ``.markdown`` files in the ``content`` folder and that becomes a page.
 If you created folder within the content folder (e.g. ``content/sub``) and put an ``index.md`` inside it, you can access that folder at the URL ``http://yoursite.com/sub``. If you want another page within the sub-folder, simply create a text file with the corresponding name (e.g. ``content/sub/page.md``) and will be able to access it from the URL ``http://yoursite.com/sub/page``.
 Below are some examples of content locations and their corresponding URLs:
 
@@ -38,7 +38,7 @@ These values will be contained in the ``{{ meta }}`` variable in themes (see bel
 
 ### Templating
 
-Zepto uses Twig for templating, and therefore assumes you already know how to use it. There's already a ``base.twig`` in the ``templates`` folder, but you can always put your own Twig templates in there.
+Sonic uses Twig for templating, and therefore assumes you already know how to use it. There's already a ``base.twig`` in the ``templates`` folder, but you can always put your own Twig templates in there.
 
 You'll have the following variables available to you in every template:
 
@@ -66,8 +66,8 @@ You will also have access to the following helper functions:
 
 ### Config
 
-You can override the default Zepto settings (and add your own custom settings) by editing config.php in the root Zepto directory. The config.php file lists all of the settings and their defaults. To override a setting, simply uncomment it in config.php and set your custom value.
+You can override the default Sonic settings (and add your own custom settings) by editing config.php in the root Sonic directory. The config.php file lists all of the settings and their defaults. To override a setting, simply uncomment it in config.php and set your custom value.
 
 ### Documentation
 
-For more help have a look at the Zepto documentation [here](https://github.com/hassankhan/Zepto/wiki/Documentation)
+For more help have a look at the Sonic documentation [here](https://github.com/hassankhan/Sonic/wiki/Documentation)

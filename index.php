@@ -4,5 +4,6 @@
 require('vendor/autoload.php' );
 require('config.php');
 
-$zepto = new Zepto\Zepto($config);
-$zepto->run();
+$sonic = new Sonic\Sonic($config);
+$sonic->app['router']->route(new Sonic\Route\TagRoute('/tags/<:tag_name>'));
+$sonic->run();

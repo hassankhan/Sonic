@@ -5,23 +5,26 @@
     forceCoversAnnotation="true">
 
     <testsuite name="all-tests">
-        <directory>tests/Zepto</directory>
+        <directory>tests/Sonic</directory>
     </testsuite>
 
     <testsuite name="travis-ci">
-        <directory>tests/Zepto</directory>
+        <directory>tests/Sonic</directory>
     </testsuite>
 
     <filter>
         <whitelist>
-            <directory suffix=".php">./library</directory>
+            <directory suffix=".php">./src</directory>
             <exclude>
-                <directory suffix=".php">./library/Zepto/Route</directory>
+                <directory suffix=".php">./src/Sonic/Route</directory>
             </exclude>
         </whitelist>
     </filter>
 
     <logging>
+        <log type="coverage-text"
+            target="php://stdout"
+            showUncoveredFiles="false"/>
         <log type="coverage-html"
             target="tests/coverage"
             charset="UTF-8"
