@@ -100,14 +100,14 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testDefaultConfig()
     {
         $expected = array(
-            'zepto.environment'           => 'dev',
-            'zepto.content_dir'           => 'content',
-            'zepto.plugins_dir'           => 'plugins',
-            'zepto.templates_dir'         => 'templates',
-            'zepto.default_template'      => 'base.twig',
-            'zepto.default_list_template' => 'list.twig',
-            'zepto.content_ext'           => array('md', 'markdown'),
-            'zepto.plugins_enabled'       => false,
+            'sonic.environment'           => 'dev',
+            'sonic.content_dir'           => 'content',
+            'sonic.plugins_dir'           => 'plugins',
+            'sonic.templates_dir'         => 'templates',
+            'sonic.default_template'      => 'base.twig',
+            'sonic.default_list_template' => 'list.twig',
+            'sonic.content_ext'           => array('md', 'markdown'),
+            'sonic.plugins_enabled'       => false,
             'site.site_root'              => 'http://localhost:8888/zepto/',
             'site.site_title'             => 'Sonic',
             'site.author'                 => '',
@@ -141,7 +141,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testConfigWithInvalidContentDir()
     {
         $config = Helper::default_config();
-        $config['zepto.content_dir'] = 'no_such_dir';
+        $config['sonic.content_dir'] = 'no_such_dir';
         Helper::validate_config($config);
     }
 
@@ -152,7 +152,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testConfigWithInvalidPluginsDir()
     {
         $config = Helper::default_config();
-        $config['zepto.plugins_dir'] = 'no_such_dir';
+        $config['sonic.plugins_dir'] = 'no_such_dir';
         Helper::validate_config($config);
     }
 
@@ -163,7 +163,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testConfigWithInvalidTemplatesDir()
     {
         $config = Helper::default_config();
-        $config['zepto.templates_dir'] = 'no_such_dir';
+        $config['sonic.templates_dir'] = 'no_such_dir';
         Helper::validate_config($config);
     }
 
@@ -174,7 +174,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testConfigWithInvalidDefaultTemplate()
     {
         $config = Helper::default_config();
-        $config['zepto.default_template'] = 'no_such_file';
+        $config['sonic.default_template'] = 'no_such_file';
         Helper::validate_config($config);
     }
 
@@ -185,7 +185,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testConfigWithInvalidSiteRoot()
     {
         $config = Helper::default_config();
-        $config['zepto.environment'] = 'production';
+        $config['sonic.environment'] = 'production';
         $config['site']['site_root'] = 'fuck://this@should?fail';
         Helper::validate_config($config);
     }

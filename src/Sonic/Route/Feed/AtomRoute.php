@@ -53,7 +53,7 @@ class AtomRoute extends \Sonic\Route\ListRoute
                 : new \DateTime('01-01-1970');
 
             $timestamp = $this->sonic->app['filesystem']->getTimestamp(
-                $this->sonic->app['settings']['zepto.content_dir'] .'/' . $path
+                $this->sonic->app['settings']['sonic.content_dir'] .'/' . $path
             );
 
             // Create additional fields for Atom stuff

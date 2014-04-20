@@ -80,7 +80,7 @@ class Helper
         try {
 
             // Try to read file, if none exists then return null
-            $this->app['filesystem']->read($this->app['settings']['zepto.content_dir'] . '/' . $file_name);
+            $this->app['filesystem']->read($this->app['settings']['sonic.content_dir'] . '/' . $file_name);
 
             // Create URL and return
             $clean_file_name = str_replace(
@@ -107,7 +107,7 @@ class Helper
     {
         try {
             // Check if file exists
-            $content = $this->app['filesystem']->parse($this->app['settings']['zepto.content_dir'] . '/' . $file_name);
+            $content = $this->app['filesystem']->parse($this->app['settings']['sonic.content_dir'] . '/' . $file_name);
 
             // Get file title and URL and return
             $title   = $content['meta']['title'];
@@ -129,14 +129,14 @@ class Helper
     public static function default_config()
     {
         return array(
-            'zepto.environment'           => 'dev',
-            'zepto.content_dir'           => 'content',
-            'zepto.plugins_dir'           => 'plugins',
-            'zepto.templates_dir'         => 'templates',
-            'zepto.default_template'      => 'base.twig',
-            'zepto.default_list_template' => 'list.twig',
-            'zepto.content_ext'           => array('md', 'markdown'),
-            'zepto.plugins_enabled'       => false,
+            'sonic.environment'           => 'dev',
+            'sonic.content_dir'           => 'content',
+            'sonic.plugins_dir'           => 'plugins',
+            'sonic.templates_dir'         => 'templates',
+            'sonic.default_template'      => 'base.twig',
+            'sonic.default_list_template' => 'list.twig',
+            'sonic.content_ext'           => array('md', 'markdown'),
+            'sonic.plugins_enabled'       => false,
             'site.site_root'              => 'http://localhost:8888/zepto/',
             'site.site_title'             => 'Sonic',
             'site.author'                 => '',
@@ -166,29 +166,29 @@ class Helper
         $message = '';
 
         while ($message === '') {
-            if (!is_dir($config['zepto.content_dir'])) {
+            if (!is_dir($config['sonic.content_dir'])) {
                 $message = 'Content directory does not exist';
                 break;
             }
 
-            if (!is_dir($config['zepto.plugins_dir'])) {
+            if (!is_dir($config['sonic.plugins_dir'])) {
                 $message = 'Plugins directory does not exist';
                 break;
             }
 
-            if (!is_dir($config['zepto.templates_dir'])) {
+            if (!is_dir($config['sonic.templates_dir'])) {
                 $message = 'Templates directory does not exist';
                 break;
             }
 
             if (
-                !is_file("{$config['zepto.templates_dir']}/{$config['zepto.default_template']}")
+                !is_file("{$config['sonic.templates_dir']}/{$config['sonic.default_template']}")
             ) {
                 $message = 'No default template exists';
             break;
             }
 
-            if ($config['zepto.environment'] !== 'dev') {
+            if ($config['sonic.environment'] !== 'dev') {
                 preg_match('#^(https?://)?([\da-z\.-]+)\.([a-z\.]{2,6})([/\w \.-]*)*/+$#', $config['site.site_root']) === 0
                     ? $message = 'Site root is invalid. Should be like http://www.example.com/'
                     : $message = '';
@@ -247,7 +247,7 @@ class Helper
      */
     private function dot_extensions()
     {
-        $extensions = $this->app['settings']['zepto.content_ext'];
+        $extensions = $this->app['settings']['sonic.content_ext'];
 
         foreach ($extensions as $extension) {
             $dotted_extensions[] = '.' . $extension;

@@ -49,7 +49,7 @@ abstract class ListRouteAbstract extends \Sonic\Route
         $this->sonic->app['extra'] = isset($this->sonic->app['extra']) === TRUE ? $this->sonic->app['extra'] : array();
 
         // Render template with Twig
-        return $this->sonic->app['twig']->render($this->sonic->app['settings']['zepto.default_list_template'], array('contents' => $posts));
+        return $this->sonic->app['twig']->render($this->sonic->app['settings']['sonic.default_list_template'], array('contents' => $posts));
     }
 
     /**

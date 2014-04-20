@@ -61,11 +61,11 @@ class NavGenPlugin extends \Sonic\PluginAbstract {
 
         // Opening ``<ul>`` tag and adding class name
         $nav_html   = sprintf('<ul class="%s">' . PHP_EOL, $settings['site.nav.class']);
-        $files      = $filesystem->listContents($settings['zepto.content_dir'], true);
+        $files      = $filesystem->listContents($settings['sonic.content_dir'], true);
 
         $content_files = array_filter($files, function ($file) use ($settings) {
             return isset($file['extension']) === TRUE
-                && in_array($file['extension'], $settings['zepto.content_ext']) === TRUE
+                && in_array($file['extension'], $settings['sonic.content_ext']) === TRUE
                 ? TRUE
                 : FALSE;
         });

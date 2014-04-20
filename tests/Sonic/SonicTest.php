@@ -47,14 +47,14 @@ class SonicTest extends \PHPUnit_Framework_TestCase
     public function testConstructWithOwnSettingsArray()
     {
         $config = array(
-            'zepto.environment'           => 'dev',
-            'zepto.content_dir'           => 'content',
-            'zepto.plugins_dir'           => 'plugins',
-            'zepto.templates_dir'         => 'templates',
-            'zepto.default_template'      => 'base.twig',
-            'zepto.default_list_template' => 'list.twig',
-            'zepto.content_ext'           => array('.md', '.markdown'),
-            'zepto.plugins_enabled'       => true,
+            'sonic.environment'           => 'dev',
+            'sonic.content_dir'           => 'content',
+            'sonic.plugins_dir'           => 'plugins',
+            'sonic.templates_dir'         => 'templates',
+            'sonic.default_template'      => 'base.twig',
+            'sonic.default_list_template' => 'list.twig',
+            'sonic.content_ext'           => array('.md', '.markdown'),
+            'sonic.plugins_enabled'       => true,
             'site.site_root'              => 'http://localhost:8888/sonic/',
             'site.site_title'             => 'Sonic',
             'site.author'                 => 'Hassan Khan',
@@ -139,7 +139,7 @@ class SonicTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadPlugins($config)
     {
-        $config['zepto.plugins_enabled'] = TRUE;
+        $config['sonic.plugins_enabled'] = TRUE;
         // Add assertion to check if plugins_enabled is true or not
         $sonic = new Sonic($config);
         $this->assertArrayHasKey('plugins', $sonic->app);
@@ -203,7 +203,7 @@ class SonicTest extends \PHPUnit_Framework_TestCase
      */
     public function testRunHooks($config)
     {
-        $config['zepto.plugins_enabled'] = TRUE;
+        $config['sonic.plugins_enabled'] = TRUE;
         $sonic = new Sonic($config);
         $this->assertTrue($sonic->run_hooks('before_response_send'));
     }
@@ -215,7 +215,7 @@ class SonicTest extends \PHPUnit_Framework_TestCase
      */
     public function testRunHooksWhenPluginsDisabled($config)
     {
-        $config['zepto.plugins_enabled'] = FALSE;
+        $config['sonic.plugins_enabled'] = FALSE;
         $sonic = new Sonic($config);
         $this->assertFalse($sonic->run_hooks('before_response_send'));
     }
@@ -260,9 +260,9 @@ class SonicTest extends \PHPUnit_Framework_TestCase
     public function providerConfigs()
     {
         $plugins_enabled                          = Helper::default_config();
-        $plugins_enabled['zepto.plugins_enabled'] = TRUE;
+        $plugins_enabled['sonic.plugins_enabled'] = TRUE;
         $production_mode                          = Helper::default_config();
-        $production_mode['zepto.environment']     = 'production';
+        $production_mode['sonic.environment']     = 'production';
         return array(
             array(array(), $plugins_enabled, $production_mode)
         );

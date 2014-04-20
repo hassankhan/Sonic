@@ -43,7 +43,7 @@ class DefaultRoute extends \Sonic\Route
         $resource_url = $sonic->app['router']->request()->getPathInfo();
 
         // Get file path
-        $path = rtrim($sonic->app['settings']['zepto.content_dir'] . $resource_url, '/');
+        $path = rtrim($sonic->app['settings']['sonic.content_dir'] . $resource_url, '/');
 
         // Check if file(s) exist
         $contents = $sonic->app['filesystem']->listContents($path);
@@ -62,7 +62,7 @@ class DefaultRoute extends \Sonic\Route
         // Get template name from file, if not set, then use default
         $template_name = array_key_exists('template', $loaded_file['meta']) === true
             ? $loaded_file['meta']['template']
-            : $sonic->app['settings']['zepto.default_template'];
+            : $sonic->app['settings']['sonic.default_template'];
 
         // Render template with Twig
         try {

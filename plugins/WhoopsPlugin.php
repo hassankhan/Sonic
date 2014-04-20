@@ -89,7 +89,7 @@ class WhoopsPlugin extends \Sonic\PluginAbstract {
         $app = $this->sonic->app;
 
         // If we're not on dev, then don't load up
-        if ($settings['zepto.environment'] !== 'dev') {
+        if ($settings['sonic.environment'] !== 'dev') {
             return;
         }
 

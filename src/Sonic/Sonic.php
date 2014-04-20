@@ -108,7 +108,7 @@ class Sonic
         $this->app['settings'] = $settings;
         // If plugins ARE indeed enabled, initialise the plugin loader
         // and load the fuckers
-        if ($this->app['settings']['zepto.plugins_enabled'] === TRUE) {
+        if ($this->app['settings']['sonic.plugins_enabled'] === TRUE) {
             $this->load_plugins();
             $this->run_hooks('after_plugins_load');
         }
@@ -150,7 +150,7 @@ class Sonic
     public function run_hooks($hook_id, $args = array())
     {
         // If plugins are disabled, do not run
-        if ($this->app['settings']['zepto.plugins_enabled'] === FALSE) {
+        if ($this->app['settings']['sonic.plugins_enabled'] === FALSE) {
             return FALSE;
         }
 
@@ -170,10 +170,10 @@ class Sonic
      */
     protected function load_plugins()
     {
-        if ($this->app['settings']['zepto.plugins_enabled'] === TRUE) {
+        if ($this->app['settings']['sonic.plugins_enabled'] === TRUE) {
 
             // Load plugins from 'plugins' folder
-            $file_list    = $this->app['filesystem']->listContents($this->app['settings']['zepto.plugins_dir']);
+            $file_list    = $this->app['filesystem']->listContents($this->app['settings']['sonic.plugins_dir']);
 
             $plugin_files = array_filter($file_list, function ($file) {
                 return preg_match('#^([A-Z]+\w+)Plugin.php$#', $file['basename']) === 1
@@ -201,7 +201,7 @@ class Sonic
     {
         // Only because you can't use $this->app in the callback
         $app       = $this->app;
-        $file_list = $app['filesystem']->listContents($app['settings']['zepto.content_dir'], true);
+        $file_list = $app['filesystem']->listContents($app['settings']['sonic.content_dir'], true);
 
         $files     = array_filter($file_list, function ($file) {
             return isset($file['extension']) && $file['extension'] === 'md'
@@ -214,7 +214,7 @@ class Sonic
 
             // Get filename without extension
             $file_path = str_replace(
-                $app['settings']['zepto.content_dir'],
+                $app['settings']['sonic.content_dir'],
                 '',
                 $file['dirname'] . '/' . $file['filename']
             );
