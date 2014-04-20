@@ -102,7 +102,7 @@ class SonicTest extends \PHPUnit_Framework_TestCase
         // Check for router
         $this->assertArrayHasKey('router', $sonic->app);
         $this->assertInstanceOf(
-            'Sonic\Router',
+            'Sonic\Routing\Router',
             $sonic->app['router']
         );
 
@@ -164,7 +164,7 @@ class SonicTest extends \PHPUnit_Framework_TestCase
         $expected = array('#^/404/$#', '#^/$#', '#^/sub/$#', '#^/sub/page/$#');
 
         // Check that all routes have a callback function
-        $this->assertContainsOnly('Sonic\Route', $routes['GET']);
+        $this->assertContainsOnly('Sonic\Routing\Route', $routes['GET']);
 
         foreach ($expected as $route_regex) {
             $this->assertArrayHasKey($route_regex, $routes['GET']);

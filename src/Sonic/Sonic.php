@@ -61,7 +61,7 @@ class Sonic
         };
 
         $app['router'] = function ($app) {
-            return new Router($app['request'], $app['response']);
+            return new Routing\Router($app['request'], $app['response']);
         };
 
         $app['content_plugin'] = function () {
@@ -221,7 +221,7 @@ class Sonic
 
             $route = '/' . trim(str_replace('/index', '/', $file_path), '/');
 
-            $this->app['router']->route(new Route\DefaultRoute($route));
+            $this->app['router']->route(new Routes\DefaultRoute($route));
         }
     }
 
