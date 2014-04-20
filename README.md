@@ -28,66 +28,7 @@ Its interface is _supposed_ to be simple and is in process of documentation. Tha
 
 ## Getting Started
 
-### System Requirements
-
-You need **PHP >= 5.3.0**, and [Composer](//getcomposer.org/) is highly recommended.
-
-### Install
-
-![Initial setup demo](https://github.com/hassankhan/Sonic/wiki/img/sonic-setup.gif)
-
-#### Composer install
-    composer install hassankhan/sonic
-
-If that doesn't work, try setting ``minimum-stability`` to ``dev`` in your ``composer.json`` file.
-
-Then add the following to the top of your ``index.php`` file:
-
-    <?php
-    require 'vendor/autoload.php';
-
-#### Manual install
-
-***Coming soon***
-
-### Project setup
-
-After installing the package via Composer, pop open a terminal window, navigate to your project root and type in ``vendor/bin/zep init`` to set up Sonic for its' first run.
-
-
-### First Run
-
-Your project root should now look like this:
-
-    .
-    ├── .htaccess
-    ├── composer.json
-    ├── composer.lock
-    ├── config.php
-    ├── index.php
-    └── vendor/
-
-Crack open ``index.php`` in your text editor and you'll see
-
-    require('vendor/autoload.php');
-    require('config.php');
-
-    $sonic = new Sonic\Sonic($config); // Create instance of Sonic
-    $sonic->run();                     // Run app
-
-### Setup your web server
-
-#### Apache
-
-Ensure the `.htaccess` and `index.php` files are in the same public-accessible directory. The `.htaccess` file should at the very minimum contain this code:
-
-    RewriteEngine On
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [QSA,L]
-
-#### Others
-
-Sonic hasn't been tested on other configurations yet, but because of how similar it is to [Slim](//slimframework.com/), the same instructions should work.
+Refer to [Sonic Skeleton](//github.com/hassankhan/Sonic-Skeleton) for instructions on creating a new project with Sonic.
 
 ## Documentation
 
@@ -111,8 +52,6 @@ It's pretty important to separate new features or improvements into separate fea
 * Method names should be written in ``snake_case()``, rather than ``camelCase()``
 * All source files should start with ``<?php`` but should **not** have an closing tag
 * End files with a Unix-style newline
-
-***Coming soon***
 
 ### Unit Testing
 
