@@ -1,6 +1,6 @@
 <?php
 
-namespace Zepto\Route;
+namespace Sonic\Route;
 
 /**
  * ErrorRoute
@@ -14,7 +14,7 @@ namespace Zepto\Route;
  * @license    MIT
  * @since      0.7
  */
-class ErrorRoute extends \Zepto\Route
+class ErrorRoute extends \Sonic\Route
 {
 
     /**

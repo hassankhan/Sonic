@@ -1,6 +1,6 @@
 <?php
 
-class SimplePlugin extends \Zepto\PluginAbstract {
+class SimplePlugin extends \Sonic\PluginAbstract {
 
     public function after_plugins_load()
     {

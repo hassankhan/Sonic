@@ -5,18 +5,18 @@
     forceCoversAnnotation="true">
 
     <testsuite name="all-tests">
-        <directory>tests/Zepto</directory>
+        <directory>tests/Sonic</directory>
     </testsuite>
 
     <testsuite name="travis-ci">
-        <directory>tests/Zepto</directory>
+        <directory>tests/Sonic</directory>
     </testsuite>
 
     <filter>
         <whitelist>
             <directory suffix=".php">./src</directory>
             <exclude>
-                <directory suffix=".php">./src/Zepto/Route</directory>
+                <directory suffix=".php">./src/Sonic/Route</directory>
             </exclude>
         </whitelist>
     </filter>

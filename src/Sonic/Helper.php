@@ -1,6 +1,6 @@
 <?php
 
-namespace Zepto;
+namespace Sonic;
 
 /**
  * Helper class to hold all helper-y functions
@@ -138,7 +138,7 @@ class Helper
             'zepto.content_ext'           => array('md', 'markdown'),
             'zepto.plugins_enabled'       => false,
             'site.site_root'              => 'http://localhost:8888/zepto/',
-            'site.site_title'             => 'Zepto',
+            'site.site_title'             => 'Sonic',
             'site.author'                 => '',
             'site.author_email'           => '',
             'site.date_format'            => 'jS M Y',

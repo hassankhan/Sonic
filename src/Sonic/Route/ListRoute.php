@@ -1,6 +1,6 @@
 <?php
 
-namespace Zepto\Route;
+namespace Sonic\Route;
 
 /**
  * ListRoute
@@ -14,7 +14,7 @@ namespace Zepto\Route;
  * @license    MIT
  * @since      0.7
  */
-class ListRoute extends \Zepto\Route\ListRouteAbstract
+class ListRoute extends \Sonic\Route\ListRouteAbstract
 {
 
     /**

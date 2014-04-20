@@ -1,6 +1,6 @@
 <?php
 
-namespace Zepto;
+namespace Sonic;
 
 /**
  * Sonic
@@ -11,7 +11,7 @@ namespace Zepto;
  * @license    MIT
  * @since      0.2
  */
-class Zepto
+class Sonic
 {
     /**
      * Current application version
@@ -28,13 +28,13 @@ class Zepto
     /**
      * A singleton instance of this class, provided as a static property
      *
-     * @var \Zepto\Zepto
+     * @var \Sonic\Sonic
      * @static
      */
     protected static $instance;
 
     /**
-     * Zepto constructor
+     * Sonic constructor
      *
      * @param array $settings
      */
@@ -228,13 +228,13 @@ class Zepto
     /**
      * Retrieves current instance, if one exists, otherwise returns null
      *
-     * @return \Zepto\Zepto|null
+     * @return \Sonic\Sonic|null
      * @static
      */
     public static function instance()
     {
         if (isset(static::$instance) === FALSE) {
-            Zepto::kill();
+            Sonic::kill();
             return null;
         }
 

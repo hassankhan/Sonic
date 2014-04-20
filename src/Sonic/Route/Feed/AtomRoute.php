@@ -1,6 +1,6 @@
 <?php
 
-namespace Zepto\Route\Feed;
+namespace Sonic\Route\Feed;
 
 /**
  * AtomRoute
@@ -14,7 +14,7 @@ namespace Zepto\Route\Feed;
  * @license    MIT
  * @since      0.7
  */
-class AtomRoute extends \Zepto\Route\ListRoute
+class AtomRoute extends \Sonic\Route\ListRoute
 {
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Zepto\Extension;
+namespace Sonic\Extension;
 
 /**
  * Twig
@@ -42,14 +42,14 @@ class Twig extends \Twig_Extension
     }
 
     /**
-     * Returns Zepto configuration
+     * Returns Sonic configuration
      *
      * @return array
      * @codeCoverageIgnore
      */
     public function config($option)
     {
-        $zepto = \Zepto\Zepto::instance();
+        $zepto = \Sonic\Sonic::instance();
         return $zepto->app['settings'][$option];
     }
 
@@ -61,7 +61,7 @@ class Twig extends \Twig_Extension
      */
     public function site_url()
     {
-        $zepto = \Zepto\Zepto::instance();
+        $zepto = \Sonic\Sonic::instance();
         return $zepto->app['settings']['site.site_root'];
     }
 
@@ -73,35 +73,35 @@ class Twig extends \Twig_Extension
      */
     public function site_title()
     {
-        $zepto = \Zepto\Zepto::instance();
+        $zepto = \Sonic\Sonic::instance();
         return $zepto->app['settings']['site.site_title'];
     }
 
     /**
      * Returns a fully-qualified URL for a given filename in the 'content' directory
      *
-     * @see    \Zepto\Helper::url_for()
+     * @see    \Sonic\Helper::url_for()
      * @param  string $file_name
      * @return string|null
      * @codeCoverageIgnore
      */
     public function url_for($file_name)
     {
-        $zepto = \Zepto\Zepto::instance();
+        $zepto = \Sonic\Sonic::instance();
         return $zepto->app['helper']->url_for($file_name);
     }
 
     /**
      * Returns a HTML <a> for a given filename in the 'content' directory
      *
-     * @see    \Zepto\Helper::link_for()
+     * @see    \Sonic\Helper::link_for()
      * @param  string $file_name
      * @return string|null
      * @codeCoverageIgnore
      */
     public function link_for($file_name)
     {
-        $zepto = \Zepto\Zepto::instance();
+        $zepto = \Sonic\Sonic::instance();
         return $zepto->app['helper']->link_for($file_name);
     }
 

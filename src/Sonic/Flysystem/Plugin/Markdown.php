@@ -1,6 +1,6 @@
 <?php
 
-namespace Zepto\Flysystem\Plugin;
+namespace Sonic\Flysystem\Plugin;
 
 use Michelf\MarkdownExtra;
 

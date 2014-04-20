@@ -1,6 +1,6 @@
 <?php
 
-namespace Zepto\Flysystem\Plugin;
+namespace Sonic\Flysystem\Plugin;
 
 /**
  * Plugin
@@ -47,7 +47,7 @@ class Plugin implements \League\Flysystem\PluginInterface
      * Plugin handler
      *
      * @param  string $path
-     * @return \Zepto\PluginInterface
+     * @return \Sonic\PluginInterface
      */
     public function handle($path = '')
     {
@@ -59,8 +59,8 @@ class Plugin implements \League\Flysystem\PluginInterface
 
         // Check class implements correct interface
         $parents = class_parents($file['filename']);
-        if (isset($parents['Zepto\PluginAbstract']) === FALSE) {
-            throw new \UnexpectedValueException('Plugin does not implement Zepto\PluginAbstract');
+        if (isset($parents['Sonic\PluginAbstract']) === FALSE) {
+            throw new \UnexpectedValueException('Plugin does not implement Sonic\PluginAbstract');
         }
 
         return new $file['filename'];

@@ -1,6 +1,6 @@
 <?php
 
-namespace Zepto;
+namespace Sonic;
 
 /**
  * PluginInterface
@@ -15,7 +15,7 @@ abstract class PluginAbstract {
 
     protected $zepto;
 
-    public function set_app(Zepto $zepto) {
+    public function set_app(Sonic $zepto) {
         $this->zepto = $zepto;
     }
 

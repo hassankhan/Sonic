@@ -1,6 +1,6 @@
 <?php
 
-namespace Zepto\Route;
+namespace Sonic\Route;
 
 /**
  * DefaultRoute
@@ -14,7 +14,7 @@ namespace Zepto\Route;
  * @license    MIT
  * @since      0.7
  */
-class DefaultRoute extends \Zepto\Route
+class DefaultRoute extends \Sonic\Route
 {
 
     /**
@@ -37,7 +37,7 @@ class DefaultRoute extends \Zepto\Route
     public function build_route()
     {
         // Get reference to Sonic
-        $zepto = \Zepto\Zepto::instance();
+        $zepto = \Sonic\Sonic::instance();
 
         // Get resource URL
         $resource_url = $zepto->app['router']->request()->getPathInfo();

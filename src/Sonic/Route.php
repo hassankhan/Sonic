@@ -1,6 +1,6 @@
 <?php
 
-namespace Zepto;
+namespace Sonic;
 
 /**
  * Route
@@ -33,7 +33,7 @@ class Route
     protected $pattern;
 
     /**
-     * Contains the callable function to execute, retrieved on ``Zepto\Router::run()``
+     * Contains the callable function to execute, retrieved on ``Sonic\Router::run()``
      *
      * @var array|\Closure
      */

@@ -1,6 +1,6 @@
 <?php
 
-namespace Zepto\Route;
+namespace Sonic\Route;
 
 /**
  * ListRoute
@@ -14,7 +14,7 @@ namespace Zepto\Route;
  * @license    MIT
  * @since      0.7
  */
-abstract class ListRouteAbstract extends \Zepto\Route
+abstract class ListRouteAbstract extends \Sonic\Route
 {
 
     abstract public function posts();
@@ -30,8 +30,8 @@ abstract class ListRouteAbstract extends \Zepto\Route
      */
     public function __construct($url = '')
     {
-        // Get reference to Zepto application
-        $this->zepto = \Zepto\Zepto::instance();
+        // Get reference to Sonic application
+        $this->zepto = \Sonic\Sonic::instance();
         parent::__construct($url, array($this, 'build_route'));
     }
 

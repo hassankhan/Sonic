@@ -10,7 +10,7 @@
  * @license    MIT
  * @since      0.6
  */
-class NavGenPlugin extends \Zepto\PluginAbstract {
+class NavGenPlugin extends \Sonic\PluginAbstract {
 
     public function after_plugins_load()
     {

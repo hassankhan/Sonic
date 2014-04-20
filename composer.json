@@ -2,7 +2,7 @@
     "name": "hassankhan/zepto",
     "description": "Zepto is a stupidly simple, blazing fast, flat-file CMS based on Pico",
     "keywords": ["cms", "framework", "markdown"],
-    "homepage": "https://github.com/hassankhan/Zepto",
+    "homepage": "https://github.com/hassankhan/Sonic",
     "require": {
         "php": ">=5.3",
         "twig/twig": "1.*",
@@ -19,7 +19,7 @@
     "license": "MIT",
     "autoload": {
         "psr-0": {
-            "Zepto": "src/"
+            "Sonic": "src/"
         }
     },
     "minimum-stability": "stable",
