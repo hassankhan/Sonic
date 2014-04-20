@@ -1,6 +1,6 @@
 <?php
 
-namespace Sonic;
+namespace Sonic\Routing;
 
 /**
  * Route

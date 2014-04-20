@@ -1,6 +1,6 @@
 <?php
 
-namespace Sonic;
+namespace Sonic\Routing;
 
 /**
  * This is the Sonic URL Router, the layer of a web application between the URL

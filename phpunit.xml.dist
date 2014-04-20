@@ -16,7 +16,7 @@
         <whitelist>
             <directory suffix=".php">./src</directory>
             <exclude>
-                <directory suffix=".php">./src/Sonic/Route</directory>
+                <directory suffix=".php">./src/Sonic/Routes</directory>
             </exclude>
         </whitelist>
     </filter>

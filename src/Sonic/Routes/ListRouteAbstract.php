@@ -1,6 +1,6 @@
 <?php
 
-namespace Sonic\Route;
+namespace Sonic\Routes;
 
 /**
  * ListRoute
@@ -14,7 +14,7 @@ namespace Sonic\Route;
  * @license    MIT
  * @since      0.7
  */
-abstract class ListRouteAbstract extends \Sonic\Route
+abstract class ListRouteAbstract extends \Sonic\Routing\Route
 {
 
     abstract public function posts();

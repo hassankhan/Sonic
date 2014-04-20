@@ -1,6 +1,6 @@
 <?php
 
-namespace Sonic\Route;
+namespace Sonic\Routing\Route;
 
 /**
  * ErrorRoute
@@ -14,7 +14,7 @@ namespace Sonic\Route;
  * @license    MIT
  * @since      0.7
  */
-class ErrorRoute extends \Sonic\Route
+class ErrorRoute extends \Sonic\Routing\Route
 {
 
     /**
