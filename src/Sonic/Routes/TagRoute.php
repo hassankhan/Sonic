@@ -1,6 +1,6 @@
 <?php
 
-namespace Sonic\Route;
+namespace Sonic\Routes;
 
 /**
  * TagRoute
@@ -14,7 +14,7 @@ namespace Sonic\Route;
  * @license    MIT
  * @since      0.7
  */
-class TagRoute extends \Sonic\Route\ListRoute
+class TagRoute extends \Sonic\Routing\Route\ListRoute
 {
 
     /**

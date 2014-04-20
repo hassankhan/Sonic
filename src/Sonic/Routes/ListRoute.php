@@ -1,6 +1,6 @@
 <?php
 
-namespace Sonic\Route;
+namespace Sonic\Routes;
 
 /**
  * ListRoute
@@ -14,7 +14,7 @@ namespace Sonic\Route;
  * @license    MIT
  * @since      0.7
  */
-class ListRoute extends \Sonic\Route\ListRouteAbstract
+class ListRoute extends \Sonic\Routing\Route\ListRouteAbstract
 {
 
     /**

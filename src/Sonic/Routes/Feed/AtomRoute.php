@@ -1,6 +1,6 @@
 <?php
 
-namespace Sonic\Route\Feed;
+namespace Sonic\Routes\Feed;
 
 /**
  * AtomRoute
@@ -14,7 +14,7 @@ namespace Sonic\Route\Feed;
  * @license    MIT
  * @since      0.7
  */
-class AtomRoute extends \Sonic\Route\ListRoute
+class AtomRoute extends \Sonic\Routing\Route\ListRoute
 {
 
     /**

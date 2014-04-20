@@ -1,6 +1,6 @@
 <?php
 
-namespace Sonic\Route;
+namespace Sonic\Routes;
 
 /**
  * DefaultRoute
@@ -14,7 +14,7 @@ namespace Sonic\Route;
  * @license    MIT
  * @since      0.7
  */
-class DefaultRoute extends \Sonic\Route
+class DefaultRoute extends \Sonic\Routing\Route
 {
 
     /**
