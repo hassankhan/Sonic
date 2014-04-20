@@ -14,9 +14,9 @@
 
     <filter>
         <whitelist>
-            <directory suffix=".php">./library</directory>
+            <directory suffix=".php">./src</directory>
             <exclude>
-                <directory suffix=".php">./library/Zepto/Route</directory>
+                <directory suffix=".php">./src/Zepto/Route</directory>
             </exclude>
         </whitelist>
     </filter>

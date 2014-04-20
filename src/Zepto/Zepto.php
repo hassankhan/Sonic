@@ -87,12 +87,16 @@ class Zepto
             return new Helper($app);
         };
 
+        $app['twig_extension'] = function() {
+            return new Extension\Twig;
+        };
+
         $app['twig'] = function ($app) {
             $twig = new \Twig_Environment(
                 new \Twig_Loader_Filesystem($app['ROOT_DIR'] . 'templates'),
                 $app['settings']['twig']
             );
-            $twig->addExtension(new Extension\Twig);
+            $twig->addExtension($app['twig_extension']);
             return $twig;
         };
 

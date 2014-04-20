@@ -19,7 +19,7 @@
     "license": "MIT",
     "autoload": {
         "psr-0": {
-            "Zepto": "library/"
+            "Zepto": "src/"
         }
     },
     "minimum-stability": "stable",

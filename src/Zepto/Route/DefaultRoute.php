@@ -65,7 +65,12 @@ class DefaultRoute extends \Zepto\Route
             : $zepto->app['settings']['zepto.default_template'];
 
         // Render template with Twig
-        return $zepto->app['twig']->render($template_name, $options);
+        try {
+            return $zepto->app['twig']->render($template_name, $options);
+        }
+        catch (\Exception $e) {
+            return $zepto->app['router']->error($e);
+        }
     }
 
 }
