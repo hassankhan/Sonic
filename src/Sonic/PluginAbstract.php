@@ -13,10 +13,10 @@ namespace Sonic;
  */
 abstract class PluginAbstract {
 
-    protected $zepto;
+    protected $sonic;
 
-    public function set_app(Sonic $zepto) {
-        $this->zepto = $zepto;
+    public function set_app(Sonic $sonic) {
+        $this->sonic = $sonic;
     }
 
     abstract public function after_plugins_load();

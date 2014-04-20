@@ -17,7 +17,7 @@ class WhoopsPlugin extends \Sonic\PluginAbstract {
     public function after_plugins_load()
     {
         // Get local reference
-        $app = $this->zepto->app;
+        $app = $this->sonic->app;
 
         // Add Whoops handlers
         $app['whoopsPrettyPageHandler'] = $app->factory(
@@ -86,7 +86,7 @@ class WhoopsPlugin extends \Sonic\PluginAbstract {
     public function before_config_load(&$settings)
     {
         // Get local reference
-        $app = $this->zepto->app;
+        $app = $this->sonic->app;
 
         // If we're not on dev, then don't load up
         if ($settings['zepto.environment'] !== 'dev') {

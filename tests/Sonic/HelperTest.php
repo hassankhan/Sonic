@@ -11,8 +11,8 @@ class HelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testConfig()
     {
-        $zepto    = new Sonic;
-        $helper   = new Helper($zepto->app);
+        $sonic    = new Sonic;
+        $helper   = new Helper($sonic->app);
         $actual   = $helper->config('site.excerpt_newline_limit');
         $expected = '5';
         $this->assertEquals($expected, $actual);
@@ -23,8 +23,8 @@ class HelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testSiteUrl()
     {
-        $zepto    = new Sonic;
-        $helper   = new Helper($zepto->app);
+        $sonic    = new Sonic;
+        $helper   = new Helper($sonic->app);
         $actual   = $helper->site_url();
         $expected = 'http://localhost:8888/zepto/';
         $this->assertEquals($expected, $actual);
@@ -35,8 +35,8 @@ class HelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testSiteTitle()
     {
-        $zepto    = new Sonic;
-        $helper   = new Helper($zepto->app);
+        $sonic    = new Sonic;
+        $helper   = new Helper($sonic->app);
         $actual   = $helper->site_title();
         $expected = 'Sonic';
         $this->assertEquals($expected, $actual);
@@ -48,8 +48,8 @@ class HelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testUrlFor()
     {
-        $zepto    = new Sonic;
-        $helper   = new Helper($zepto->app);
+        $sonic    = new Sonic;
+        $helper   = new Helper($sonic->app);
         $actual   = $helper->url_for('index.md');
         $expected = 'http://localhost:8888/zepto/';
         $this->assertEquals($expected, $actual);
@@ -62,8 +62,8 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testUrlForFailure()
     {
         ob_start();
-        $zepto    = new Sonic;
-        $helper   = new Helper($zepto->app);
+        $sonic    = new Sonic;
+        $helper   = new Helper($sonic->app);
         $actual   = $helper->url_for('non-index.md');
         $this->assertNull($actual);
         ob_end_clean();
@@ -74,8 +74,8 @@ class HelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testLinkFor()
     {
-        $zepto    = new Sonic;
-        $helper   = new Helper($zepto->app);
+        $sonic    = new Sonic;
+        $helper   = new Helper($sonic->app);
         $actual   = $helper->link_for('index.md');
         $expected = '<a href="http://localhost:8888/zepto/"> Welcome </a>';
         $this->assertEquals($expected, $actual);
@@ -87,8 +87,8 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testLinkForFailure()
     {
         ob_start();
-        $zepto  = new Sonic;
-        $helper = new Helper($zepto->app);
+        $sonic  = new Sonic;
+        $helper = new Helper($sonic->app);
         $actual = $helper->link_for('non-index.md');
         $this->assertNull($actual);
         ob_end_clean();

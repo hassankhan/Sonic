@@ -52,12 +52,12 @@ class AtomRoute extends \Sonic\Route\ListRoute
                 ? new \DateTime($post['meta']['date'])
                 : new \DateTime('01-01-1970');
 
-            $timestamp = $this->zepto->app['filesystem']->getTimestamp(
-                $this->zepto->app['settings']['zepto.content_dir'] .'/' . $path
+            $timestamp = $this->sonic->app['filesystem']->getTimestamp(
+                $this->sonic->app['settings']['zepto.content_dir'] .'/' . $path
             );
 
             // Create additional fields for Atom stuff
-            $posts[$path]['id']             = $this->make_id($this->zepto->app['helper']->url_for($path));
+            $posts[$path]['id']             = $this->make_id($this->sonic->app['helper']->url_for($path));
             $posts[$path]['published_date'] = $post_date->format(\DateTime::ATOM);
             $posts[$path]['modified_date']  = date('Y-m-d\TH:i:sP', $timestamp);
         }
@@ -80,10 +80,10 @@ class AtomRoute extends \Sonic\Route\ListRoute
         $todays_date = new \DateTime();
 
         // Set response content-type
-        $this->zepto->app['router']->response()->headers->set('Content-type', 'application/xml');
+        $this->sonic->app['router']->response()->headers->set('Content-type', 'application/xml');
 
         // Render template with Twig
-        return $this->zepto->app['twig']->render(
+        return $this->sonic->app['twig']->render(
             'feed.twig',
             array(
                 'date' => $todays_date->format(\DateTime::ATOM),

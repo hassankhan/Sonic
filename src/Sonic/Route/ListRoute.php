@@ -52,7 +52,7 @@ class ListRoute extends \Sonic\Route\ListRouteAbstract
     public function dates($path = '')
     {
         // Get all files in path
-        $contents = $this->zepto->app['filesystem']->listContents($path, TRUE);
+        $contents = $this->sonic->app['filesystem']->listContents($path, TRUE);
         // Create array
         $date_list = array();
 
@@ -80,7 +80,7 @@ class ListRoute extends \Sonic\Route\ListRouteAbstract
      */
     protected function date($file)
     {
-        $file_contents = $this->zepto->app['filesystem']->parse($file['path']);
+        $file_contents = $this->sonic->app['filesystem']->parse($file['path']);
         if (isset($file_contents['meta']['date']) === FALSE) {
             return NULL;
         }

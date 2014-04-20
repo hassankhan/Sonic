@@ -36,13 +36,13 @@ class NavGenPlugin extends \Sonic\PluginAbstract {
     public function after_router_setup()
     {
         // Use this one
-        $html         = $this->generate_html($this->zepto->app);
+        $html         = $this->generate_html($this->sonic->app);
 
-        if (isset($this->zepto->app['extra']) === TRUE) {
-            $this->zepto->app['extra']['nav'] = $html;
+        if (isset($this->sonic->app['extra']) === TRUE) {
+            $this->sonic->app['extra']['nav'] = $html;
         }
         else {
-            $this->zepto->app['extra'] = array('nav' => $html);
+            $this->sonic->app['extra'] = array('nav' => $html);
         }
     }
 
@@ -56,8 +56,8 @@ class NavGenPlugin extends \Sonic\PluginAbstract {
 
     public function generate_html()
     {
-        $settings   = $this->zepto->app['settings'];
-        $filesystem = $this->zepto->app['filesystem'];
+        $settings   = $this->sonic->app['settings'];
+        $filesystem = $this->sonic->app['filesystem'];
 
         // Opening ``<ul>`` tag and adding class name
         $nav_html   = sprintf('<ul class="%s">' . PHP_EOL, $settings['site.nav.class']);
@@ -72,7 +72,7 @@ class NavGenPlugin extends \Sonic\PluginAbstract {
 
         foreach ($content_files as $file) {
             if ($file['dirname'] === 'content') {
-                $nav_html .= '<li>' . $this->zepto->app['helper']->link_for($file['basename']) . '</li>' . PHP_EOL;
+                $nav_html .= '<li>' . $this->sonic->app['helper']->link_for($file['basename']) . '</li>' . PHP_EOL;
                 continue;
             }
         }

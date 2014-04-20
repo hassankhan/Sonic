@@ -19,7 +19,7 @@ abstract class ListRouteAbstract extends \Sonic\Route
 
     abstract public function posts();
 
-    protected $zepto;
+    protected $sonic;
 
     /**
      * Initializes the route by creating a regex pattern from the provided URL,
@@ -31,7 +31,7 @@ abstract class ListRouteAbstract extends \Sonic\Route
     public function __construct($url = '')
     {
         // Get reference to Sonic application
-        $this->zepto = \Sonic\Sonic::instance();
+        $this->sonic = \Sonic\Sonic::instance();
         parent::__construct($url, array($this, 'build_route'));
     }
 
@@ -46,10 +46,10 @@ abstract class ListRouteAbstract extends \Sonic\Route
         $posts = $this->posts($param);
 
         // Load in any extra stuffs
-        $this->zepto->app['extra'] = isset($this->zepto->app['extra']) === TRUE ? $this->zepto->app['extra'] : array();
+        $this->sonic->app['extra'] = isset($this->sonic->app['extra']) === TRUE ? $this->sonic->app['extra'] : array();
 
         // Render template with Twig
-        return $this->zepto->app['twig']->render($this->zepto->app['settings']['zepto.default_list_template'], array('contents' => $posts));
+        return $this->sonic->app['twig']->render($this->sonic->app['settings']['zepto.default_list_template'], array('contents' => $posts));
     }
 
     /**
@@ -65,16 +65,16 @@ abstract class ListRouteAbstract extends \Sonic\Route
 
         // Iterate through files and get excerpts for all of them
         foreach ($files as $file) {
-            $file_contents = $this->zepto->app['filesystem']->parse($file);
+            $file_contents = $this->sonic->app['filesystem']->parse($file);
 
             if (
                 $file_contents['meta']['title'] !== 'Quote'
                 &&
-                $this->zepto->app['settings']['site.excerpt_newline_limit'] !== 0
+                $this->sonic->app['settings']['site.excerpt_newline_limit'] !== 0
             ) {
-                $contents  = $this->zepto->app['helper']->get_excerpt(
+                $contents  = $this->sonic->app['helper']->get_excerpt(
                     $file_contents['contents'],
-                    $this->zepto->app['settings']['site.excerpt_newline_limit']
+                    $this->sonic->app['settings']['site.excerpt_newline_limit']
                 );
 
                 $file_contents['contents'] = $contents;

@@ -55,7 +55,7 @@ class SonicTest extends \PHPUnit_Framework_TestCase
             'zepto.default_list_template' => 'list.twig',
             'zepto.content_ext'           => array('.md', '.markdown'),
             'zepto.plugins_enabled'       => true,
-            'site.site_root'              => 'http://localhost:8888/zepto/',
+            'site.site_root'              => 'http://localhost:8888/sonic/',
             'site.site_title'             => 'Sonic',
             'site.author'                 => 'Hassan Khan',
             'site.author_email'           => 'contact@hassankhan.me',
@@ -73,8 +73,8 @@ class SonicTest extends \PHPUnit_Framework_TestCase
                 'auto_reload'       => true
             )
         );
-        $zepto = new Sonic($config);
-        $this->assertEquals($config, $zepto->app['settings']);
+        $sonic = new Sonic($config);
+        $this->assertEquals($config, $sonic->app['settings']);
     }
 
     /**
@@ -83,48 +83,48 @@ class SonicTest extends \PHPUnit_Framework_TestCase
      */
     public function testDependenciesAdded($config)
     {
-        $zepto = new Sonic($config);
+        $sonic = new Sonic($config);
 
         // Check for request
-        $this->assertArrayHasKey('request', $zepto->app);
+        $this->assertArrayHasKey('request', $sonic->app);
         $this->assertInstanceOf(
             'Symfony\Component\HttpFoundation\Request',
-            $zepto->app['request']
+            $sonic->app['request']
         );
 
         // Check for response
-        $this->assertArrayHasKey('response', $zepto->app);
+        $this->assertArrayHasKey('response', $sonic->app);
         $this->assertInstanceOf(
             'Symfony\Component\HttpFoundation\Response',
-            $zepto->app['response']
+            $sonic->app['response']
         );
 
         // Check for router
-        $this->assertArrayHasKey('router', $zepto->app);
+        $this->assertArrayHasKey('router', $sonic->app);
         $this->assertInstanceOf(
             'Sonic\Router',
-            $zepto->app['router']
+            $sonic->app['router']
         );
 
         // Check for filesystem
-        $this->assertArrayHasKey('filesystem', $zepto->app);
+        $this->assertArrayHasKey('filesystem', $sonic->app);
         $this->assertInstanceOf(
             'League\Flysystem\Filesystem',
-            $zepto->app['filesystem']
+            $sonic->app['filesystem']
         );
 
         // Check for helper
-        $this->assertArrayHasKey('helper', $zepto->app);
+        $this->assertArrayHasKey('helper', $sonic->app);
         $this->assertInstanceOf(
             'Sonic\Helper',
-            $zepto->app['helper']
+            $sonic->app['helper']
         );
 
         // Check for Twig
-        $this->assertArrayHasKey('twig', $zepto->app);
+        $this->assertArrayHasKey('twig', $sonic->app);
         $this->assertInstanceOf(
             '\Twig_Environment',
-            $zepto->app['twig']
+            $sonic->app['twig']
         );
         // Add check to see if extension is loaded in?
     }
@@ -141,11 +141,11 @@ class SonicTest extends \PHPUnit_Framework_TestCase
     {
         $config['zepto.plugins_enabled'] = TRUE;
         // Add assertion to check if plugins_enabled is true or not
-        $zepto = new Sonic($config);
-        $this->assertArrayHasKey('plugins', $zepto->app);
-        $plugins = $zepto->app['plugins'];
-        $this->assertArrayHasKey('WhoopsPlugin', $zepto->app['plugins']);
-        $this->assertArrayHasKey('NavGenPlugin', $zepto->app['plugins']);
+        $sonic = new Sonic($config);
+        $this->assertArrayHasKey('plugins', $sonic->app);
+        $plugins = $sonic->app['plugins'];
+        $this->assertArrayHasKey('WhoopsPlugin', $sonic->app['plugins']);
+        $this->assertArrayHasKey('NavGenPlugin', $sonic->app['plugins']);
     }
 
     /**
@@ -154,8 +154,8 @@ class SonicTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetupRouter($config)
     {
-        $zepto = new Sonic($config);
-        $routes = $zepto->app['router']->routes();
+        $sonic = new Sonic($config);
+        $routes = $sonic->app['router']->routes();
 
         // Check that routes were added as HTTP GET requests
         $this->assertArrayHasKey('GET', $routes);
@@ -178,8 +178,8 @@ class SonicTest extends \PHPUnit_Framework_TestCase
     public function testRun($config)
     {
         ob_start();
-        $zepto = new Sonic($config);
-        $this->assertTrue($zepto->run());
+        $sonic = new Sonic($config);
+        $this->assertTrue($sonic->run());
         ob_end_clean();
     }
 
@@ -192,8 +192,8 @@ class SonicTest extends \PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URL']     = '/non-existent';
         $_SERVER['REQUEST_URI']     = '/non-existent';
         ob_start();
-        $zepto = new Sonic($config);
-        $this->assertFalse($zepto->run());
+        $sonic = new Sonic($config);
+        $this->assertFalse($sonic->run());
         ob_end_clean();
     }
 
@@ -204,8 +204,8 @@ class SonicTest extends \PHPUnit_Framework_TestCase
     public function testRunHooks($config)
     {
         $config['zepto.plugins_enabled'] = TRUE;
-        $zepto = new Sonic($config);
-        $this->assertTrue($zepto->run_hooks('before_response_send'));
+        $sonic = new Sonic($config);
+        $this->assertTrue($sonic->run_hooks('before_response_send'));
     }
 
 
@@ -216,8 +216,8 @@ class SonicTest extends \PHPUnit_Framework_TestCase
     public function testRunHooksWhenPluginsDisabled($config)
     {
         $config['zepto.plugins_enabled'] = FALSE;
-        $zepto = new Sonic($config);
-        $this->assertFalse($zepto->run_hooks('before_response_send'));
+        $sonic = new Sonic($config);
+        $this->assertFalse($sonic->run_hooks('before_response_send'));
     }
 
     /**
@@ -238,7 +238,7 @@ class SonicTest extends \PHPUnit_Framework_TestCase
      */
     public function testInstanceAfterInitialization($config)
     {
-        $zepto = new Sonic($config);
+        $sonic = new Sonic($config);
         $this->assertInstanceOf('Sonic\Sonic', Sonic::instance());
     }
 
@@ -248,7 +248,7 @@ class SonicTest extends \PHPUnit_Framework_TestCase
      */
     public function testKill($config)
     {
-        $zepto = new Sonic($config);
+        $sonic = new Sonic($config);
         $this->assertInstanceOf('Sonic\Sonic', Sonic::instance());
         Sonic::kill();
         $this->assertNull(Sonic::instance());

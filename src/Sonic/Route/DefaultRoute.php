@@ -37,39 +37,39 @@ class DefaultRoute extends \Sonic\Route
     public function build_route()
     {
         // Get reference to Sonic
-        $zepto = \Sonic\Sonic::instance();
+        $sonic = \Sonic\Sonic::instance();
 
         // Get resource URL
-        $resource_url = $zepto->app['router']->request()->getPathInfo();
+        $resource_url = $sonic->app['router']->request()->getPathInfo();
 
         // Get file path
-        $path = rtrim($zepto->app['settings']['zepto.content_dir'] . $resource_url, '/');
+        $path = rtrim($sonic->app['settings']['zepto.content_dir'] . $resource_url, '/');
 
         // Check if file(s) exist
-        $contents = $zepto->app['filesystem']->listContents($path);
+        $contents = $sonic->app['filesystem']->listContents($path);
 
         // Load file
         $loaded_file = empty($contents) === TRUE
-            ? $zepto->app['filesystem']->parse($path . '.md')
-            : $zepto->app['filesystem']->parse(rtrim($path, '/') . '/' . 'index.md');
+            ? $sonic->app['filesystem']->parse($path . '.md')
+            : $sonic->app['filesystem']->parse(rtrim($path, '/') . '/' . 'index.md');
 
         // Load in any extra stuffs
-        $zepto->app['extra'] = isset($zepto->app['extra']) === TRUE ? $zepto->app['extra'] : array();
+        $sonic->app['extra'] = isset($sonic->app['extra']) === TRUE ? $sonic->app['extra'] : array();
 
         // Merge Twig options and content into one array
-        $options = array_merge($loaded_file, $zepto->app['extra']);
+        $options = array_merge($loaded_file, $sonic->app['extra']);
 
         // Get template name from file, if not set, then use default
         $template_name = array_key_exists('template', $loaded_file['meta']) === true
             ? $loaded_file['meta']['template']
-            : $zepto->app['settings']['zepto.default_template'];
+            : $sonic->app['settings']['zepto.default_template'];
 
         // Render template with Twig
         try {
-            return $zepto->app['twig']->render($template_name, $options);
+            return $sonic->app['twig']->render($template_name, $options);
         }
         catch (\Exception $e) {
-            return $zepto->app['router']->error($e);
+            return $sonic->app['router']->error($e);
         }
     }
 

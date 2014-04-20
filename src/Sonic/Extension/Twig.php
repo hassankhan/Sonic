@@ -49,8 +49,8 @@ class Twig extends \Twig_Extension
      */
     public function config($option)
     {
-        $zepto = \Sonic\Sonic::instance();
-        return $zepto->app['settings'][$option];
+        $sonic = \Sonic\Sonic::instance();
+        return $sonic->app['settings'][$option];
     }
 
     /**
@@ -61,8 +61,8 @@ class Twig extends \Twig_Extension
      */
     public function site_url()
     {
-        $zepto = \Sonic\Sonic::instance();
-        return $zepto->app['settings']['site.site_root'];
+        $sonic = \Sonic\Sonic::instance();
+        return $sonic->app['settings']['site.site_root'];
     }
 
     /**
@@ -73,8 +73,8 @@ class Twig extends \Twig_Extension
      */
     public function site_title()
     {
-        $zepto = \Sonic\Sonic::instance();
-        return $zepto->app['settings']['site.site_title'];
+        $sonic = \Sonic\Sonic::instance();
+        return $sonic->app['settings']['site.site_title'];
     }
 
     /**
@@ -87,8 +87,8 @@ class Twig extends \Twig_Extension
      */
     public function url_for($file_name)
     {
-        $zepto = \Sonic\Sonic::instance();
-        return $zepto->app['helper']->url_for($file_name);
+        $sonic = \Sonic\Sonic::instance();
+        return $sonic->app['helper']->url_for($file_name);
     }
 
     /**
@@ -101,8 +101,8 @@ class Twig extends \Twig_Extension
      */
     public function link_for($file_name)
     {
-        $zepto = \Sonic\Sonic::instance();
-        return $zepto->app['helper']->link_for($file_name);
+        $sonic = \Sonic\Sonic::instance();
+        return $sonic->app['helper']->link_for($file_name);
     }
 
 }

@@ -42,7 +42,7 @@ class TagRoute extends \Sonic\Route\ListRoute
         $tag_name = $params[0];
 
         // Get all files in path
-        $contents = $this->zepto->app['filesystem']->listContents('content', TRUE);
+        $contents = $this->sonic->app['filesystem']->listContents('content', TRUE);
 
         // Create array to hold tagged files
         $tagged_files = array();
@@ -54,7 +54,7 @@ class TagRoute extends \Sonic\Route\ListRoute
                 && $file['extension'] === 'md'
             ) {
 
-                $file_contents = $this->zepto->app['filesystem']->read($file['path']);
+                $file_contents = $this->sonic->app['filesystem']->read($file['path']);
 
                 // Grab meta section between '/* ... */' in the content file
                 preg_match_all('#/\*(.*?)\*/#s', $file_contents, $meta);
