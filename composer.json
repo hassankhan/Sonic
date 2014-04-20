@@ -1,7 +1,7 @@
 {
-    "name": "hassankhan/zepto",
-    "description": "Zepto is a stupidly simple, blazing fast, flat-file CMS based on Pico",
-    "keywords": ["cms", "framework", "markdown"],
+    "name": "hassankhan/sonic",
+    "description": "Sonic is a stupidly simple, blazing fast, flat-file CMS based on Pico",
+    "keywords": ["flat-file", "microcms", "cms", "framework", "markdown"],
     "homepage": "https://github.com/hassankhan/Sonic",
     "require": {
         "php": ">=5.3",

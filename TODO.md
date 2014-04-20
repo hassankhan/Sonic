@@ -21,6 +21,8 @@ To-Do
 - Move plugins to separate repo
 
 ## Application
+- MARKDOWN PLUGIN NEEDS TO BE MORE DECOUPLED
+- Need to remove loads of 'md' strings, make it use the value from the settings
 - [Add support for environments ``[production|dev]``](https://github.com/hassankhan/Zepto/issues/4)
 - Move ``index.php`` to ``public`` folder
 - Consider making ``$app`` protected, and using specific methods to access it
@@ -32,9 +34,4 @@ To-Do
 
 ## [Tests](https://github.com/hassankhan/Zepto/issues?milestone=1&state=open)
 - Write MORE unit tests
-    - Add @dataProvider to ConsoleTest
 - Maybe get some benchmarks up?
-
-## ``zep``
-- Make init wizard
-- Make shortcuts for ``zep new`` like ``zep new -p Test`` for a new plugin called TestPlugin.php

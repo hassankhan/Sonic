@@ -20,7 +20,7 @@
 		"trim_trailing_white_space_on_save": true,
 		"xdebug":
 		{
-			"url": "http://localhost:8888/zepto/"
+			"url": "http://localhost:8888/sonic/"
 		}
 	}
 }
