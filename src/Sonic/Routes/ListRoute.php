@@ -14,7 +14,7 @@ namespace Sonic\Routes;
  * @license    MIT
  * @since      0.7
  */
-class ListRoute extends \Sonic\Routing\Route\ListRouteAbstract
+class ListRoute extends ListRouteAbstract
 {
 
     /**

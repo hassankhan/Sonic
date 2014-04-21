@@ -14,7 +14,7 @@ namespace Sonic\Routes\Feed;
  * @license    MIT
  * @since      0.7
  */
-class AtomRoute extends \Sonic\Routing\Route\ListRoute
+class AtomRoute extends \Sonic\Routes\ListRoute
 {
 
     /**

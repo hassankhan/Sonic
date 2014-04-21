@@ -14,7 +14,7 @@ namespace Sonic\Routes;
  * @license    MIT
  * @since      0.7
  */
-class TagRoute extends \Sonic\Routing\Route\ListRoute
+class TagRoute extends ListRoute
 {
 
     /**
