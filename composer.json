@@ -18,8 +18,8 @@
     },
     "license": "MIT",
     "autoload": {
-        "psr-0": {
-            "Sonic": "src/"
+        "psr-4": {
+            "Sonic\\": "src/Sonic"
         }
     },
     "minimum-stability": "stable",
