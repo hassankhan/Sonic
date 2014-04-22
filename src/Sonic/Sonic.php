@@ -93,7 +93,7 @@ class Sonic
 
         $app['twig'] = function ($app) {
             $twig = new \Twig_Environment(
-                new \Twig_Loader_Filesystem($app['ROOT_DIR'] . 'templates'),
+                new \Twig_Loader_Filesystem($app['ROOT_DIR'] . $app['settings']['sonic.templates_dir']),
                 $app['settings']['twig']
             );
             $twig->addExtension($app['twig_extension']);
