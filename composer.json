@@ -5,15 +5,15 @@
     "homepage": "https://github.com/hassankhan/Sonic",
     "require": {
         "php": ">=5.3",
-        "twig/twig": "1.*",
+        "twig/twig": "~1.0",
         "michelf/php-markdown": "~1.4",
         "pimple/pimple": "~2.0",
         "symfony/http-foundation": "~2.4",
         "league/flysystem": "~0.2"
     },
     "require-dev": {
-        "filp/whoops": "1.*",
-        "phpunit/phpunit": "4.*",
+        "filp/whoops": "~1.0",
+        "phpunit/phpunit": "~4.0",
         "satooshi/php-coveralls": "dev-master"
     },
     "license": "MIT",
