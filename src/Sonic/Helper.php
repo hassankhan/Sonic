@@ -161,22 +161,22 @@ class Helper
      * @throws InvalidArgumentException If a setting is invalid
      * @static
      */
-    public static function validate_config($config)
+    public function validate_config($config)
     {
         $message = '';
 
         while ($message === '') {
-            if (!is_dir($config['sonic.content_dir'])) {
+            if (!is_dir($this->app['ROOT_DIR'] . $config['sonic.content_dir'])) {
                 $message = 'Content directory does not exist';
                 break;
             }
 
-            if (!is_dir($config['sonic.plugins_dir'])) {
+            if (!is_dir($this->app['ROOT_DIR'] . $config['sonic.plugins_dir'])) {
                 $message = 'Plugins directory does not exist';
                 break;
             }
 
-            if (!is_dir($config['sonic.templates_dir'])) {
+            if (!is_dir($this->app['ROOT_DIR'] . $config['sonic.templates_dir'])) {
                 $message = 'Templates directory does not exist';
                 break;
             }

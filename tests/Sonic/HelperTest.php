@@ -131,7 +131,10 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testValidateConfig()
     {
         $config = Helper::default_config();
-        $this->assertTrue(Helper::validate_config($config));
+
+        $sonic    = new Sonic;
+        $helper   = new Helper($sonic->app);
+        $this->assertTrue($helper->validate_config($config));
     }
 
     /**
@@ -142,7 +145,10 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     {
         $config = Helper::default_config();
         $config['sonic.content_dir'] = 'no_such_dir';
-        Helper::validate_config($config);
+
+        $sonic    = new Sonic;
+        $helper   = new Helper($sonic->app);
+        $helper->validate_config($config);
     }
 
     /**
@@ -153,7 +159,10 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     {
         $config = Helper::default_config();
         $config['sonic.plugins_dir'] = 'no_such_dir';
-        Helper::validate_config($config);
+
+        $sonic    = new Sonic;
+        $helper   = new Helper($sonic->app);
+        $helper->validate_config($config);
     }
 
     /**
@@ -164,7 +173,10 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     {
         $config = Helper::default_config();
         $config['sonic.templates_dir'] = 'no_such_dir';
-        Helper::validate_config($config);
+
+        $sonic    = new Sonic;
+        $helper   = new Helper($sonic->app);
+        $helper->validate_config($config);
     }
 
     /**
@@ -175,7 +187,10 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     {
         $config = Helper::default_config();
         $config['sonic.default_template'] = 'no_such_file';
-        Helper::validate_config($config);
+
+        $sonic    = new Sonic;
+        $helper   = new Helper($sonic->app);
+        $helper->validate_config($config);
     }
 
     /**
@@ -187,7 +202,10 @@ class HelperTest extends \PHPUnit_Framework_TestCase
         $config = Helper::default_config();
         $config['sonic.environment'] = 'production';
         $config['site']['site_root'] = 'fuck://this@should?fail';
-        Helper::validate_config($config);
+
+        $sonic    = new Sonic;
+        $helper   = new Helper($sonic->app);
+        $helper->validate_config($config);
     }
 
     /**
