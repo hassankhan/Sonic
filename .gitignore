@@ -15,3 +15,4 @@ my.config.php
 # Folders
 tests/coverage
 cache
+.vagrant

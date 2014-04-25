@@ -9,7 +9,7 @@ $config = array(
     'sonic.default_list_template' => 'list.twig',
     'sonic.content_ext'           => array('md', 'markdown'),
     'sonic.plugins_enabled'       => true,
-    'site.site_root'              => 'http://localhost:8888/sonic/',
+    'site.site_root'              => 'http://sonic.dev/',
     'site.site_title'             => 'Sonic',
     'site.author'                 => 'Hassan Khan',
     'site.author_email'           => 'contact@hassankhan.me',
@@ -21,7 +21,7 @@ $config = array(
     'site.nav.dropdown_li_markup' => '<li class="%s"><a href="%s" class="dropdown-toggle" data-toggle="dropdown"> %s <b class="caret"></b></a><ul class="%s">',
     'twig'                       => array(
         'charset'           => 'utf-8',
-        'cache'             => 'cache',
+        'cache'             => 'cache/twig',
         'strict_variables'  => false,
         'autoescape'        => false,
         'auto_reload'       => true
